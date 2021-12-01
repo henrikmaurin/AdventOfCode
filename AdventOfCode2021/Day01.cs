@@ -28,10 +28,10 @@ namespace AdventOfCode2021
             int increases =0 ;
             int lastDepth = int.MaxValue;
             
-            for (int i = 0; i<= depths.Length-sweepsize; i++)
+            for (int i = 0; i<= depths.Length- sweepSize; i++)
             {
                 int depth = 0;
-                for (int j = 0; j < sweepsize;j++)
+                for (int j = 0; j < sweepSize; j++)
                     depth += depths[i+j];                
                
                 if (depth > lastDepth)
@@ -40,24 +40,5 @@ namespace AdventOfCode2021
             }
             return increases;
         }
-
-/*        public int CountIncreasesSlidingWindows(int[] depths)
-        {
-            int increases = 0;
-            int lastDepth = int.MaxValue;
-
-            for (int i = 0; i< depths.Length-2; i++)
-            {
-                int depth = depths[i] + depths[i+1] + depths[i+2];
-                if (depth > lastDepth)
-                    increases++;
-                lastDepth = depth;
-            }
-                    
-            return increases;
-        }
-*/
     }
-
-
 }
