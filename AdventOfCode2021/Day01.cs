@@ -20,15 +20,20 @@ namespace AdventOfCode2021
         {
             int[] data = ReadFile.ReadLines("Day01.txt").Select(d => d.ToInt()).ToArray();
 
-            return (CountIncreasesSlidingWindows(data));
+            return (CountIncreases(data,3));
         }
 
-        public int CountIncreases(int[] depths)
+        public int CountIncreases(int[] depths, int sweepSize = 1)
         {
             int increases =0 ;
             int lastDepth = int.MaxValue;
-            foreach (int depth in depths)
+            
+            for (int i = 0; i<= depths.Length-sweepsize; i++)
             {
+                int depth = 0;
+                for (int j = 0; j < sweepsize;j++)
+                    depth += depths[i+j];                
+               
                 if (depth > lastDepth)
                     increases++;
                 lastDepth = depth;
@@ -36,7 +41,7 @@ namespace AdventOfCode2021
             return increases;
         }
 
-        public int CountIncreasesSlidingWindows(int[] depths)
+/*        public int CountIncreasesSlidingWindows(int[] depths)
         {
             int increases = 0;
             int lastDepth = int.MaxValue;
@@ -51,7 +56,7 @@ namespace AdventOfCode2021
                     
             return increases;
         }
-
+*/
     }
 
 
