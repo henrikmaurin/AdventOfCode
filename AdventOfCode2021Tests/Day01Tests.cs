@@ -27,7 +27,7 @@ namespace AdventOfCode2021Tests
         {
             int[] testData = { 199, 200, 208, 210, 200, 207, 240, 269, 260, 263 };
 
-            Assert.AreEqual(5, day.CountIncreasesSlidingWindows(testData));
+            Assert.AreEqual(5, day.CountIncreases(testData,3));
         }
 
 
