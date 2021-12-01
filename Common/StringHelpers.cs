@@ -13,10 +13,20 @@ namespace AdventOfCode
 			return outVal;
 		}
 
+		public static int[] ToInt(this string[] s)
+		{
+			return s.Select(str => str.ToInt()).ToArray();			
+		}
+
 		public static int ToInt(this char c)
 		{
 			int.TryParse(c.ToString(), out int outVal);
 			return outVal;
+		}
+
+		public static int[] ToInt(this char[] c)
+		{
+			return c.Select(ch => ch.ToInt()).ToArray();
 		}
 
 		public static long ToLong(this string s)
@@ -25,10 +35,20 @@ namespace AdventOfCode
 			return outVal;
 		}
 
+		public static long[] ToLong(this string[] s)
+		{
+			return s.Select(str => str.ToLong()).ToArray();
+		}
+
 		public static ulong ToUlong(this string s)
 		{
 			ulong.TryParse(s, out ulong outVal);
 			return outVal;
+		}
+
+		public static ulong[] ToUlong(this string[] s)
+		{
+			return s.Select(str => str.ToUlong()).ToArray();
 		}
 
 		public static bool IsNumber(this string s)

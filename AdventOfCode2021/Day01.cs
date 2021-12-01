@@ -11,14 +11,14 @@ namespace AdventOfCode2021
     {
         public int Problem1()
         {
-            int[] data = ReadFile.ReadLines("Day01.txt").Select(d=>d.ToInt()).ToArray();
+            int[] data = ReadFile.ReadLines("Day01.txt").ToInt();
 
             return (CountIncreases(data));
         }
 
         public int Problem2()
         {
-            int[] data = ReadFile.ReadLines("Day01.txt").Select(d => d.ToInt()).ToArray();
+            int[] data = ReadFile.ReadLines("Day01.txt").ToInt();
 
             return (CountIncreases(data,3));
         }
