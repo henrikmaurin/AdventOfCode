@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode2021
 {
-    public class Day03
+    public class Day03 : DayBase
     {
+        public Day03() : base() { }
+
         public int Problem1()
         {
-            string[] data = ReadFile.ReadLines("Day03.txt");
+            string[] data = input.GetDataCached(2021, 3).SplitOnNewlineArray();
             int len = data[0].Length;
-
 
             return CalcGamma(data.FromBinary(), len) * CalcEpsilon(data.FromBinary(), len); 
         }
 
         public int Problem2()
         {
-            string[] data = ReadFile.ReadLines("Day03.txt");
+            string[] data = input.GetDataCached(2021, 3).SplitOnNewlineArray();
             int len = data[0].Length;
-
 
             return CalcOxygenRating(data.FromBinary(), len) * CalcScrubberRating(data.FromBinary(), len);
         }
@@ -38,13 +38,11 @@ namespace AdventOfCode2021
                 shift /= 2;
             }
 
-
             return result;
         }
 
         public int CalcEpsilon(int[] values, int bits)
         {
-
             int result = 0;
             int shift = 1 << bits-1;
             while (shift > 0)
@@ -53,7 +51,6 @@ namespace AdventOfCode2021
                     result += shift;
                 shift /= 2;
             }
-
 
             return result;
         }
@@ -66,16 +63,13 @@ namespace AdventOfCode2021
             {
                 int lookFor = shift;
 
-
                 if (values.Where(v => (v & shift) > 0).Count() < values.Where(v => (v & shift) == 0).Count())
                     lookFor = 0;
 
                 values = values.Where(v => (v & shift) == lookFor).ToArray();
 
-
                 shift /= 2;
             }
-
 
             return values.Single();
         }
@@ -88,16 +82,13 @@ namespace AdventOfCode2021
             {
                 int lookFor = 0;
 
-
                 if (values.Where(v => (v & shift) > 0).Count() < values.Where(v => (v & shift) == 0).Count())
                     lookFor = shift;
 
                 values = values.Where(v => (v & shift) == lookFor).ToArray();
 
-
                 shift /= 2;
             }
-
 
             return values.Single();
         }

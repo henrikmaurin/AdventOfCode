@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode2021
 {
-    public class Day02
+    public class Day02 : DayBase
     {
         public int Pos { get; set; }
         public int Depth { get; set; }
         public int Aim { get; set; }
 
+        public Day02() : base() { }
 
         public int Problem1()
         {
-            string[] data = ReadFile.ReadLines("Day02.txt");
+            string[] data = input.GetDataCached(2021, 2).SplitOnNewlineArray();
 
             foreach (string line in data)
                 Parse(line);    
@@ -26,7 +27,7 @@ namespace AdventOfCode2021
 
         public int Problem2()
         {
-            string[] data = ReadFile.ReadLines("Day02.txt");
+            string[] data = input.GetDataCached(2021, 2).SplitOnNewlineArray();
 
             foreach (string line in data)
                 Parse(line,true);

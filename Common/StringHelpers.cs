@@ -100,5 +100,13 @@ namespace AdventOfCode
 			StringSplitOptions.None
 			).ToList();
 		}
+
+		public static string[] SplitOnNewlineArray(this string me)
+		{
+			return me.Split(
+			new[] { "\r\n", "\r", "\n" },
+			StringSplitOptions.None
+			).ToArray();
+		}
 	}
 }
