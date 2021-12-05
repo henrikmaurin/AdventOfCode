@@ -1,6 +1,6 @@
 ﻿using AdventOfCode2021;
 using Common;
-
+/*
 Console.WriteLine("Day 1");
 Day01 day01 = new Day01();
 
@@ -29,3 +29,11 @@ Day04 day04 = new Day04();
 Console.WriteLine(day04.Problem1());
 day04 = new Day04();
 Console.WriteLine(day04.Problem2());
+*/
+
+Console.WriteLine("Day 5");
+Day05 day05 = new Day05();
+
+Console.WriteLine(day05.Problem1());
+day05 = new Day05();
+Console.WriteLine(day05.Problem2());
