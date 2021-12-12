@@ -30,10 +30,29 @@ Console.WriteLine(day04.Problem1());
 day04 = new Day04();
 Console.WriteLine(day04.Problem2());
 */
-
+/*
 Console.WriteLine("Day 5");
 Day05 day05 = new Day05();
 
 Console.WriteLine(day05.Problem1());
 day05 = new Day05();
 Console.WriteLine(day05.Problem2());
+
+Console.WriteLine("Day 6");
+Day06 day06 = new Day06();
+
+Console.WriteLine(day06.Problem1());
+day06 = new Day06();
+Console.WriteLine(day06.Problem2());
+*/
+/*Console.WriteLine("Day 7");
+Day07 day07 = new Day07();
+
+Console.WriteLine(day07.Problem1());
+Console.WriteLine(day07.Problem2());
+*/
+Console.WriteLine("Day 8");
+Day08 day08 = new Day08();
+
+Console.WriteLine(day08.Problem1());
+Console.WriteLine(day08.Problem2());
