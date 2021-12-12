@@ -108,5 +108,6 @@ namespace AdventOfCode
 			StringSplitOptions.None
 			).ToArray();
 		}
+
 	}
 }
