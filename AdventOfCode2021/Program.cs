@@ -62,9 +62,15 @@ Day09 day09 = new Day09();
 
 Console.WriteLine(day09.Problem1());
 Console.WriteLine(day09.Problem2());
-*/
+
 Console.WriteLine("Day 10");
 Day10 day10 = new Day10();
 
 Console.WriteLine(day10.Problem1());
 Console.WriteLine(day10.Problem2());
+*/
+Console.WriteLine("Day 11");
+Day11 day11 = new Day11();
+
+Console.WriteLine(day11.Problem1());
+Console.WriteLine(day11.Problem2());
