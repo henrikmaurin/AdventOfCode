@@ -36,9 +36,7 @@ namespace AdventOfCode2021Tests
             "2311944581"};
 
             day.Parse(data);
-          //  day.CalculateLowest();
             Assert.AreEqual(40, day.FindLowest(0, 0, 0)-data[0][0].ToInt());
-
         }
 
         [TestMethod]

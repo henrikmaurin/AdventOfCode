@@ -19,12 +19,9 @@ namespace AdventOfCode2021
         public int Problem1()
         {
             string[] instructions = input.GetDataCached(2021, 15).SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
-            Parse(instructions);
+            Parse(instructions);            
 
-            _RiskLevel[0, 0].Lowest = 0;
-            _RiskLevel[0, 0].Level = 0;
-
-            return FindLowest(0, 0, 0);
+            return RunAStar();
         }
 
         public int Problem2()
@@ -44,6 +41,7 @@ namespace AdventOfCode2021
             Map.SizeX = sizeX;
             Map.SizeY = sizeY;
             Map.RiskLevel = new int[sizeX, sizeY];
+            Map.DistanceToTarget = new int[sizeX, sizeY];
 
             _RiskLevel = new RiskLevel[sizeX, sizeY];
 
@@ -58,6 +56,7 @@ namespace AdventOfCode2021
                     _RiskLevel[x, y].Level = c.ToInt();
                     _RiskLevel[x, y].Lowest = int.MaxValue;
                     Map.RiskLevel[x, y] = c.ToInt();
+                    Map.DistanceToTarget[x, y] = Math.Abs(sizeX - x) + Math.Abs(sizeY - y);
                 }
             }
         }
@@ -71,6 +70,7 @@ namespace AdventOfCode2021
             Map.SizeX = sizeX;
             Map.SizeY = sizeY;
             Map.RiskLevel = new int[sizeX, sizeY];
+            Map.DistanceToTarget = new int[sizeX, sizeY];
 
             _RiskLevel = new RiskLevel[sizeX, sizeY];
 
@@ -93,10 +93,9 @@ namespace AdventOfCode2021
                             _RiskLevel[x + x1 * sizeX / 5, y + y1 * sizeY / 5].Level = level;
                             _RiskLevel[x + x1 * sizeX / 5, y + y1 * sizeY / 5].Lowest = int.MaxValue;
                             Map.RiskLevel[x + x1 * sizeX / 5, y + y1 * sizeY / 5] = level;
+                            Map.DistanceToTarget[x + x1 * sizeX / 5, y + y1 * sizeY / 5] = Math.Abs(sizeX - x) + Math.Abs(sizeY - y);
                         }
                     }
-
-
                 }
             }
         }
@@ -127,7 +126,7 @@ namespace AdventOfCode2021
 
             return result;
         }
-  
+
 
         int Lowest(int x1, int x2)
         {
@@ -138,7 +137,7 @@ namespace AdventOfCode2021
 
         public int RunAStar()
         {
-            AStar.Init(0, 0, sizeX-1, sizeY-1);
+            AStar.Init(0, 0, sizeX - 1, sizeY - 1);
             AStar.Map = Map;
 
             AStarNode goal = AStar.ProcessNext();
@@ -153,8 +152,8 @@ namespace AdventOfCode2021
 
     public class AStar
     {
-        public List<AStarNode> ToProcess { get; set; }
-        public List<AStarNode> Visited { get; set; }
+        public PriorityQueue<AStarNode, int> ToProcess { get; set; }
+        public Dictionary<string,AStarNode> Visited { get; set; }
         public RiskLevelMap Map { get; set; }
         private int _goalX;
         private int _goalY;
@@ -164,35 +163,31 @@ namespace AdventOfCode2021
             _goalX = goalX;
             _goalY = goalY;
 
-            ToProcess = new List<AStarNode>();
-            Visited = new List<AStarNode>();
+            ToProcess = new PriorityQueue<AStarNode, int>();
+            Visited = new Dictionary<string, AStarNode>();
 
-            ToProcess.Add(new AStarNode
+            ToProcess.Enqueue(new AStarNode
             {
                 Cost = 0,
                 X = startX,
                 Y = startY,
-            });
+            }, 0);
 
         }
 
         public AStarNode ProcessNext()
         {
-            int nextMin = ToProcess.Min(v => v.Cost);
-            int indexToMin = ToProcess.FindIndex(v => v.Cost == nextMin);
 
-            AStarNode current = ToProcess.ElementAt(indexToMin);
-            ToProcess.RemoveAt(indexToMin);
+            AStarNode current = ToProcess.Dequeue();
 
             xy[] neighbors = { new xy { X = -1, Y = 0 }, new xy { X = 0, Y = -1 }, new xy { X = 1, Y = 0 }, new xy { X = 0, Y = 1 }, };
-
-            int? level = null;
 
             //Left
             foreach (xy z in neighbors)
             {
 
-                level = TryGetRiskLevel(current.X + z.X, current.Y + z.Y);
+                int? level = TryGetRiskLevel(current.X + z.X, current.Y + z.Y);
+                int? distance = TryGetDistance(current.X + z.X, current.Y + z.Y);
                 if (level != null)
                 {
                     AStarNode visited = TryGetVisitedAt(current.X + z.X, current.Y + z.Y);
@@ -200,10 +195,10 @@ namespace AdventOfCode2021
                     {
                         if (visited.Cost > current.Cost + level.Value)
                         {
-                            Visited.Remove(visited);
-                            visited.CameFrom = current;
+                            Visited.Remove($"{visited.X},{visited.Y}");
+                                                        visited.CameFrom = current;
                             visited.Cost = current.Cost + level.Value;
-                            ToProcess.AddOrUpdate(visited);
+                            ToProcess.Enqueue(visited, visited.Cost + distance.Value);
                         }
                     }
                     else
@@ -215,13 +210,13 @@ namespace AdventOfCode2021
                             CameFrom = current,
                             Cost = current.Cost + level.Value,
                         };
-                        ToProcess.AddOrUpdate(visited);
+                        ToProcess.Enqueue(visited, visited.Cost + distance.Value);
                         if (visited.X == _goalX && visited.Y == _goalY)
                             return visited;
                     }
                 }
             }
-            Visited.Add(current);
+            Visited.AddOrUpdate(current);
 
             return null;
         }
@@ -233,12 +228,22 @@ namespace AdventOfCode2021
 
             return Map.RiskLevel[x, y];
         }
+        public int? TryGetDistance(int x, int y)
+        {
+            if (x >= Map.SizeX || y >= Map.SizeY || x < 0 || y < 0)
+                return null;
+
+            return Map.DistanceToTarget[x, y];
+        }
 
 
 
         public AStarNode TryGetVisitedAt(int x, int y)
         {
-            return Visited.SingleOrDefault(v => v.X == x && v.Y == y);
+            if (Visited.ContainsKey($"{x},{y}"))
+                return Visited[$"{x},{y}"];
+
+            return null;
         }
 
         class xy
@@ -253,8 +258,8 @@ namespace AdventOfCode2021
     {
         public static void AddOrUpdate(this List<AStarNode> list, AStarNode item)
         {
-            var existingItem = list.Where(l=>l.X==item.X && l.Y==item.Y).SingleOrDefault();
-            if (existingItem==null)
+            var existingItem = list.Where(l => l.X == item.X && l.Y == item.Y).SingleOrDefault();
+            if (existingItem == null)
             {
                 list.Add(item);
                 return;
@@ -267,6 +272,21 @@ namespace AdventOfCode2021
                 list.Add(existingItem);
             }
 
+        }
+
+        public static  AStarNode AddOrUpdate(this Dictionary<string, AStarNode> dict, AStarNode node)
+        {
+            string key = $"{node.X},{node.Y}";
+
+            if (dict .ContainsKey(key))
+            {
+                if (dict[key].Cost> node.Cost)
+                    dict[key].Cost = node.Cost;
+                return dict[key];
+            }
+
+            dict.Add(key, node); ;
+            return node; 
         }
     }
 
@@ -290,5 +310,6 @@ namespace AdventOfCode2021
         public int SizeX { get; set; }
         public int SizeY { get; set; }
         public int[,] RiskLevel { get; set; }
+        public int[,] DistanceToTarget { get; set; }
     }
 }
