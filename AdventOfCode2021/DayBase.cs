@@ -13,8 +13,11 @@ namespace AdventOfCode2021
         protected AOCGetInput input;
         public DayBase()
         {
-            string cookie = File.ReadAllText("AOCCookie.txt");
-            input=new AOCGetInput(cookie);
+            if (File.Exists("AOCCookie.txt"))
+            {
+                string cookie = File.ReadAllText("AOCCookie.txt");
+                input = new AOCGetInput(cookie);
+            }
         }
         
     }

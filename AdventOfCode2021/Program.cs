@@ -105,10 +105,24 @@ Day15 day15 = new Day15();
 Console.WriteLine(day15.Problem1());
 day15 = new Day15();
 Console.WriteLine(day15.Problem2());
-*/
+
 Console.WriteLine("Day 16");
 Day16 day16 = new Day16();
 
 Console.WriteLine(day16.Problem1());
 day16 = new Day16();
 Console.WriteLine(day16.Problem2());
+
+Console.WriteLine("Day 17");
+Day17 day17 = new Day17();
+
+Console.WriteLine(day17.Problem1());
+day17 = new Day17();
+Console.WriteLine(day17.Problem2());
+*/
+Console.WriteLine("Day 18");
+Day18 day18 = new Day18();
+
+Console.WriteLine(day18.Problem1());
+day18 = new Day18();
+Console.WriteLine(day18.Problem2());
