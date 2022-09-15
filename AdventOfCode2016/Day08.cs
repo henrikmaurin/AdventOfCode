@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2016.Days
+namespace AdventOfCode2016
 {
     public class Day08
     {
@@ -67,7 +67,7 @@ namespace AdventOfCode2016.Days
                 int mem = display[col + (dimY - 1) * dimX];
                 for (int y = dimY - 2; y >= 0; y--)
                 {
-                    display[col + (y + 1) * dimX] = display[col + (y) * dimX];
+                    display[col + (y + 1) * dimX] = display[col + y * dimX];
                 }
                 display[col] = mem;
             }
@@ -92,7 +92,7 @@ namespace AdventOfCode2016.Days
             {
                 for (int xp = 0; xp < dimX; xp++)
                 {
-                    Console.Write(display[xp + yp * dimX]==1?'*':' ');
+                    Console.Write(display[xp + yp * dimX] == 1 ? '*' : ' ');
                 }
                 Console.WriteLine();
             }

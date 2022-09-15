@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2016.Days
+namespace AdventOfCode2016
 {
     public class Day03
     {
@@ -24,11 +24,11 @@ namespace AdventOfCode2016.Days
             else
                 lines = File.ReadAllText("data\\3.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-            triangles = lines.Select(t => new Day03.triangle
+            triangles = lines.Select(t => new triangle
             {
-                v1 = Int32.Parse(t.Substring(0, 5).Trim()),
-                v2 = Int32.Parse(t.Substring(5, 5).Trim()),
-                v3 = Int32.Parse(t.Substring(10, 5).Trim()),
+                v1 = int.Parse(t.Substring(0, 5).Trim()),
+                v2 = int.Parse(t.Substring(5, 5).Trim()),
+                v3 = int.Parse(t.Substring(10, 5).Trim()),
             }).ToList();
         }
 

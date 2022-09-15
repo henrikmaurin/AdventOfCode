@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2016.Days
+namespace AdventOfCode2016
 {
     public class Day04
     {
@@ -36,7 +36,7 @@ namespace AdventOfCode2016.Days
                 var l = r.name.Replace("-", "").ToCharArray().GroupBy(g => g).Select(g => new { c = g.Key, count = g.Count() }).OrderByDescending(o => o.count).ThenBy(o => o.c).ToList();
                 string key = "" + l[0].c + l[1].c + l[2].c + l[3].c + l[4].c;
                 if (key.Trim().Equals(r.checksum.Trim()))
-                    sum += Int32.Parse(r.sector);
+                    sum += int.Parse(r.sector);
 
             }
 
@@ -56,7 +56,7 @@ namespace AdventOfCode2016.Days
                 string key = "" + l[0].c + l[1].c + l[2].c + l[3].c + l[4].c;
                 if (true)
                 {
-                    char shiftval = Convert.ToChar(Int32.Parse(r.sector) % 26);
+                    char shiftval = Convert.ToChar(int.Parse(r.sector) % 26);
                     string newstring = string.Empty;
 
                     foreach (char c in r.name)
@@ -64,7 +64,7 @@ namespace AdventOfCode2016.Days
                         char n;
                         if (c != '-')
                         {
-                            n = Convert.ToChar((c + shiftval));
+                            n = Convert.ToChar(c + shiftval);
                             if (n > 'z')
                                 n -= Convert.ToChar(26);
 
@@ -76,7 +76,7 @@ namespace AdventOfCode2016.Days
 
                     }
                     if (newstring.Contains("north"))
-                        return Int32.Parse(r.sector);
+                        return int.Parse(r.sector);
 
                 }
 

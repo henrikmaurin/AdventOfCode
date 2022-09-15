@@ -1,26 +1,31 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Numerics;
 
-namespace AdventOfCode2016.Days
+namespace AdventOfCode2016
 {
-    public class Day01
+    public class Day01 : DayBase, IDay
     {
-        List<string> instructions = null;
+        public Day01() : base(2016, 1) { }
 
-        public Day01(bool demodata = false)
+        private List<string> instructions = null;
+
+        public void Run()
         {
-            if (!demodata)
-                instructions = File.ReadAllText("data\\1.txt").Split(",").ToList();
-            else
-                instructions = File.ReadAllText("demodata\\1.txt").Split(",").ToList();
+            int blocksAway = Problem1();
+            Console.WriteLine($"P1: Easter bunny is {blocksAway} blocks away");
 
+            blocksAway = Problem2();
+            Console.WriteLine($"P2: Easter bunny is {blocksAway} blocks away when first revisit");
         }
 
         public int Problem1()
         {
+            instructions = input.GetDataCached().Split(",").ToList();
+
             Complex pos = new Complex(0, 0);
             Complex direction = new Complex(1, 0);
 
@@ -35,7 +40,7 @@ namespace AdventOfCode2016.Days
                 {
                     direction *= new Complex(0, -1);
                 }
-                int steps = Int32.Parse(inst.Substring(1));
+                int steps = int.Parse(inst.Substring(1));
                 pos += direction * steps;
             }
 
@@ -44,6 +49,8 @@ namespace AdventOfCode2016.Days
 
         public int Problem2()
         {
+            instructions = input.GetDataCached().Split(",").ToList();
+
             Complex pos = new Complex(0, 0);
             Complex direction = new Complex(1, 0);
 
@@ -61,7 +68,7 @@ namespace AdventOfCode2016.Days
                 {
                     direction *= new Complex(0, -1);
                 }
-                int steps = Int32.Parse(inst.Substring(1));
+                int steps = int.Parse(inst.Substring(1));
                 for (int i = 0; i < steps; i++)
                 {
                     pos += direction;

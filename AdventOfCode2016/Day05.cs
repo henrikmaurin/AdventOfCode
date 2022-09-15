@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace AdventOfCode2016.Days
+namespace AdventOfCode2016
 {
     public class Day05
     {

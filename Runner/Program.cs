@@ -24,6 +24,9 @@ bool Run(string year, int day)
         case "2015":
             yearToRun = new AdventOfCode2015.Year();
             break;
+        case "2016":
+            yearToRun = new AdventOfCode2016.Year();
+            break;
     }
 
     if (yearToRun == null)
