@@ -4,7 +4,7 @@ namespace AdventOfCode2015
 {
     public class Year : IYear
     {
-        public IDay Day(int day)
+        public IDay? Day(int day)
         {
             switch (day)
             {
@@ -24,6 +24,8 @@ namespace AdventOfCode2015
                     return new Day07();
                 case 8:
                     return new Day08();
+                case 9:
+                    return new Day09();
 
             }
             return null;

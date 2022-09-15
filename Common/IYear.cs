@@ -2,7 +2,7 @@
 {
     public interface IYear
     {
-        IDay Day(int day);
+        IDay? Day(int day);
 
     }
 }
