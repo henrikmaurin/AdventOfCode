@@ -10,7 +10,7 @@ namespace AdventOfCode2016
     {
         private List<triangle> triangles;
 
-        public Day03() : base(2016, 3) { }
+        public Day03() : base(2016, 3) { triangles = ParseTriangles(input.GetDataCached().SplitOnNewline(true)); }
 
         public void Run()
         {
@@ -40,19 +40,13 @@ namespace AdventOfCode2016
 
         public int Problem1()
         {
-            List<string> data = input.GetDataCached().SplitOnNewline(true);
-            triangles = ParseTriangles(data);
-
             return triangles
-                .Where(t => Valid(t) == 1)
-                .Count();
+              .Where(t => Valid(t) == 1)
+              .Count();
         }
 
         public int Problem2()
         {
-            List<string> data = input.GetDataCached().SplitOnNewline(true);
-            triangles = ParseTriangles(data);
-
             int valid = 0;
             for (int i = 0; i < triangles.Count; i += 3)
             {

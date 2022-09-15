@@ -1,22 +1,16 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace AdventOfCode2016
 {
-    public class Day06
+    public class Day06 : DayBase, IDay
     {
         private List<string> lines;
-        public Day06(bool demodata = false)
-        {
+        public Day06() : base(2016, 6) { lines = input.GetDataCached().SplitOnNewline(true); }
 
-            if (!demodata)
-                lines = File.ReadAllText("data\\6.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            else
-                lines = File.ReadAllText("demodata\\6.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-
-        }
 
         public string Problem1()
         {
@@ -46,6 +40,11 @@ namespace AdventOfCode2016
 
 
             return result;
+        }
+
+        public void Run()
+        {
+            throw new NotImplementedException();
         }
     }
 }

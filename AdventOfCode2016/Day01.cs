@@ -9,9 +9,9 @@ namespace AdventOfCode2016
 {
     public class Day01 : DayBase, IDay
     {
-        public Day01() : base(2016, 1) { }
+        private List<string> instructions;
 
-        private List<string> instructions = null;
+        public Day01() : base(2016, 1) { instructions = input.GetDataCached().Split(",").ToList(); }
 
         public void Run()
         {
@@ -24,8 +24,6 @@ namespace AdventOfCode2016
 
         public int Problem1()
         {
-            instructions = input.GetDataCached().Split(",").ToList();
-
             Complex pos = new Complex(0, 0);
             Complex direction = new Complex(1, 0);
 
@@ -49,8 +47,6 @@ namespace AdventOfCode2016
 
         public int Problem2()
         {
-            instructions = input.GetDataCached().Split(",").ToList();
-
             Complex pos = new Complex(0, 0);
             Complex direction = new Complex(1, 0);
 

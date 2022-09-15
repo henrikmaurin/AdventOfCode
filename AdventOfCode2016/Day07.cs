@@ -1,23 +1,17 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace AdventOfCode2016
 {
-    public class Day07
+    public class Day07 : DayBase, IDay
     {
         private List<string> lines;
 
-        public Day07(bool demodata = false)
-        {
+        public Day07() : base(2016, 7) { lines = input.GetDataCached().SplitOnNewline(true); }
 
-            if (!demodata)
-                lines = File.ReadAllText("data\\7.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            else
-                lines = File.ReadAllText("demodata\\7.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-
-        }
 
         public int Problem1()
         {
@@ -95,6 +89,11 @@ namespace AdventOfCode2016
 
 
             return count;
+        }
+
+        public void Run()
+        {
+            throw new NotImplementedException();
         }
 
         private bool ContainsABBAString(string input)

@@ -1,25 +1,18 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace AdventOfCode2016
 {
-    public class Day08
+    public class Day08 : DayBase, IDay
     {
         private List<string> lines;
         int[] display;
         int dimX, dimY;
 
-        public Day08(bool demodata = false)
-        {
-
-            if (!demodata)
-                lines = File.ReadAllText("data\\8.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            else
-                lines = File.ReadAllText("demodata\\8.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-
-        }
+        public Day08() : base(2016, 8) { lines = input.GetDataCached().SplitOnNewline(true); }
 
         public int Problem1()
         {
@@ -96,6 +89,11 @@ namespace AdventOfCode2016
                 }
                 Console.WriteLine();
             }
+        }
+
+        public void Run()
+        {
+            throw new NotImplementedException();
         }
     }
 }

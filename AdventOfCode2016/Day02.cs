@@ -8,7 +8,7 @@ namespace AdventOfCode2016
     {
         private string[] datarows;
 
-        public Day02() : base(2016, 2) { }
+        public Day02() : base(2016, 2) { datarows = input.GetDataCached().SplitOnNewlineArray(true); }
 
         public void Run()
         {
@@ -21,8 +21,6 @@ namespace AdventOfCode2016
 
         public string Problem1()
         {
-            datarows = input.GetDataCached().SplitOnNewlineArray(true);
-
             string code = string.Empty;
             int posX = 1, posY = 1;
 
@@ -57,8 +55,6 @@ namespace AdventOfCode2016
 
         public string Problem2()
         {
-            datarows = input.GetDataCached().SplitOnNewlineArray(true);
-
             string code = string.Empty;
             int posX = 1, posY = 3;
 

@@ -1,28 +1,22 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace AdventOfCode2016
 {
-    public class Day04
+    public class Day04 : DayBase, IDay
     {
+        private List<string> lines;
+        public Day04() : base(2016, 4) { lines = input.GetDataCached().SplitOnNewline(true); }
+
+
         public struct room
         {
             public string name;
             public string sector;
             public string checksum;
-        }
-
-        private List<string> lines;
-
-        public Day04(bool testdata = false)
-        {
-            if (!testdata)
-                lines = File.ReadAllText("data\\4.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            else
-                lines = File.ReadAllText("demodata\\4.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-
         }
 
         public int Problem1()
@@ -96,6 +90,11 @@ namespace AdventOfCode2016
             r.sector = line.Substring(lastIndex + 1, checksumstart - lastIndex - 1);
             r.checksum = line.Substring(checksumstart + 1).Replace("]", "");
             return r;
+        }
+
+        public void Run()
+        {
+            throw new NotImplementedException();
         }
     }
 }

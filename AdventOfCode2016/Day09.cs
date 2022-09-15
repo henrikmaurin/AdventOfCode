@@ -1,20 +1,13 @@
-﻿using System.IO;
+﻿using AdventOfCode;
+using Common;
 using System.Linq;
 
 namespace AdventOfCode2016
 {
-    public class Day09
+    public class Day09 : DayBase, IDay
     {
         string data;
-        public Day09(bool demodata = false)
-        {
-
-            if (!demodata)
-                data = File.ReadAllText("data\\9.txt");
-            else
-                data = "X(8x2)(3x3)ABCY";
-
-        }
+        public Day09() : base(2016, 9) { data = input.GetDataCached(); }
 
         public int Problem1()
         {
@@ -70,6 +63,11 @@ namespace AdventOfCode2016
                 }
             }
             return datalength;
+        }
+
+        public void Run()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

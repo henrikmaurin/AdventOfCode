@@ -1,7 +1,18 @@
-﻿namespace AdventOfCode2016
+﻿using AdventOfCode;
+using Common;
+using System.Collections.Generic;
+
+namespace AdventOfCode2016
 {
-    public class Day11
+    public class Day11 : DayBase, IDay
     {
+        private List<string> lines;
+        public Day11() : base(2016, 11) { lines = input.GetDataCached().SplitOnNewline(true); }
+        public void Run()
+        {
+            throw new System.NotImplementedException();
+        }
+
         enum Isotopes
         {
             Hydrogen = 1,

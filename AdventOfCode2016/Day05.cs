@@ -1,11 +1,14 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace AdventOfCode2016
 {
-    public class Day05
+    public class Day05 : DayBase, IDay
     {
+        public Day05() : base(2016, 5) { }
         public string Problem1(string s)
         {
             int counter = 0;
@@ -68,6 +71,11 @@ namespace AdventOfCode2016
             foreach (byte b in ba)
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
+        }
+
+        public void Run()
+        {
+            throw new NotImplementedException();
         }
     }
 }
