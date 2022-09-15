@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace AdventOfCode
 {
 	public static class StringHelpers
 	{
 		public static int FromBinary(this string s)
-        {
+		{
 			int result = Convert.ToInt32(s, 2);
 			return result;
-        }
+		}
 
 		public static int[] FromBinary(this string[] s)
 		{
@@ -27,7 +24,7 @@ namespace AdventOfCode
 
 		public static int[] ToInt(this string[] s)
 		{
-			return s.Select(str => str.ToInt()).ToArray();			
+			return s.Select(str => str.ToInt()).ToArray();
 		}
 
 		public static int ToInt(this char c)
@@ -93,20 +90,27 @@ namespace AdventOfCode
 			return strings;
 		}
 
-		public static List<string> SplitOnNewline(this string me)
+		public static List<string> SplitOnNewline(this string me, bool removeEmptyLines = false)
 		{
-			return me.Split(
-			new[] { "\r\n", "\r", "\n" },
-			StringSplitOptions.None
-			).ToList();
+			return SplitOnNewlineArray(me, removeEmptyLines).ToList();
 		}
 
-		public static string[] SplitOnNewlineArray(this string me)
+		public static string[] SplitOnNewlineArray(this string me, bool removeEmptyLines = false)
 		{
-			return me.Split(
+			var retval = me.Split(
 			new[] { "\r\n", "\r", "\n" },
 			StringSplitOptions.None
-			).ToArray();
+			);
+
+			if (removeEmptyLines)
+				retval = retval.Where(m => !string.IsNullOrEmpty(m)).ToArray();
+
+			return retval;
+		}
+
+		public static string IsSingleLine(this string me)
+		{
+			return me.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
 		}
 
 	}

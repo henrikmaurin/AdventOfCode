@@ -1,26 +1,34 @@
 ﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Common;
 
 namespace AdventOfCode2015
 {
-    public class Day03
+    public class Day03 : DayBase, IDay
     {
+        public Day03() : base(2015, 3) { }
+
         public int Problem1()
         {
-            string data = ReadFile.ReadText("Day03.txt");
+            string data = input.GetDataCached();
 
             return DeliverByInstructions(data);
         }
 
         public int Problem2()
         {
-            string data = ReadFile.ReadText("Day03.txt");
+            string data = input.GetDataCached();
 
             return DeliverByInstructionsWithRoboSanta(data);
+        }
+
+        public void Run()
+        {
+            int visitedHouses = Problem1();
+            Console.WriteLine($"Number of houses visited at least once by Santa: {visitedHouses}");
+
+            visitedHouses = Problem2();
+            Console.WriteLine($"Number of houses visited at least once by Santa and Robo-Santa: {visitedHouses}");
+
         }
 
         public int DeliverByInstructions(string instructions)
@@ -30,9 +38,9 @@ namespace AdventOfCode2015
             int x = 0;
             int y = 0;
 
-            visitedHouses.Add($"{x}x{y}",1);
+            visitedHouses.Add($"{x}x{y}", 1);
 
-        
+
             foreach (char instruction in instructions)
             {
                 switch (instruction)
@@ -50,8 +58,8 @@ namespace AdventOfCode2015
                         x++;
                         break;
                 }
-                if(visitedHouses.TryGetValue($"{x}x{y}",out int value))
-                    {
+                if (visitedHouses.TryGetValue($"{x}x{y}", out int value))
+                {
                     visitedHouses[$"{x}x{y}"] = value + 1;
                 }
                 else
@@ -66,8 +74,8 @@ namespace AdventOfCode2015
         {
             Dictionary<string, int> visitedHouses = new Dictionary<string, int>();
 
-            int[] x = {0,0};
-            int[] y = {0,0};           
+            int[] x = { 0, 0 };
+            int[] y = { 0, 0 };
 
             visitedHouses.Add($"0x0", 2);
 
@@ -104,5 +112,7 @@ namespace AdventOfCode2015
 
             return visitedHouses.Count();
         }
+
+
     }
 }

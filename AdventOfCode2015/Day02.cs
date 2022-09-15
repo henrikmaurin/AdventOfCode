@@ -1,26 +1,32 @@
 ﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Common;
 
 namespace AdventOfCode2015
 {
-    public class Day02
+    public class Day02 : DayBase, IDay
     {
+        public Day02() : base(2015, 2) { }
         public int Problem1()
         {
-            string[] data = ReadFile.ReadLines("Day02.txt");
+            string[] data = input.GetDataCached().SplitOnNewlineArray(true);
 
             return data.Select(d => CalcWrappingPaper(d)).Sum();
         }
 
         public int Problem2()
         {
-            string[] data = ReadFile.ReadLines("Day02.txt");
+            string[] data = input.GetDataCached().SplitOnNewlineArray(true);
 
             return data.Select(d => CalcRibbon(d)).Sum();
+        }
+
+        public void Run()
+        {
+            int paperToOrder = Problem1();
+            Console.WriteLine($"P1: The elves nedds to order (paper): {paperToOrder} ");
+
+            int ribbontoOrder = Problem2();
+            Console.WriteLine($"P1: The elves nedds to order (ribbon): {ribbontoOrder}");
         }
 
         public int CalcWrappingPaper(string dims)
@@ -52,5 +58,7 @@ namespace AdventOfCode2015
 
             return 2 * (values[0] + values[1]) + x * y * z;
         }
+
+
     }
 }

@@ -1,27 +1,33 @@
 ﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Common;
 
 namespace AdventOfCode2015
 {
-    public class Day01
+    public class Day01 : DayBase, IDay
     {
+        public Day01() : base(2015, 1) { }
         public int Problem1()
         {
-            string data = ReadFile.ReadText("Day01.txt");
+            //string data = ReadFile.ReadText("Day01.txt");
+            string data = input.GetDataCached();
 
             return Travel(data);
         }
         public int Problem2()
         {
-            string data = ReadFile.ReadText("Day01.txt");
+            string data = input.GetDataCached();
 
             return TravelTo(data, -1);
         }
 
+        public void Run()
+        {
+            int finalFloor = Problem1();
+            Console.WriteLine($"P1: Santa ends up on floor: {finalFloor}");
+
+            int position = Problem2();
+            Console.WriteLine($"P2: Santa ends up in basemant at position: {position}");
+        }
 
         public int Travel(string directions)
         {

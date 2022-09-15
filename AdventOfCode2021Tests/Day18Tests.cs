@@ -39,7 +39,7 @@ namespace AdventOfCode2021Tests
             string data = "[[[[[9,8],1],2],3],4]";
             day.Init(data);
             day.ParseUntilDone();
-            Assert.AreEqual("[[[[0,9],2],3],4]", day.ToString());
+            Assert.AreEqual("[[[[0,9],2],3],5]", day.ToString());
         }
 
         [TestMethod]

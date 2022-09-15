@@ -1,18 +1,13 @@
 ﻿using AdventOfCode;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Common;
 
 namespace AdventOfCode2015
 {
-    public class Day07
+    public class Day07 : DayBase, IDay
     {
         private Dictionary<string, Gate> _gates;
 
-        public Day07()
+        public Day07() : base(2015, 7)
         {
             _gates = new Dictionary<string, Gate>();
             OutputExtension.SetGates(ref _gates);
@@ -20,7 +15,7 @@ namespace AdventOfCode2015
 
         public ushort? Problem2(int newVal)
         {
-            string[] lines = ReadFile.ReadLines("Day07.txt");
+            string[] lines = input.GetDataCached().SplitOnNewlineArray(true);
 
             foreach (string line in lines)
             {
@@ -35,7 +30,7 @@ namespace AdventOfCode2015
 
         public ushort? Problem1()
         {
-            string[] lines = ReadFile.ReadLines("Day07.txt");
+            string[] lines = input.GetDataCached().SplitOnNewlineArray(true);
 
             foreach (string line in lines)
             {
@@ -43,6 +38,17 @@ namespace AdventOfCode2015
             }
 
             return ReadValue("a");
+        }
+
+        public void Run()
+        {
+            int signal = (int)Problem1().Value;
+            Console.WriteLine($"P1: Signal: {signal}");
+
+            Day07 newDay = new Day07();
+
+            int feedbacksignal = (int)newDay.Problem2(signal).Value;
+            Console.WriteLine($"P2: Feedback signal: {feedbacksignal}");
         }
 
         public ushort? ReadValue(string gateName)
@@ -134,7 +140,7 @@ namespace AdventOfCode2015
             else
             {
                 string[] split = line.Split("->");
-             
+
                 WireGate gate = new WireGate();
                 gate.Name = split[1].Trim();
                 gate.Input = split[0].Trim();
@@ -164,8 +170,8 @@ namespace AdventOfCode2015
             get
             {
                 visits++;
-                if (cache!=null) return cache;
-               
+                if (cache != null) return cache;
+
                 if (Input.Output() == null)
                     return null;
                 cache = Input.Output();
@@ -179,7 +185,7 @@ namespace AdventOfCode2015
             return $"{Name}, {visits}";
         }
     }
-      
+
 
     public class AndGate : Gate
     {
@@ -204,7 +210,7 @@ namespace AdventOfCode2015
 
                 if (Input1.Output() == null || Input2.Output() == null)
                     return null;
-                cache= (ushort?)(Input1.Output() & Input2.Output());
+                cache = (ushort?)(Input1.Output() & Input2.Output());
                 return cache;
             }
         }
@@ -233,7 +239,7 @@ namespace AdventOfCode2015
 
                 if (Input1.Output() == null || Input2.Output() == null)
                     return null;
-                cache= (ushort?)(Input1.Output() | Input2.Output());
+                cache = (ushort?)(Input1.Output() | Input2.Output());
                 return cache;
             }
         }
@@ -315,7 +321,7 @@ namespace AdventOfCode2015
 
                 if (Input1.Output() == null || ByAmount.Output() == null)
                     return null;
-                cache= (ushort?)(Input1.Output() >> ByAmount.Output());
+                cache = (ushort?)(Input1.Output() >> ByAmount.Output());
                 return cache;
             }
         }

@@ -1,25 +1,18 @@
 ﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Common;
 
 namespace AdventOfCode2015
 {
-    public class Day06
+    public class Day06 : DayBase, IDay
     {
-        private int[,] grid;
+        private int[,] grid = new int[1000, 1000];
         private bool useNewInstructions = false;
 
-        public Day06()
-        {
-            grid = new int[1000, 1000];
-        }
+        public Day06() : base(2015, 6) { }
 
         public int Problem1()
         {
-            string[] data = ReadFile.ReadLines("Day06.txt");
+            string[] data = input.GetDataCached().SplitOnNewlineArray(true);
             foreach (string line in data)
                 Parse(line);
 
@@ -30,11 +23,20 @@ namespace AdventOfCode2015
         {
             UseNewInstructions();
             UnSetAll();
-            string[] data = ReadFile.ReadLines("Day06.txt");
+            string[] data = input.GetDataCached().SplitOnNewlineArray(true);
             foreach (string line in data)
                 Parse(line);
 
             return SetCount();
+        }
+
+        public void Run()
+        {
+            int lightsLit = Problem1();
+            Console.WriteLine($"P1: Lights lit: {lightsLit}");
+
+            int lightsLitNewInstructions = Problem2();
+            Console.WriteLine($"P2: Santa ends up in basemant at position: {lightsLitNewInstructions}");
         }
 
         public void UseNewInstructions()
