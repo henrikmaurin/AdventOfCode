@@ -8,7 +8,8 @@ namespace AdventOfCode2016
 {
     public class Day05 : DayBase, IDay
     {
-        public Day05() : base(2016, 5) { }
+        private string code;
+        public Day05() : base(2016, 5) { code = input.GetDataCached().IsSingleLine(); }
         public string Problem1(string s)
         {
             int counter = 0;
@@ -75,10 +76,10 @@ namespace AdventOfCode2016
 
         public void Run()
         {
-            int result1 = Problem1();
+            string result1 = Problem1(code);
             Console.WriteLine($"P1: {result1}");
 
-            int result2 = Problem1();
+            string result2 = Problem1(code);
             Console.WriteLine($"P2: {result2}");
         }
     }

@@ -44,10 +44,10 @@ namespace AdventOfCode2016
 
         public void Run()
         {
-            int result1 = Problem1();
+            string result1 = Problem1();
             Console.WriteLine($"P1: {result1}");
 
-            int result2 = Problem1();
+            string result2 = Problem1();
             Console.WriteLine($"P2: {result2}");
         }
     }
