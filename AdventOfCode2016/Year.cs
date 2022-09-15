@@ -12,9 +12,9 @@ namespace AdventOfCode2016
                     return new Day01();
                 case 2:
                     return new Day02();
-                    /*               case 3:
-                                       return new Day03();
-                                   case 4:
+                case 3:
+                    return new Day03();
+                    /*               case 4:
                                        return new Day04();
                                    case 5:
                                        return new Day05();

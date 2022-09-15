@@ -1,13 +1,25 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace AdventOfCode2016
 {
-    public class Day03
+    public class Day03 : DayBase, IDay
     {
         private List<triangle> triangles;
+
+        public Day03() : base(2016, 3) { }
+
+        public void Run()
+        {
+            int possibleTriangles = Problem1();
+            Console.WriteLine($"P1: Possible triangles: {possibleTriangles}");
+
+            possibleTriangles = Problem2();
+            Console.WriteLine($"P2: Advanced possible triangles: {possibleTriangles}");
+        }
 
         public struct triangle
         {
@@ -16,15 +28,9 @@ namespace AdventOfCode2016
             public int v3;
         }
 
-        public Day03(bool demodata = false)
+        List<triangle> ParseTriangles(List<string> triangleData)
         {
-            List<string> lines;
-            if (!demodata)
-                lines = File.ReadAllText("data\\3.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            else
-                lines = File.ReadAllText("data\\3.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-
-            triangles = lines.Select(t => new triangle
+            return triangleData.Select(t => new triangle
             {
                 v1 = int.Parse(t.Substring(0, 5).Trim()),
                 v2 = int.Parse(t.Substring(5, 5).Trim()),
@@ -34,6 +40,9 @@ namespace AdventOfCode2016
 
         public int Problem1()
         {
+            List<string> data = input.GetDataCached().SplitOnNewline(true);
+            triangles = ParseTriangles(data);
+
             return triangles
                 .Where(t => Valid(t) == 1)
                 .Count();
@@ -41,6 +50,9 @@ namespace AdventOfCode2016
 
         public int Problem2()
         {
+            List<string> data = input.GetDataCached().SplitOnNewline(true);
+            triangles = ParseTriangles(data);
+
             int valid = 0;
             for (int i = 0; i < triangles.Count; i += 3)
             {
