@@ -1,23 +1,28 @@
-﻿using System;
-using System.IO;
+﻿using AdventOfCode;
+using Common;
+using System;
 
 namespace AdventOfCode2016
 {
-    public class Day02
+    public class Day02 : DayBase, IDay
     {
         private string[] datarows;
 
-        public Day02(bool demodata = false)
-        {
-            if (!demodata)
-                datarows = File.ReadAllText("data\\2.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            else
-                datarows = File.ReadAllText("demodata\\2.txt").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-        }
+        public Day02() : base(2016, 2) { }
 
+        public void Run()
+        {
+            string bathroomCode = Problem1();
+            Console.WriteLine($"P1: Code to bathroom: {bathroomCode}");
+
+            bathroomCode = Problem2();
+            Console.WriteLine($"P1: New code to bathroom: {bathroomCode}");
+        }
 
         public string Problem1()
         {
+            datarows = input.GetDataCached().SplitOnNewlineArray(true);
+
             string code = string.Empty;
             int posX = 1, posY = 1;
 
@@ -52,6 +57,8 @@ namespace AdventOfCode2016
 
         public string Problem2()
         {
+            datarows = input.GetDataCached().SplitOnNewlineArray(true);
+
             string code = string.Empty;
             int posX = 1, posY = 3;
 
