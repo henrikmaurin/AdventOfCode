@@ -79,7 +79,7 @@ namespace AdventOfCode2016
             string result1 = Problem1(code);
             Console.WriteLine($"P1: {result1}");
 
-            string result2 = Problem1(code);
+            string result2 = Problem2(code);
             Console.WriteLine($"P2: {result2}");
         }
     }

@@ -71,7 +71,7 @@ namespace AdventOfCode2016
             int result1 = Problem1();
             Console.WriteLine($"P1: {result1}");
 
-            int result2 = Problem1();
+            long result2 = Problem2();
             Console.WriteLine($"P2: {result2}");
         }
     }
