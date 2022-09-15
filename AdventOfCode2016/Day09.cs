@@ -8,7 +8,7 @@ namespace AdventOfCode2016
     public class Day09 : DayBase, IDay
     {
         string data;
-        public Day09() : base(2016, 9) { data = input.GetDataCached(); }
+        public Day09() : base(2016, 9) { data = input.GetDataCached().IsSingleLine(); }
 
         public int Problem1()
         {
