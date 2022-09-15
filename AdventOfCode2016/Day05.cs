@@ -75,7 +75,11 @@ namespace AdventOfCode2016
 
         public void Run()
         {
-            throw new NotImplementedException();
+            int result1 = Problem1();
+            Console.WriteLine($"P1: {result1}");
+
+            int result2 = Problem1();
+            Console.WriteLine($"P2: {result2}");
         }
     }
 }

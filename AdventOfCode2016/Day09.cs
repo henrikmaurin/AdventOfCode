@@ -1,5 +1,6 @@
 ﻿using AdventOfCode;
 using Common;
+using System;
 using System.Linq;
 
 namespace AdventOfCode2016
@@ -67,7 +68,11 @@ namespace AdventOfCode2016
 
         public void Run()
         {
-            throw new System.NotImplementedException();
+            int result1 = Problem1();
+            Console.WriteLine($"P1: {result1}");
+
+            int result2 = Problem1();
+            Console.WriteLine($"P2: {result2}");
         }
     }
 }

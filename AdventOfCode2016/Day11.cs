@@ -10,7 +10,7 @@ namespace AdventOfCode2016
         public Day11() : base(2016, 11) { lines = input.GetDataCached().SplitOnNewline(true); }
         public void Run()
         {
-            throw new System.NotImplementedException();
+
         }
 
         enum Isotopes
