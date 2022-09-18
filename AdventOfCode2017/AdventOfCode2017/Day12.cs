@@ -1,22 +1,24 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day12 : AdventOfCode2017
+    public class Day12 : DayBase, IDay
     {
         public List<Program> Programs { get; set; }
         public List<int> PipedToZero { get; set; }
 
-        public Day12()
+        public Day12() : base(2017, 12)
         {
             Programs = new List<Program>();
             PipedToZero = new List<int>();
-            string[] lines = SplitLines(ReadData("12.txt"));
+            string[] lines = input.GetDataCached().SplitOnNewlineArray();
             foreach (string line in lines)
             {
-                string[] tokens = Tokenize(line);
+                string[] tokens = line.Tokenize();
                 Program program = new Program();
                 program.ID = int.Parse(tokens[0]);
                 for (int i = 2; i < tokens.Count(); i++)
@@ -27,17 +29,24 @@ namespace AdventOfCode2017.Days
             }
         }
 
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
-            Process(Programs.Single(p => p.ID == 0));
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Group 0 Contains {result1}");
 
-            Console.WriteLine($"Group 0 Contains {PipedToZero.Count} programs");
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Number of groups {result2}");
         }
 
-        public void Problem2()
+        public int Problem1()
         {
-            Console.WriteLine("Problem 1");
+            Process(Programs.Single(p => p.ID == 0));
+
+            return PipedToZero.Count;
+        }
+
+        public int Problem2()
+        {
             Process(Programs.Single(p => p.ID == 0));
             int count = 1;
             while (PipedToZero.Count < Programs.Count)
@@ -46,7 +55,7 @@ namespace AdventOfCode2017.Days
                 Program startProgram = Programs.Where(p => !PipedToZero.Contains(p.ID)).First();
                 Process(startProgram);
             }
-            Console.WriteLine($"Number of groups {count} ");
+            return count;
         }
 
         public void Process(Program program)

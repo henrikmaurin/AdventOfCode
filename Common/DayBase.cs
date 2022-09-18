@@ -17,6 +17,11 @@ namespace AdventOfCode
             }
         }
 
+        public DayBase(bool runtests)
+        {
+
+        }
+
         public int Year { get; private set; }
         public int Day { get; private set; }
         protected AOCGetInput input;

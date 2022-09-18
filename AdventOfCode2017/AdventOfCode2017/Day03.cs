@@ -1,20 +1,26 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day3 : AdventOfCode2017
+    public class Day03 : DayBase, IDay
     {
-        public Day3()
+        public int code { get; set; }
+        public Day03() : base(2017, 3) { code = input.GetDataCached().IsSingleLine().ToInt(); }
+
+        public void Run()
         {
-            code = 265149;
-            //code = 1024;
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Shortest path: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Value: {result2}");
         }
 
-        public int code { get; set; }
-
-        public void Problem1()
+        public int Problem1()
         {
             int right = 1, up = -1, left = -1, down = 1;
             int x = 0, y = 0;
@@ -66,10 +72,11 @@ namespace AdventOfCode2017.Days
             }
 
             Console.WriteLine($"Shortest path: {Math.Abs(x) + Math.Abs(y) - 1}");
+            return Math.Abs(x) + Math.Abs(y) - 1;
 
         }
 
-        public void Problem2()
+        public int Problem2()
         {
             List<StorageCell> cells = new List<StorageCell>();
             int right = 1, up = -1, left = -1, down = 1;
@@ -125,17 +132,13 @@ namespace AdventOfCode2017.Days
 
                 if (newCell.Value > code)
                 {
-                    Console.WriteLine($"Value: {newCell.Value}");
-                    found = true;
+                    return newCell.Value;
+
                 }
             }
-
-
-
+            return 0;
         }
     }
-
-
 
     public class StorageCell
     {

@@ -1,30 +1,39 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day13 : AdventOfCode2017
+    public class Day13 : DayBase, IDay
     {
         public List<FirewallLayer> Firewall { get; set; }
-        public Day13()
+        public Day13() : base(2017, 13)
         {
             Firewall = new List<FirewallLayer>();
-            string[] layers = SplitLines(ReadData("13.txt"));
+            string[] layers = input.GetDataCached().SplitOnNewlineArray();
             foreach (string layer in layers)
             {
                 FirewallLayer newLayer = new FirewallLayer();
-                newLayer.Layer = int.Parse(Tokenize(layer)[0].Replace(":", ""));
-                newLayer.Range = int.Parse(Tokenize(layer)[1].Replace(":", ""));
+                newLayer.Layer = int.Parse(layer.Tokenize()[0].Replace(":", ""));
+                newLayer.Range = int.Parse(layer.Tokenize()[1].Replace(":", ""));
 
                 Firewall.Add(newLayer);
             }
 
         }
 
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Severity: {result1}");
 
+            ulong result2 = Problem2();
+            Console.WriteLine($"P2: Minimum delay: {result2}");
+        }
+
+        public int Problem1()
+        {
             int severity = 0;
             foreach (FirewallLayer layer in Firewall)
             {
@@ -34,13 +43,11 @@ namespace AdventOfCode2017.Days
                 }
             }
 
-            Console.WriteLine($"Severity: {severity}");
+            return severity;
         }
 
-        public void Problem2()
+        public ulong Problem2()
         {
-            Console.WriteLine("Problem 2");
-
             ulong delay = 0;
 
             int severity = int.MaxValue;
@@ -61,7 +68,7 @@ namespace AdventOfCode2017.Days
                 delay++;
             }
 
-            Console.WriteLine($"Minimum delay: {delay - 1}");
+            return delay - 1;
         }
 
     }

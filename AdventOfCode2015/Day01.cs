@@ -8,7 +8,6 @@ namespace AdventOfCode2015
         public Day01() : base(2015, 1) { }
         public int Problem1()
         {
-            //string data = ReadFile.ReadText("Day01.txt");
             string data = input.GetDataCached();
 
             return Travel(data);

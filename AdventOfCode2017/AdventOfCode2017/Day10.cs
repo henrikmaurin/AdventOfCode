@@ -1,40 +1,43 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day10 : AdventOfCode2017
+    public class Day10 : DayBase, IDay
     {
         public List<int> Instructions { get; set; }
         public List<int> ComplexInstructions { get; set; }
         public int[] DataArray { get; set; }
-        public Day10()
+        public Day10() : base(2017, 10)
         {
             int size = 256;
 
             DataArray = new int[size];
-            for (int i = 0; i < DataArray.Count(); i++)
-            {
-                DataArray[i] = i;
-            }
 
-            int test = 0 ^ 65 ^ 27 ^ 9 ^ 1 ^ 4 ^ 3 ^ 40 ^ 50 ^ 91 ^ 7 ^ 6 ^ 0 ^ 2 ^ 5 ^ 68 ^ 22;
-
-            Instructions = ReadData("10.txt").Split(",").Select(i => int.Parse(i)).ToList();
-            ComplexInstructions = ReadData("10.txt").ToCharArray().Select(c => (int)c).ToList();
-            // ComplexInstructions.Clear();
+            Instructions = input.GetDataCached().IsSingleLine().Split(",").ToInt().ToList();
+            ComplexInstructions = input.GetDataCached().IsSingleLine().ToCharArray().Select(c => (int)c).ToList();
             ComplexInstructions.Add(17);
             ComplexInstructions.Add(31);
             ComplexInstructions.Add(73);
             ComplexInstructions.Add(47);
             ComplexInstructions.Add(23);
-            //Instructions = "3, 4, 1, 5".Split(",").Select(i => int.Parse(i)).ToList();
         }
 
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Hash is {result1}");
+
+            string result2 = Problem2();
+            Console.WriteLine($"P2: Hash is {result2}");
+        }
+
+        public int Problem1()
+        {
+            DataArray = DataArray.Init();
             int pos = 0;
             int skip = 0;
             foreach (int t in Instructions)
@@ -46,12 +49,12 @@ namespace AdventOfCode2017.Days
                 pos = pos % DataArray.Count();
             }
 
-            Console.WriteLine($"Hash is {DataArray[0] * DataArray[1]}");
+            return DataArray[0] * DataArray[1];
         }
 
-        public void Problem2()
+        public string Problem2()
         {
-            Console.WriteLine("Problem 2");
+            DataArray = DataArray.Init();
             int pos = 0;
             int skip = 0;
 
@@ -84,7 +87,7 @@ namespace AdventOfCode2017.Days
                 hashstring += hexval;
             }
 
-            Console.WriteLine($"Hash is {hashstring.ToLower()}");
+            return hashstring.ToLower();
         }
 
 
@@ -98,6 +101,20 @@ namespace AdventOfCode2017.Days
                 startpos++;
                 endpos--;
             }
+        }
+    }
+
+    public static class ArrayInit
+    {
+        public static int[] Init(this int[] array)
+        {
+            array = new int[array.Length];
+            for (int i = 0; i < array.Count(); i++)
+            {
+                array[i] = i;
+            }
+
+            return array;
         }
     }
 }

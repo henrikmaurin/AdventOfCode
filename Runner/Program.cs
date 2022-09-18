@@ -1,12 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 
+using AdventOfCode;
 using Common;
+using Runner;
 
 Console.WriteLine("Year:");
-string year = Console.ReadLine();
+int year = Console.ReadLine().ToInt();
 Console.WriteLine("Day:");
-int day = int.Parse(Console.ReadLine());
+int day = Console.ReadLine().ToInt();
 
 if (!Run(year, day))
 {
@@ -16,18 +18,9 @@ if (!Run(year, day))
 
 
 
-bool Run(string year, int day)
+bool Run(int year, int day)
 {
-    IYear yearToRun = null;
-    switch (year)
-    {
-        case "2015":
-            yearToRun = new AdventOfCode2015.Year();
-            break;
-        case "2016":
-            yearToRun = new AdventOfCode2016.Year();
-            break;
-    }
+    IYear? yearToRun = DayHelper.GetYear(year);
 
     if (yearToRun == null)
     {

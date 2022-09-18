@@ -1,28 +1,36 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day8 : AdventOfCode2017
+    public class Day08 : DayBase, IDay
     {
-        public Day8()
+        public string[] programlines { get; private set; }
+        Dictionary<string, int> registers;
+        public Day08() : base(2017, 8)
         {
-            programlines = SplitLines(ReadData("8.txt"));
+            programlines = input.GetDataCached().SplitOnNewlineArray();
             registers = new Dictionary<string, int>();
         }
 
-        public string[] programlines { get; private set; }
-        Dictionary<string, int> registers;
-
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Max Value: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Max Value: {result2}");
+        }
+
+        public int Problem1()
+        {
+            registers.Clear();
             foreach (string line in programlines)
             {
-                string[] instruction = Tokenize(line);
+                string[] instruction = line.Tokenize();
 
                 bool state = false;
                 int valueToCompare = 0;
@@ -56,7 +64,7 @@ namespace AdventOfCode2017.Days
                             state = true;
                         break;
                 }
-                if(state)
+                if (state)
                 {
                     if (!registers.ContainsKey(instruction[0]))
                         registers.Add(instruction[0], 0);
@@ -72,20 +80,16 @@ namespace AdventOfCode2017.Days
                 }
             }
 
-            Console.WriteLine($"Max Value: {registers.Max(r=>r.Value)}");
-
-
-
-
+            return registers.Max(r => r.Value);
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
+            registers.Clear();
             int maxvalue = 0;
             foreach (string line in programlines)
             {
-                string[] instruction = Tokenize(line);
+                string[] instruction = line.Tokenize();
 
                 bool state = false;
                 int valueToCompare = 0;
@@ -138,11 +142,7 @@ namespace AdventOfCode2017.Days
                 }
             }
 
-            Console.WriteLine($"Max Value: {maxvalue}");
-
-
-
-
+            return maxvalue;
         }
     }
 }

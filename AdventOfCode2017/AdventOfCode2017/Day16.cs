@@ -1,14 +1,16 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day16 : AdventOfCode2017
+    public class Day16 : DayBase, IDay
     {
         public LinkedList<char> Programs { get; set; }
         public List<string> Moves { get; set; }
-        public Day16()
+        public Day16() : base(2017, 16)
         {
             Programs = new LinkedList<char>();
             for (char c = 'a'; c <= 'p'; c++)
@@ -17,13 +19,20 @@ namespace AdventOfCode2017.Days
                 Programs.AddLast(node);
             }
 
-            Moves = ReadData("16.txt").Split(",").ToList();
-            //Moves = "s1,x3/4,pe/b".Split(",").ToList();
+            Moves = input.GetDataCached().IsSingleLine().Split(",").ToList();
         }
 
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            string result1 = Problem1();
+            Console.WriteLine($"P1: Program order: {result1}");
+
+            string result2 = Problem2();
+            Console.WriteLine($"P2: Program order: {result2}");
+        }
+
+        public string Problem1()
+        {
             foreach (string Move in Moves)
             {
                 char m = Move[0];
@@ -46,14 +55,11 @@ namespace AdventOfCode2017.Days
             LinkedListNode<char> n = Programs.First;
             string result = ToString(n);
 
-            Console.WriteLine($"Program order: {result}");
+            return result;
         }
 
-
-        public void Problem2()
+        public string Problem2()
         {
-            Console.WriteLine("Problem 2");
-
             int counter = 0;
             List<string> history = new List<string>();
             bool found = false;
@@ -84,7 +90,7 @@ namespace AdventOfCode2017.Days
 
 
                 LinkedListNode<char> n = Programs.First;
-                 result = ToString(n);
+                result = ToString(n);
                 Console.WriteLine($"Counter {counter}, {result}");
                 if (history.Contains(result))
                 {
@@ -97,12 +103,12 @@ namespace AdventOfCode2017.Days
                 }
             }
 
-            int first = history.FindIndex(h=>h == result);
+            int first = history.FindIndex(h => h == result);
             int modVal = counter - first;
 
-            string finalVal = history[first + ((1000000000-1) % modVal)];
+            string finalVal = history[(1000000000 - first - 2) % modVal];
 
-            Console.WriteLine($"Program order: {finalVal}");
+            return finalVal;
         }
 
         public string ToString(LinkedListNode<char> n)

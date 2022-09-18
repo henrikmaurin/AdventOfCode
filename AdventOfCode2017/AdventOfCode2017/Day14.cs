@@ -1,60 +1,60 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day14 : AdventOfCode2017
+    public class Day14 : DayBase, IDay
     {
-
-        public Day14()
-        {
-
-
-
-        }
-
         public int[] DataArray { get; set; }
         public int pos = 0;
         public int skip = 0;
+        private string data;
 
-        public void Problem1()
+        public Day14() : base(2017, 14) { data = input.GetDataCached().IsSingleLine(); }
+
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Total bits: {result1}");
 
-            string input = "ljoxqyyw";
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Total regions: {result2}");
+        }
 
+
+        public int Problem1()
+        {
             int bitsum = 0;
 
             for (int i = 0; i < 128; i++)
             {
-                string hash = Hash(input + "-" + i);
+                string hash = Hash(data + "-" + i);
                 bitsum += CountBits(hash);
             }
-            Console.WriteLine($"Total bits {bitsum}");
+            return bitsum;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
 
             int[] map = new int[130 * 130];
-
-            string input = "ljoxqyyw";
 
             int bitsum = 0;
 
             for (int y = 0; y < 128; y++)
             {
-                string hash = Hash(input + "-" + y);
+                string hash = Hash(data + "-" + y);
                 string binarystring = String.Join(String.Empty,
                                                     hash.Select(
                                                     c => Convert.ToString(Convert.ToInt32(c.ToString(), 16), 2).PadLeft(4, '0')
                                                     ));
-         //       Console.WriteLine(binarystring);
+                //       Console.WriteLine(binarystring);
                 for (int x = 0; x < 128; x++)
                 {
-                    if (binarystring.Substring(x, 1) == "1") 
+                    if (binarystring.Substring(x, 1) == "1")
                     {
                         map[x + 1 + (y + 1) * 130] = -1;
                     }
@@ -73,7 +73,7 @@ namespace AdventOfCode2017.Days
                             map[x + y * 130] = map[x - 1 + y * 130];
                         }
                     }
-                    if (map[x + (y - 1) * 130] != 0 && map[x + y * 130] !=0)
+                    if (map[x + (y - 1) * 130] != 0 && map[x + y * 130] != 0)
                     {
                         if (map[x + y * 130] > 0 && map[x + (y - 1) * 130] != map[x + y * 130])
                         {
@@ -100,10 +100,8 @@ namespace AdventOfCode2017.Days
                 }
             }
 
-            Console.WriteLine($"Total regions {map.Where(m => m != 0 && m != -1).Distinct().Count()}");
+            return map.Where(m => m != 0 && m != -1).Distinct().Count();
         }
-
-
 
         public int CountBits(string hash)
         {

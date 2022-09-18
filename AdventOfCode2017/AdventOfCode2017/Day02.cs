@@ -1,23 +1,29 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day2 : AdventOfCode2017
+    public class Day02 : DayBase, IDay
     {
         private string[] lines;
-        public Day2()
+        public Day02() : base(2017, 2) { lines = input.GetDataCached().SplitOnNewlineArray(true); }
+
+        public void Run()
         {
-            lines = SplitLines(ReadData("2.txt"));
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Checksum: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Checksum: {result2}");
         }
 
-        public void Problem1()
+        public int Problem1()
         {
-            Console.WriteLine("Problem 1");
-
             int sum = 0;
-    
+
             foreach (string line in lines)
             {
                 List<int> numbers = line.Split("\t").Select(t => int.Parse(t)).ToList();
@@ -25,15 +31,11 @@ namespace AdventOfCode2017.Days
                 sum += numbers.Max() - numbers.Min();
             }
 
-
-
-            Console.WriteLine($"Checksum: {sum}");
+            return sum;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
-
             int sum = 0;
 
             foreach (string line in lines)
@@ -51,9 +53,7 @@ namespace AdventOfCode2017.Days
 
                 }
             }
-
-            Console.WriteLine($"Checksum: {sum}");
-
+            return sum;
         }
     }
 }

@@ -1,20 +1,37 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day7 : AdventOfCode2017
+    public class Day07 : DayBase, IDay
     {
+        private string[] data;
         public List<Tower> Towers { get; set; }
-        public Day7()
+        public Day07() : base(2017, 7)
         {
-            string[] data = SplitLines(ReadData("7.txt"));
+            data = input.GetDataCached().SplitOnNewlineArray();
+            CreateTowers();
+        }
+
+        public void Run()
+        {
+            string result1 = Problem1();
+            Console.WriteLine($"P1: Tower {result1} is the bottom one");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Tower is unbalanced, Correct weight should be {result2}");
+        }
+
+        public void CreateTowers()
+        {
             Towers = new List<Tower>();
 
             foreach (string line in data)
             {
-                string[] d = Tokenize(line);
+                string[] d = line.Tokenize();
                 Tower newTower = new Tower();
                 newTower.Name = d[0];
                 newTower.Weight = int.Parse(d[1].Replace("(", "").Replace(")", ""));
@@ -36,9 +53,9 @@ namespace AdventOfCode2017.Days
             }
         }
 
-        public void Problem1()
+
+        public string Problem1()
         {
-            Console.WriteLine("Problem 1");
             foreach (Tower t in Towers)
             {
                 if (t.TowerNames.Count > 0)
@@ -51,21 +68,15 @@ namespace AdventOfCode2017.Days
             }
 
             Tower answer = Towers.Where(t => t.NotBottom == false).Single();
-            Console.WriteLine($"Tower {answer.Name} is the bottom one");
+            return answer.Name;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
-
             int[] unbalanced = Towers.Where(t => t.Unbalanced() != 0).Select(t => t.Unbalanced()).ToArray();
 
-
-            Console.WriteLine($"Tower  is unbalanced, Correct weight should be {unbalanced.First()}");
-
+            return unbalanced.First();
         }
-
-
     }
 
     public class Tower

@@ -1,21 +1,30 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Linq;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day1 : AdventOfCode2017
+    public class Day01 : DayBase, IDay
     {
-        public Day1()
+        public Day01() : base(2017, 1)
         {
-            string data = ReadData("1.txt");
+            string data = input.GetDataCached().IsSingleLine();
             digits = data.ToCharArray().Select(d => int.Parse(string.Empty + d)).ToArray();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Captcha: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: New Captcha {result2}");
         }
 
         public int[] digits { get; }
 
-        public void Problem1()
+        public int Problem1()
         {
-            Console.WriteLine("Problem 1");
             int sum = 0;
 
             int lastDigit = digits.Last();
@@ -29,22 +38,21 @@ namespace AdventOfCode2017.Days
                 lastDigit = digit;
             }
 
-            Console.WriteLine($"Captcha: {sum}");
-
+            return sum;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 1");
             int sum = 0;
             for (int i = 0; i < digits.Length; i++)
             {
-                if(digits[i]==digits[(i+digits.Length/2)% digits.Length])
+                if (digits[i] == digits[(i + digits.Length / 2) % digits.Length])
                 {
                     sum += digits[i];
                 }
             }
-            Console.WriteLine($"Captcha: {sum}");
+
+            return sum;
         }
 
     }

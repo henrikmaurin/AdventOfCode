@@ -90,12 +90,12 @@ namespace AdventOfCode
 			return strings;
 		}
 
-		public static List<string> SplitOnNewline(this string me, bool removeEmptyLines = false)
+		public static List<string> SplitOnNewline(this string me, bool removeEmptyLines = true)
 		{
 			return SplitOnNewlineArray(me, removeEmptyLines).ToList();
 		}
 
-		public static string[] SplitOnNewlineArray(this string me, bool removeEmptyLines = false)
+		public static string[] SplitOnNewlineArray(this string me, bool removeEmptyLines = true)
 		{
 			var retval = me.Split(
 			new[] { "\r\n", "\r", "\n" },
@@ -113,5 +113,9 @@ namespace AdventOfCode
 			return me.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
 		}
 
+		public static string[] Tokenize(this string indata)
+		{
+			return indata.Split(" ");
+		}
 	}
 }

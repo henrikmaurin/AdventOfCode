@@ -1,21 +1,30 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day6 : AdventOfCode2017
+    public class Day06 : DayBase, IDay
     {
-        public Day6()
-        {
-            banks = ReadData("6.txt").Split("\t").Select(d => int.Parse(d)).ToList();
-            combos = new List<string>();
-        }
         public List<int> banks { get; set; }
         public List<string> combos { get; set; }
-        public void Problem1()
+        public Day06() : base(2017, 6)
         {
-            Console.WriteLine("Problem 1");
+            banks = input.GetDataCached().IsSingleLine().Split("\t").ToInt().ToList();
+            combos = new List<string>();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Number of Rounds: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Number of Cycles: {result2}");
+        }
+        public int Problem1()
+        {
             combos.Add(string.Join(",", banks));
             int rounds = 0;
             bool done = false;
@@ -44,15 +53,11 @@ namespace AdventOfCode2017.Days
                 }
             }
 
-            Console.WriteLine($"Number of Rounds: {rounds}");
-
-
-
+            return rounds;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 1");
             combos.Add(string.Join(",", banks));
             int rounds = 0;
             int cycles = 0;
@@ -108,12 +113,7 @@ namespace AdventOfCode2017.Days
                 }
             }
 
-
-
-            Console.WriteLine($"Number of Cycles: {cycles}");
-
-
-
+            return cycles;
         }
     }
 }

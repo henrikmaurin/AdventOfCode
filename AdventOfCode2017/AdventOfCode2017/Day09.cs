@@ -1,20 +1,28 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Linq;
 
-namespace AdventOfCode2017.Days
+namespace AdventOfCode2017
 {
-    public class Day9 : AdventOfCode2017
+    public class Day09 : DayBase, IDay
     {
         public char[] dataStream { get; set; }
-        public Day9()
+        public Day09() : base(2017, 9)
         {
-            dataStream = ReadData("9.txt").ToCharArray();
-            //dataStream = "{{<a!>},{<a!>},{<a!>},{<ab>}}".ToCharArray();
+            dataStream = input.GetDataCached().IsSingleLine().ToCharArray();
+        }
+        public void Run()
+        {
+            ulong result1 = Problem1();
+            Console.WriteLine($"P1: Total score: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Total garbage: {result2}");
         }
 
-        public void Problem1()
+        public ulong Problem1()
         {
-            Console.WriteLine("Problem 1");
             ulong score = 0;
             int depth = 0;
             bool isGarbage = false;
@@ -34,7 +42,7 @@ namespace AdventOfCode2017.Days
                         case '}':
                             score += (ulong)depth--;
                             break;
-                  
+
                     }
                 }
                 else if (dataStream[i] == '>')
@@ -45,15 +53,11 @@ namespace AdventOfCode2017.Days
                     i++;
             }
 
-
-            Console.WriteLine($"Total score: {score}");
-
-
-
+            return score;
         }
-        public void Problem2()
+
+        public int Problem2()
         {
-            Console.WriteLine("Problem 1");
             ulong score = 0;
             int depth = 0;
             bool isGarbage = false;
@@ -87,13 +91,7 @@ namespace AdventOfCode2017.Days
                     garbagechars++;
             }
 
-
-            Console.WriteLine($"Total garbage: {garbagechars}");
-
-
-
+            return garbagechars;
         }
     }
-
-
 }

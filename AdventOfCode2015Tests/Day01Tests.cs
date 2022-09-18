@@ -26,7 +26,7 @@ namespace AdventOfCode2015Tests
         [TestMethod]
         public void TestMethod2()
         {
-             string testdata = "()()";
+            string testdata = "()()";
 
             int result = day.Travel(testdata);
             Assert.AreEqual(0, result);
@@ -89,7 +89,7 @@ namespace AdventOfCode2015Tests
         [TestMethod]
         public void TestMethod9()
         {
-             string testdata = ")())())";
+            string testdata = ")())())";
 
             int result = day.Travel(testdata);
             Assert.AreEqual(-3, result);
@@ -98,9 +98,9 @@ namespace AdventOfCode2015Tests
         [TestMethod]
         public void TestMethod10()
         {
-             string testdata = ")())())";
+            string testdata = ")())())";
 
-            int result = day.TravelTo(testdata,-1);
+            int result = day.TravelTo(testdata, -1);
             Assert.AreEqual(1, result);
         }
 
