@@ -1,5 +1,4 @@
-﻿using AdventOfCode2019.Days;
-using System;
+﻿using System;
 
 namespace AdventOfCode2019
 {
@@ -19,7 +18,7 @@ namespace AdventOfCode2019
                 switch (choice)
                 {
                     case "1":
-                        Day1 day1 = new Day1();
+                        Day01 day1 = new Day01();
                         Console.WriteLine("Problem 1");
                         Console.WriteLine($"Total fuel: {day1.Problem1()}");
                         Console.WriteLine("Problem 2");
@@ -27,7 +26,7 @@ namespace AdventOfCode2019
                         day1 = null;
                         break;
                     case "2":
-                        Day2 day2 = new Day2();
+                        Day02 day2 = new Day02();
                         Console.WriteLine("Problem 1");
                         Console.WriteLine($"opCodes[0]: {day2.Problem1()}");
                         Console.WriteLine("Problem 2");
@@ -35,7 +34,7 @@ namespace AdventOfCode2019
                         day2 = null;
                         break;
                     case "3":
-                        Day3 day3 = new Day3();
+                        Day03 day3 = new Day03();
                         Console.WriteLine("Problem 1");
                         Console.WriteLine($"Distance: {day3.Problem1()}");
                         Console.WriteLine("Problem 2");
@@ -43,7 +42,7 @@ namespace AdventOfCode2019
                         day3 = null;
                         break;
                     case "4":
-                        Day4 day4 = new Day4();
+                        Day04 day4 = new Day04();
                         Console.WriteLine("Problem 1");
                         Console.WriteLine($"Number of Passwords: {day4.Problem1()}");
                         Console.WriteLine("Problem 2");
@@ -51,7 +50,7 @@ namespace AdventOfCode2019
                         day4 = null;
                         break;
                     case "5":
-                        Day5 day5 = new Day5();
+                        Day05 day5 = new Day05();
                         Console.WriteLine("Problem 1");
                         Console.WriteLine($"Diag Code: {day5.Problem1()}");
                         Console.WriteLine("Problem 2");
@@ -59,7 +58,7 @@ namespace AdventOfCode2019
                         day5 = null;
                         break;
                     case "6":
-                        Day6 day6 = new Day6();
+                        Day06 day6 = new Day06();
                         Console.WriteLine("Problem 1");
                         Console.WriteLine($"Number of orbits: {day6.Problem1()}");
                         Console.WriteLine("Problem 2");
@@ -67,15 +66,15 @@ namespace AdventOfCode2019
                         day6 = null;
                         break;
                     case "7":
-                        Day7 day7 = new Day7();
+                        Day07 day7 = new Day07();
                         Console.WriteLine("Problem 1");
-                        Console.WriteLine($"Number of orbits: {day7.Problem1()}");
+                        Console.WriteLine($"Highest signal: {day7.Problem1()}");
                         Console.WriteLine("Problem 2");
-                        Console.WriteLine($"Number of jumps: {day7.Problem2()}");
+                        Console.WriteLine($"Highest signal: {day7.Problem2()}");
                         day7 = null;
                         break;
                     case "8":
-                        Day8 day8 = new Day8();
+                        Day08 day8 = new Day08();
                         Console.WriteLine("Problem 1");
                         Console.WriteLine($"Checksum: {day8.Problem1()}");
                         Console.WriteLine("Problem 2");
@@ -83,9 +82,9 @@ namespace AdventOfCode2019
                         day8 = null;
                         break;
                     case "9":
-                        Day9 day9 = new Day9();
+                        Day09 day9 = new Day09();
                         Console.WriteLine("Problem 1");
-                        Console.WriteLine($"Checksum: {day9.Problem1()}");
+                        Console.WriteLine($"BOOST keycode: {day9.Problem1()}");
                         Console.WriteLine("Problem 2");
                         Console.WriteLine($"Checksum: {day9.Problem2()}");
                         day9 = null;

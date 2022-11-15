@@ -1,11 +1,12 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2019.Days
+namespace AdventOfCode2019
 {
-    public class Day3 : Days
+    public class Day03 : DayBase, IDay
     {
         private HasWireOfType[,] map;
         private Coord pos;
@@ -15,13 +16,20 @@ namespace AdventOfCode2019.Days
         private Coord origo;
         int steps = 0;
 
-        public Day3() : base()
+        public Day03() : base(2019, 3)
         {
-            string filename = Path.Combine(path, "Day3\\Wires.txt");
-            wiredata = File.ReadAllText(filename).Split(Environment.NewLine).ToList();
+            wiredata = input.GetDataCached().SplitOnNewline().ToList();
 
             pos = new Coord { X = 0, Y = 0 };
 
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Distance: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Distance: {result2}");
         }
 
         public int Problem1()

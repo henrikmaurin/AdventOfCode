@@ -1,24 +1,32 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2019.Days
+namespace AdventOfCode2019
 {
-    public class Day6 : Days
+    public class Day06 : DayBase, IDay
     {
         private List<string> orbitData;
         private List<Planet> planets;
         private List<Planet> you;
         private List<Planet> san;
 
-        public Day6() : base()
+        public Day06() : base(2019, 6)
         {
-            string filename = Path.Combine(path, "Day6\\Planets.txt");
-            orbitData = File.ReadAllText(filename).Split(Environment.NewLine).ToList();
+            orbitData = input.GetDataCached().SplitOnNewline();
             BuildMap();
         }
 
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Number of orbits: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Number of jumps: {result2}");
+        }
         public int Problem1()
         {
             int total = 0;
@@ -62,7 +70,7 @@ namespace AdventOfCode2019.Days
                 sancount++;
             }
 
-            return youcount + sancount-2;
+            return youcount + sancount - 2;
         }
 
         public int Traverse(Planet p, string buildFor = null)
@@ -75,7 +83,7 @@ namespace AdventOfCode2019.Days
 
             if (p.orbits != null)
             {
-                return 1 + Traverse(p.orbits,buildFor);
+                return 1 + Traverse(p.orbits, buildFor);
             }
             return 0;
         }

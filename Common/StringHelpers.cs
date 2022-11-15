@@ -26,6 +26,10 @@ namespace AdventOfCode
 		{
 			return s.Select(str => str.ToInt()).ToArray();
 		}
+		public static List<int> ToInt(this List<string> s)
+		{
+			return s.Select(str => str.ToInt()).ToList();
+		}
 
 		public static int ToInt(this char c)
 		{
@@ -116,6 +120,10 @@ namespace AdventOfCode
 		public static string[] Tokenize(this string indata)
 		{
 			return indata.Split(" ");
+		}
+		public static string[] Tokenize(this string indata, char tokenizer)
+		{
+			return indata.Split(tokenizer);
 		}
 	}
 }

@@ -1,25 +1,33 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
-namespace AdventOfCode2019.Days
+namespace AdventOfCode2019
 {
-    public class Day7 : Days
+    public class Day07 : DayBase, IDay
     {
-        private Int64[] opCodes;
+        private long[] opCodes;
 
-        public Day7() : base()
+        public Day07() : base(2019, 7)
         {
-            string filename = Path.Combine(path, "Day7\\Program.txt");
-            opCodes = File.ReadAllText(filename).Split(",").Select(l => Int64.Parse(l)).ToArray();
+            opCodes = input.GetDataCached().Tokenize(',').ToLong();
         }
 
-        public Int64 Problem1()
+        public void Run()
+        {
+            long result1 = Problem1();
+            Console.WriteLine($"P1: Highest signal: {result1}");
+
+            long result2 = Problem2();
+            Console.WriteLine($"P2: Highest signal: {result2}");
+        }
+
+        public long Problem1()
         {
             IntcodeComputer computer = new IntcodeComputer();
-            List<Int64> output = new List<Int64>();
-            Int64 max = 0;
+            List<long> output = new List<long>();
+            long max = 0;
             for (int ph1 = 0; ph1 < 5; ph1++)
                 for (int ph2 = 0; ph2 < 5; ph2++)
                     for (int ph3 = 0; ph3 < 5; ph3++)
@@ -28,26 +36,26 @@ namespace AdventOfCode2019.Days
                             {
                                 if (ph2 != ph1 && ph3 != ph1 && ph3 != ph2 && ph4 != ph1 && ph4 != ph2 && ph4 != ph3 && ph5 != ph1 && ph5 != ph2 && ph5 != ph3 && ph5 != ph4)
                                 {
-                                    Int64 outputVal;
+                                    long outputVal;
                                     computer.InitRam(opCodes);
                                     output.Clear();
-                                    computer.Run(new List<Int64> { ph1, 0 }, output);
+                                    computer.Run(new List<long> { ph1, 0 }, output);
                                     outputVal = output[0];
                                     output.Clear();
                                     computer.InitRam(opCodes);
-                                    computer.Run(new List<Int64> { ph2, outputVal }, output);
+                                    computer.Run(new List<long> { ph2, outputVal }, output);
                                     outputVal = output[0];
                                     output.Clear();
                                     computer.InitRam(opCodes);
-                                    computer.Run(new List<Int64> { ph3, outputVal }, output);
+                                    computer.Run(new List<long> { ph3, outputVal }, output);
                                     outputVal = output[0];
                                     output.Clear();
                                     computer.InitRam(opCodes);
-                                    computer.Run(new List<Int64> { ph4, outputVal }, output);
+                                    computer.Run(new List<long> { ph4, outputVal }, output);
                                     outputVal = output[0];
                                     output.Clear();
                                     computer.InitRam(opCodes);
-                                    computer.Run(new List<Int64> { ph5, outputVal }, output);
+                                    computer.Run(new List<long> { ph5, outputVal }, output);
                                     if (output[0] > max)
                                         max = output[0];
 
@@ -61,15 +69,15 @@ namespace AdventOfCode2019.Days
             return max;
         }
 
-        public Int64 Problem2()
+        public long Problem2()
         {
             IntcodeComputer computer1 = new IntcodeComputer();
             IntcodeComputer computer2 = new IntcodeComputer();
             IntcodeComputer computer3 = new IntcodeComputer();
             IntcodeComputer computer4 = new IntcodeComputer();
             IntcodeComputer computer5 = new IntcodeComputer();
-            List<Int64> output = new List<Int64>();
-            Int64 max = 0;
+            List<long> output = new List<long>();
+            long max = 0;
             for (int ph1 = 5; ph1 < 10; ph1++)
                 for (int ph2 = 5; ph2 < 10; ph2++)
                     for (int ph3 = 5; ph3 < 10; ph3++)
@@ -78,7 +86,7 @@ namespace AdventOfCode2019.Days
                             {
                                 if (ph2 != ph1 && ph3 != ph1 && ph3 != ph2 && ph4 != ph1 && ph4 != ph2 && ph4 != ph3 && ph5 != ph1 && ph5 != ph2 && ph5 != ph3 && ph5 != ph4)
                                 {
-                                    Int64 outputVal;
+                                    long outputVal;
                                     computer1.InitRam(opCodes);
                                     computer2.InitRam(opCodes);
                                     computer3.InitRam(opCodes);
@@ -86,19 +94,19 @@ namespace AdventOfCode2019.Days
                                     computer5.InitRam(opCodes);
 
                                     output.Clear();
-                                    computer1.Run(new List<Int64> { ph1, 0 }, output);
+                                    computer1.Run(new List<long> { ph1, 0 }, output);
                                     outputVal = output[0];
                                     output.Clear();
-                                    computer2.Run(new List<Int64> { ph2, outputVal }, output);
+                                    computer2.Run(new List<long> { ph2, outputVal }, output);
                                     outputVal = output[0];
                                     output.Clear();
-                                    computer3.Run(new List<Int64> { ph3, outputVal }, output);
+                                    computer3.Run(new List<long> { ph3, outputVal }, output);
                                     outputVal = output[0];
                                     output.Clear();
-                                    computer4.Run(new List<Int64> { ph4, outputVal }, output);
+                                    computer4.Run(new List<long> { ph4, outputVal }, output);
                                     outputVal = output[0];
                                     output.Clear();
-                                    computer5.Run(new List<Int64> { ph5, outputVal }, output);
+                                    computer5.Run(new List<long> { ph5, outputVal }, output);
                                     outputVal = output[0];
 
                                     while (computer1.running)

@@ -1,18 +1,25 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
-namespace AdventOfCode2019.Days
+namespace AdventOfCode2019
 {
-    public class Day1 : Days
+    public class Day01 : DayBase, IDay
     {
         private List<int> masses;
 
-        public Day1() : base()
+        public Day01() : base(2019, 1)
         {
-            string filename = Path.Combine(path, "Day1\\Masses.txt");
-            masses = File.ReadAllText(filename).Split(Environment.NewLine).Select(l => int.Parse(l)).ToList();
+            masses = input.GetDataCached().SplitOnNewline().ToInt();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Sum of fuel: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Total sum of fuel: {result2}");
         }
 
         public int Problem1()

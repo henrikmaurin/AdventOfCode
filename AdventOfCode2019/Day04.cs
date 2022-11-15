@@ -1,15 +1,28 @@
-﻿namespace AdventOfCode2019.Days
+﻿using AdventOfCode;
+using Common;
+using System;
+
+namespace AdventOfCode2019
 {
-    public class Day4 : Days
+    public class Day04 : DayBase, IDay
     {
         private int min;
         private int max;
-        public Day4()
-        {
-            min = 271973;
-            max = 785961;
-        }
 
+        public Day04() : base(2019, 4)
+        {
+            int[] data = input.GetDataCached().IsSingleLine().Tokenize('-').ToInt();
+            min = data[0];
+            max = data[1];
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Number of Passwords: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Number of Passwords: {result2}");
+        }
         public int Problem1()
         {
             int count = 0;
@@ -82,7 +95,7 @@
                 else
                 {
                     if (count == 2)
-                         return true;
+                        return true;
                     count = 1;
                 }
                 lastchar = c;

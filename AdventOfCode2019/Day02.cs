@@ -1,20 +1,27 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using AdventOfCode;
+using Common;
+using System;
 
-namespace AdventOfCode2019.Days
+namespace AdventOfCode2019
 {
-    public class Day2 : Days
+    public class Day02 : DayBase, IDay
     {
-        private Int64[] opCodes;
+        private long[] opCodes;
 
-        public Day2() : base()
+        public Day02() : base(2019, 2)
         {
-            string filename = Path.Combine(path, "Day2\\Program.txt");
-            opCodes = File.ReadAllText(filename).Split(",").Select(l => Int64.Parse(l)).ToArray();
+            opCodes = input.GetDataCached().Tokenize(',').ToLong();
+        }
+        public void Run()
+        {
+            long result1 = Problem1();
+            Console.WriteLine($"P1: opCodes[0]: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: opCodes[0]: {result2}");
         }
 
-        public Int64 Problem1()
+        public long Problem1()
         {
             IntcodeComputer computer = new IntcodeComputer();
 

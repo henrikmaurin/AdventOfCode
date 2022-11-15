@@ -1,20 +1,19 @@
-﻿using System;
-using System.IO;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Linq;
 
-namespace AdventOfCode2019.Days
+namespace AdventOfCode2019
 {
-    public class Day10 : Days
+    public class Day10 : DayBase, IDay
     {
         private char[] map;
         private char[] tempMap;
         private int sizeX, sizeY;
 
-        public Day10() : base()
+        public Day10() : base(2019, 10)
         {
-
-            string filename = Path.Combine(path, "Day10\\Map.txt");
-            string[] textLines = File.ReadAllText(filename).Split(Environment.NewLine).ToArray();
+            string[] textLines = input.GetDataCached().SplitOnNewlineArray();
 
             sizeX = textLines[0].Length;
             sizeY = textLines.Length;
@@ -24,6 +23,14 @@ namespace AdventOfCode2019.Days
             for (int y = 0; y < sizeY; y++)
                 for (int x = 0; x < sizeX; x++)
                     map[x + y * sizeX] = textLines[y][x];
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Best: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Coordinate: {result2}");
         }
 
         public int Problem1()
@@ -85,7 +92,7 @@ namespace AdventOfCode2019.Days
                 {
                     if (tempMap[x + y * sizeX] == '#')
                     {
-                        double a = 2 * Math.PI - Math.Atan2(y - py, x - px) - Math.PI/2;
+                        double a = 2 * Math.PI - Math.Atan2(y - py, x - px) - Math.PI / 2;
                         angles[x + y * sizeX] = a;
 
                     }
