@@ -1,10 +1,6 @@
 ﻿using AdventOfCode;
 using Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021
 {
@@ -12,10 +8,14 @@ namespace AdventOfCode2021
     {
         private List<Token> tokens;
         //private TreeBranch topBranch;
+        public Day18()
+        {
+
+        }
 
         public int Problem1()
         {
-            string[] data = input.GetDataCached(2021, 18).SplitOnNewlineArray().Where(s => !string.IsNullOrEmpty(s)).ToArray();
+            string[] data = input.GetDataCached().SplitOnNewlineArray().Where(s => !string.IsNullOrEmpty(s)).ToArray();
             AddAllNumbers(data);
 
             string resultString = ToString();
@@ -28,7 +28,7 @@ namespace AdventOfCode2021
         }
         public int Problem2()
         {
-            string[] data = input.GetDataCached(2021, 18).SplitOnNewlineArray().Where(s => !string.IsNullOrEmpty(s)).ToArray();
+            string[] data = input.GetDataCached().SplitOnNewlineArray().Where(s => !string.IsNullOrEmpty(s)).ToArray();
             return FindMax(data);
         }
 
@@ -63,7 +63,7 @@ namespace AdventOfCode2021
             }
             return treeBranch;
         }
-              
+
 
         public TreeBranch AddToTree(TreeBranch first, TreeBranch second)
         {
@@ -88,7 +88,7 @@ namespace AdventOfCode2021
                     ParseUntilDone();
                     int result = ParseToTree(ToString()).Magnitude();
                     if (result > maxVal)
-                        maxVal= result;
+                        maxVal = result;
                 }
             }
             return maxVal;

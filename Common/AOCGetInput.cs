@@ -29,10 +29,23 @@
         {
             string path = Path.Combine("data", $"{_year}");
             string file = Path.Combine(path, $"Day{_day.ToString("D2")}.txt");
-            if (File.Exists(file))
-                return File.ReadAllText(file);
+            string? fileContent = null;
 
-            string fileContent = GetData();
+            if (File.Exists(file))
+            {
+                fileContent = File.ReadAllText(file);
+            }
+
+            if (string.IsNullOrEmpty(fileContent))
+                fileContent = GetData();
+
+            if (fileContent.StartsWith("Puzzle inputs differ by user."))
+            {
+                if (File.Exists(file))
+                    File.Delete(file);
+                throw new Exception("Wrong Cookie");
+            }
+
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
@@ -40,10 +53,5 @@
             File.WriteAllText(file, fileContent);
             return fileContent;
         }
-    }
-
-    public class AdventOfCodeSecrets
-    {
-        public string Cookie { get; set; }
     }
 }
