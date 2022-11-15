@@ -1,29 +1,19 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day25 : AdventOfCode2018
+    public class Day25 : DayBase, IDay
     {
         public List<Constellation> Constellations { get; set; }
         public List<Point4D> Points { get; set; }
-        public Day25()
+        public Day25() : base(2018, 1)
         {
             Constellations = new List<Constellation>();
-            string[] data = SplitLines(ReadData("25.txt"));
- /*           data = SplitLines(@"-1,2,2,0
-                                0,0,2,-2
-                                0,0,0,-2
-                                -1,2,0,0
-                                -2,-2,-2,2
-                                3,0,2,-1
-                                -1,3,2,2
-                                -1,0,-1,0
-                                0,2,1,-2
-                                3,0,0,0");
-*/
-
+            string[] data = input.GetDataCached().SplitOnNewlineArray();
 
             Points = new List<Point4D>();
             int counter = 1;
@@ -38,9 +28,17 @@ namespace AdventOfCode2018.Days
             }
         }
 
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: {result1} Constellations");
+
+            //  int result2 = Problem2();
+            //   Console.WriteLine($"P2: {result2}");
+        }
+
+        public int Problem1()
+        {
             foreach (Point4D p in Points)
             {
                 bool found = false;
@@ -92,7 +90,7 @@ namespace AdventOfCode2018.Days
 
             int count = Constellations.Where(c => c.Points.Count > 0).Count();
 
-            Console.WriteLine($"{count} Constellations");
+            return count;
 
         }
 

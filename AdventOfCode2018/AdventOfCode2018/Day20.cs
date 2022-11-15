@@ -1,39 +1,45 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day20 : AdventOfCode2018
+    public class Day20 : DayBase, IDay
     {
         public string Instructions { get; set; }
         public List<Room> Map { get; set; }
-        public Day20()
+        public Day20() : base(2018, 20)
         {
-            Instructions = ReadData("20.txt");
-            //Instructions = "^WSSEESWWWNW(S|NENNEEEENN(ESSSSW(NWSW|SSEN)|WSWWN(E|WWS(E|SS))))$";
+            Instructions = input.GetDataCached().IsSingleLine();
             Map = new List<Room>();
 
         }
-
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Max: {result1}");
 
+            int result2 = Problem2();
+            Console.WriteLine($"P2: {result2} is more than thousand doors away");
+        }
+
+        public int Problem1()
+        {
             BuildMap(Instructions, 0, 0, string.Empty);
 
- //           Printmap();
+            //  Printmap();
 
             CalcDist();
 
-            Console.WriteLine($"Max: {Map.Max(m => m.Distance)}");
+            return Map.Max(m => m.Distance);
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem2");
-
-            Console.WriteLine($"{Map.Where(m => m.Distance >= 1000).Count()} has is more than thousand doors away");
+            return Map.Where(m => m.Distance >= 1000).Count();
+            ;
         }
 
         public void CalcDist()
@@ -138,7 +144,7 @@ namespace AdventOfCode2018.Days
                         pos++;
                         int length = FindEnd(instructions.Substring(pos));
                         BuildMap(instructions.Substring(pos, length - 1), x, y, string.Empty);
-                        pos += length-1;
+                        pos += length - 1;
                         break;
                     case '|':
                         if (pos != instructions.Length - 1)

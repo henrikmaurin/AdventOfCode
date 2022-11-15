@@ -1,19 +1,26 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day7 : AdventOfCode2018
+    public class Day07 : DayBase, IDay
     {
-        public Day7()
+        public Day07() : base(2018, 7)
+        {
+
+        }
+
+        public void InitInstructions()
         {
             Instructions = new List<Instruction>();
-            List<string> textInstructions = new List<string>(SplitLines(ReadData("7.txt")));
+            List<string> textInstructions = input.GetDataCached().SplitOnNewline();
             foreach (string textInstruction in textInstructions)
             {
-                char step = Tokenize(textInstruction)[7].ToArray()[0];
-                char requires = Tokenize(textInstruction)[1].ToArray()[0];
+                char step = textInstruction.Tokenize()[7].ToArray()[0];
+                char requires = textInstruction.Tokenize()[1].ToArray()[0];
                 if (!Instructions.Any(i => i.Step == step))
                 {
                     Instruction instruction = new Instruction();
@@ -35,10 +42,21 @@ namespace AdventOfCode2018.Days
                 }
             }
         }
+
+        public void Run()
+        {
+            string result1 = Problem1();
+            Console.WriteLine($"P1: Order to complete: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Time to complete: {result2}");
+        }
         public List<Instruction> Instructions { get; set; }
 
-        public void Problem1()
+        public string Problem1()
         {
+            InitInstructions();
+
             string result = string.Empty;
             while (Instructions.Any(i => i.Done == false))
             {
@@ -62,12 +80,13 @@ namespace AdventOfCode2018.Days
                 result += next.Step;
             }
 
-            Console.WriteLine($"Sequence: {result}");
-
+            return result;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
+            InitInstructions();
+
             int seconds = 0;
             int workers = 5;
             int staticwait = 60;
@@ -99,8 +118,7 @@ namespace AdventOfCode2018.Days
                 seconds++;
             }
 
-            Console.WriteLine($"Time Spent: {seconds}");
-
+            return seconds;
         }
 
     }

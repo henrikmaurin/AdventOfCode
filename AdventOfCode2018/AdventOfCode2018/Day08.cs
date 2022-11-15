@@ -1,37 +1,38 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day8 : AdventOfCode2018
+    public class Day08 : DayBase, IDay
     {
-        public Day8()
+        public Day08() : base(2018, 8)
         {
-            data = new Queue<int>(Tokenize(ReadData("8.txt")).Select(d => int.Parse(d)).ToList());
+            data = new Queue<int>(input.GetDataCached().IsSingleLine().Tokenize().Select(d => int.Parse(d)).ToList());
             Licenses = new List<LicenceData>();
             counter = 0;
             totalsum = 0;
             TopData = Parse(data);
         }
 
-
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Total sum:{result1}");
 
-            
-
-            Console.WriteLine($"Resultat: {totalsum}");
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Summa: {result2}");
+        }
+        public int Problem1()
+        {
+            return totalsum;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
-
-            int sum = GetValue(TopData);
-
-            Console.WriteLine($"Summa: {sum}");
+            return GetValue(TopData);
         }
 
 
@@ -54,7 +55,7 @@ namespace AdventOfCode2018.Days
             int metaDataEntries = Data.Dequeue();
             for (int i = 0; i < nodes; i++)
             {
-                newData.Data.Add(Parse( Data));
+                newData.Data.Add(Parse(Data));
             }
             for (int i = 0; i < metaDataEntries; i++)
             {
@@ -73,7 +74,7 @@ namespace AdventOfCode2018.Days
                 return data.Metadata.Sum();
 
 
-            foreach(int metadata in data.Metadata)
+            foreach (int metadata in data.Metadata)
             {
                 if (data.Data.Count() >= metadata)
                     sum += GetValue(data.Data[metadata - 1]);
@@ -90,7 +91,7 @@ namespace AdventOfCode2018.Days
         public int Id { get; set; }
         public List<int> Metadata { get; set; }
         public List<LicenceData> Data { get; set; }
-      
+
 
     }
 

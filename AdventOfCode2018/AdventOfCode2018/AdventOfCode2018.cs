@@ -1,5 +1,4 @@
-﻿using AdventOfCode2018.Days;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -107,7 +106,7 @@ namespace AdventOfCode2018
                            diff = day15.Problem2(elfpower);
                        }
                        Console.WriteLine($"Minimum Elfpower {elfpower}");
-                       */
+                       
 
 
             Console.WriteLine("Day 16");
@@ -115,7 +114,7 @@ namespace AdventOfCode2018
             day16.Problem1();
             //day16 = new Day16();
             day16.Problem2();
-
+*/
             /*     Console.WriteLine("Day 17");
                  Day17 day17 = new Day17();
                  day17.Problem1();

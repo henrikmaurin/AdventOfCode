@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdventOfCode;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -72,6 +73,11 @@ namespace AdventOfCode2018
         public void LoadAssembyCode(string file)
         {
             Instructions = Regex.Split(File.ReadAllText(file), "\r\n|\r|\n").ToList();
+            Assemble();
+        }
+        public void LoadAssembyCodeContents(string contents)
+        {
+            Instructions = contents.SplitOnNewline();
             Assemble();
         }
 

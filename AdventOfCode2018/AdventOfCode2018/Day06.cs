@@ -1,16 +1,25 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day6 : AdventOfCode2018
+    public class Day06 : DayBase, IDay
     {
-        public Day6()
+        public Day06() : base(2018, 6)
         {
-            data = ReadData("6.txt");
+            data = input.GetDataCached().SplitOnNewlineArray();
         }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Largest Area: {result1}");
 
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Total Area: {result2}");
+        }
         public class Coordinate
         {
             public int Id { get; set; }
@@ -18,12 +27,10 @@ namespace AdventOfCode2018.Days
             public int Y { get; set; }
         }
 
-        public string data { get; private set; }
+        public string[] data { get; private set; }
 
-        public void Problem1()
+        public int Problem1()
         {
-            Console.WriteLine("Problem 1");
-
             List<Coordinate> coordinates = new List<Coordinate>();
             int[] counters = new int[51];
 
@@ -32,7 +39,7 @@ namespace AdventOfCode2018.Days
             int[,] map = new int[maxsize * 2, maxsize * 2];
 
             int place = 1;
-            foreach (string coords in SplitLines(data))
+            foreach (string coords in data)
             {
                 int x = int.Parse(coords.Split(", ")[0]);
                 int y = int.Parse(coords.Split(", ")[1]);
@@ -105,18 +112,10 @@ namespace AdventOfCode2018.Days
             var l = theRest.GroupBy(n => n).Select(n => new { n.Key, Count = n.Count() }).OrderByDescending(c => c.Count).ToList();
             int largest = theRest.GroupBy(n => n).Select(n => new { n.Key, Count = n.Count() }).OrderByDescending(c => c.Count).Select(c => c.Count).First(); ;
 
-
-
-
-            Console.WriteLine($"Largest Area: {largest}");
-
-
-
+            return largest;
         }
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
-
             List<Coordinate> coordinates = new List<Coordinate>();
 
             int maxsize = 500;
@@ -124,14 +123,14 @@ namespace AdventOfCode2018.Days
             int[,] map = new int[maxsize * 2, maxsize * 2];
 
             int place = 1;
-            foreach (string coords in SplitLines(data))
+            foreach (string coords in data)
             {
                 int x = int.Parse(coords.Split(", ")[0]);
                 int y = int.Parse(coords.Split(", ")[1]);
 
                 coordinates.Add(new Coordinate { Id = place, X = x, Y = y });
 
-                 place++;
+                place++;
             }
 
             for (int y = -maxsize; y < maxsize; y++)
@@ -158,9 +157,7 @@ namespace AdventOfCode2018.Days
 
             int count = theRest.Where(r => r < 10000).Count();
 
-            Console.WriteLine($"Total Area: {count}");
-
-
+            return count;
         }
     }
 }

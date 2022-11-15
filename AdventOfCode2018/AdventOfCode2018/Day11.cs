@@ -1,15 +1,17 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day11 : AdventOfCode2018
+    public class Day11 : DayBase, IDay
     {
         public int[,] Grid { get; set; }
 
-        public Day11()
+        public Day11() : base(2018, 11)
         {
             Grid = new int[300, 300];
-            int serialNo = 7803;
+            int serialNo = input.GetDataCached().IsSingleLine().ToInt();
             //serialNo = 8;
 
             for (int y = 0; y < 300; y++)
@@ -27,10 +29,16 @@ namespace AdventOfCode2018.Days
                 }
             }
         }
-
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            string result1 = Problem1();
+            Console.WriteLine($"P1: {result1}");
+
+            string result2 = Problem2();
+            Console.WriteLine($"P2:  {result2}");
+        }
+        public string Problem1()
+        {
             int maxval = 0;
             int topx = 0;
             int topy = 0;
@@ -52,11 +60,11 @@ namespace AdventOfCode2018.Days
             }
 
             Console.WriteLine($"Max coord: {topx},{topy}");
+            return $"Max coord: {topx},{topy}";
         }
 
-        public void Problem2()
+        public string Problem2()
         {
-            Console.WriteLine("Problem 2");
             int maxSize = 1;
             int maxval = 0;
             int topx = 0;
@@ -76,7 +84,7 @@ namespace AdventOfCode2018.Days
                         {
                             for (int x1 = 0; x1 < size; x1++)
                             {
-                                val += Grid[x+x1,y+ y1];
+                                val += Grid[x + x1, y + y1];
                             }
                         }
 
@@ -92,7 +100,7 @@ namespace AdventOfCode2018.Days
                 size++;
             }
 
-            Console.WriteLine($"Max coord: {topx},{topy} with a size of {maxSize}");
+            return $"Max coord: {topx},{topy} with a size of {maxSize}";
         }
     }
 

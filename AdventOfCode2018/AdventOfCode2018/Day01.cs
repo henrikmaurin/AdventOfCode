@@ -1,31 +1,35 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day1 : AdventOfCode2018
+    public class Day01 : DayBase, IDay
     {
-        public Day1()
-        {
-            string data = ReadData("1.txt");
-            deviations = SplitLines(data);
-        }
-
         public string[] deviations { get; }
-
-        public void Problem1()
+        public Day01() : base(2018, 1)
         {
-            Console.WriteLine("Problem 1");
-            int result = deviations.Select(d => int.Parse(d)).Sum();
+            deviations = input.GetDataCached().SplitOnNewlineArray();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Final drift: {result1}");
 
-            Console.WriteLine($"Final drift: {result}");
-
+            int result2 = Problem2();
+            Console.WriteLine($"P2: First double: {result2}");
         }
 
-        public void Problem2()
+        public int Problem1()
         {
-            Console.WriteLine("Problem 2");
+            return deviations.Select(d => int.Parse(d)).Sum();
+        }
+
+        public int Problem2()
+        {
+
             List<int> frequensies = new List<int>();
             int currentFreq = 0;
 
@@ -49,7 +53,7 @@ namespace AdventOfCode2018.Days
                 i = i % deviations.Length;
             }
 
-            Console.WriteLine($"First double {currentFreq}");
+            return currentFreq;
         }
 
 

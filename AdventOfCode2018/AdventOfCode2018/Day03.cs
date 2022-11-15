@@ -1,19 +1,21 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day3 : AdventOfCode2018
+    public class Day03 : DayBase, IDay
     {
-        public Day3()
+        public Day03() : base(2018, 3)
         {
-            claims = SplitLines(ReadData("3.txt"));
+            claims = input.GetDataCached().SplitOnNewlineArray();
             fabricClaims = new List<FabricClaim>();
             foreach (string claim in claims)
             {
-                string[] splitline = Tokenize(claim);
+                string[] splitline = claim.Tokenize();
                 int x = 0, y = 0, width = 0, height = 0;
 
                 x = int.Parse(splitline[2].Split(",")[0]);
@@ -25,25 +27,33 @@ namespace AdventOfCode2018.Days
                 fabricClaim.Id = int.Parse(splitline[0].Replace("#", ""));
                 fabricClaim.Rect = new Rectangle(x, y, width, height);
 
-                              foreach(FabricClaim fc in fabricClaims)
-                                {
-                                    if (fc.Rect.IntersectsWith(fabricClaim.Rect))
-                                    {
-                                        fc.Intersects = 1;
-                                        fabricClaim.Intersects = 1;
-                                    }
-                                }
+                foreach (FabricClaim fc in fabricClaims)
+                {
+                    if (fc.Rect.IntersectsWith(fabricClaim.Rect))
+                    {
+                        fc.Intersects = 1;
+                        fabricClaim.Intersects = 1;
+                    }
+                }
                 fabricClaims.Add(fabricClaim);
             }
+        }
+
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Intersecting inches: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Not intersecting: {result2}");
         }
 
         public string[] claims { get; }
         private List<FabricClaim> fabricClaims;
 
-        public void Problem1()
+        public int Problem1()
         {
             int size = 1500;
-            Console.WriteLine("Problem 1");
             int[] fabric = new int[size * size];
 
             foreach (FabricClaim claim in fabricClaims)
@@ -53,31 +63,23 @@ namespace AdventOfCode2018.Days
                     for (int x = claim.Rect.Left; x < claim.Rect.Right; x++)
                     {
                         fabric[y * size + x]++;
- //                       if (fabric[y * size + x] > 1)
- //                           Console.WriteLine("Intersects");
-
                     }
                 }
             }
 
-            int intersectingInches = fabric.Where(f=>f>1).Count();
-            Console.WriteLine($"Intersecting inches {intersectingInches}");
+            int intersectingInches = fabric.Where(f => f > 1).Count();
 
-            return;
+            return intersectingInches;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
+            int best = fabricClaims.Where(f => f.Intersects == 0).Select(f => f.Id).Single();
 
-            int best = fabricClaims.Where(f => f.Intersects == 0).Select(f=>f.Id).Single();
+            return best;
 
-            Console.WriteLine($"Not intersecting: {best}");
-
+        }
     }
-    }
-
-    
 
     public class FabricClaim
     {

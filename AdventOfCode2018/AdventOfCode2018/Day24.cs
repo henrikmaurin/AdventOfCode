@@ -1,15 +1,18 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day24 : AdventOfCode2018
+
+    public class Day24 : DayBase, IDay
     {
         public List<Combatant> Combatants { get; set; }
-        public Day24()
+        public Day24() : base(2018, 24)
         {
-            string[] data = SplitLines(ReadData("24.txt"));
+            string[] data = input.GetDataCached().SplitOnNewlineArray();
             string currentType = string.Empty;
             Combatants = new List<Combatant>();
             int counter = 1;
@@ -22,7 +25,7 @@ namespace AdventOfCode2018.Days
                 }
                 else if (line.Length > 1)
                 {
-                    string[] t = Tokenize(line);
+                    string[] t = line.Tokenize();
 
 
                     Combatant c = new Combatant();
@@ -75,10 +78,17 @@ namespace AdventOfCode2018.Days
 
         }
 
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            string result1 = Problem1();
+            Console.WriteLine($"P1: {result1}");
 
+            string result2 = Problem2();
+            Console.WriteLine($"P2: {result2}");
+        }
+
+        public string Problem1()
+        {
             bool done = false;
             while (!done)
             {
@@ -98,12 +108,10 @@ namespace AdventOfCode2018.Days
                     }
                     if (best != null)
                     {
-
-
                         round.Add(new Target { Attacker = a, Defender = best });
                     };
                 }
-                //Console.WriteLine("Atacking");
+                //Console.WriteLine("Attacking");
                 {
                     foreach (Target t in round.OrderByDescending(o => o.Attacker.Initiative))
                     {
@@ -119,38 +127,34 @@ namespace AdventOfCode2018.Days
 
                 if (Combatants.Where(c => c.Type == "Immune System").Select(c => c.Count).Sum() <= 0)
                 {
-                    Console.WriteLine($"Infection wins with {Combatants.Where(c => c.Type == "Infection").Select(c => c.Count).Sum()}");
-
-                    done = true;
+                    return $"Infection wins with {Combatants.Where(c => c.Type == "Infection").Select(c => c.Count).Sum()}";
                 }
                 if (Combatants.Where(c => c.Type == "Infection").Select(c => c.Count).Sum() <= 0)
                 {
-                    Console.WriteLine($"Immune System wins with {Combatants.Where(c => c.Type == "Immune System").Select(c => c.Count).Sum()}");
-                    done = true;
+                    return $"Immune System wins with {Combatants.Where(c => c.Type == "Immune System").Select(c => c.Count).Sum()}";
                 }
             }
+            return string.Empty;
         }
 
-        public void Problem2()
+        public string Problem2()
         {
-            Console.WriteLine("Problem 2");
-
             bool ImmuneWinner = false;
             int boost = 0;
 
-            List<Combatant> reset = Combatants.Select(c => new Combatant { AttackDamage = c.AttackDamage, Attacktype = c.Attacktype, Count = c.Count, HP = c.HP, Immune = c.Immune, Initiative = c.Initiative, Type = c.Type, Weaknesses = c.Weaknesses, Name=c.Name }).ToList();
+            List<Combatant> reset = Combatants.Select(c => new Combatant { AttackDamage = c.AttackDamage, Attacktype = c.Attacktype, Count = c.Count, HP = c.HP, Immune = c.Immune, Initiative = c.Initiative, Type = c.Type, Weaknesses = c.Weaknesses, Name = c.Name }).ToList();
             int lastCount = 0;
 
             while (!ImmuneWinner)
             {
                 bool done = false;
-                Combatants = reset.Select(c => new Combatant { AttackDamage = c.AttackDamage, Attacktype = c.Attacktype, Count = c.Count, HP = c.HP, Immune = c.Immune, Initiative = c.Initiative, Type = c.Type, Weaknesses = c.Weaknesses, Name=c.Name }).ToList();
+                Combatants = reset.Select(c => new Combatant { AttackDamage = c.AttackDamage, Attacktype = c.Attacktype, Count = c.Count, HP = c.HP, Immune = c.Immune, Initiative = c.Initiative, Type = c.Type, Weaknesses = c.Weaknesses, Name = c.Name }).ToList();
                 foreach (Combatant c in Combatants.Where(o => o.Type == "Immune System"))
                 {
                     c.AttackDamage += boost;
                 }
 
-//                Print();
+                //                Print();
 
                 while (!done)
                 {
@@ -163,14 +167,14 @@ namespace AdventOfCode2018.Days
                         foreach (Combatant t in Combatants.Where(o => o.Type != a.Type && o.Count > 0).OrderByDescending(o => o.EffectivePower).ThenByDescending(o => o.Initiative))
                         {
                             int attackPower = t.DefendAgainst(a.Attacktype, a.EffectivePower);
-//                            if (a.Type == "Immune System")
-//                                attackPower += boost;
+                            //                            if (a.Type == "Immune System")
+                            //                                attackPower += boost;
 
-//                            Console.WriteLine($"{a.Name} would deal {t.Name} {attackPower} damage");
+                            //                            Console.WriteLine($"{a.Name} would deal {t.Name} {attackPower} damage");
 
                             if (attackPower > bestAttackPower && !round.Select(r => r.Defender).Contains(t))
                             {
-                                best = t; 
+                                best = t;
                                 bestAttackPower = t.DefendAgainst(a.Attacktype, a.EffectivePower);
                             }
                         }
@@ -185,11 +189,11 @@ namespace AdventOfCode2018.Days
                         {
                             int attackPower = t.Defender.DefendAgainst(t.Attacker.Attacktype, t.Attacker.EffectivePower);
                             int killed = attackPower / t.Defender.HP;
-  //                          Console.WriteLine($"{t.Attacker.Name} attacks {t.Defender.Name}, killing {killed} units");
+                            //                          Console.WriteLine($"{t.Attacker.Name} attacks {t.Defender.Name}, killing {killed} units");
                             t.Defender.Count -= killed;
                             if (t.Defender.Count < 0)
                             {
-  //                              Console.WriteLine($"{t.Defender.Name} is defeated");
+                                //                              Console.WriteLine($"{t.Defender.Name} is defeated");
                                 t.Defender.Count = 0;
                             }
                         }
@@ -197,41 +201,36 @@ namespace AdventOfCode2018.Days
 
                     if (Combatants.Where(c => c.Type == "Immune System").Select(c => c.Count).Sum() <= 0)
                     {
-                        Console.WriteLine($"Infection wins with {Combatants.Where(c => c.Type == "Infection").Select(c => c.Count).Sum()} ({boost})");
+                        return $"Infection wins with {Combatants.Where(c => c.Type == "Infection").Select(c => c.Count).Sum()} ({boost})";
 
                         done = true;
                     }
                     if (Combatants.Where(c => c.Type == "Infection").Select(c => c.Count).Sum() <= 0)
                     {
-                        Console.WriteLine($"Immune System wins with {Combatants.Where(c => c.Type == "Immune System").Select(c => c.Count).Sum()}, ({boost})");
+                        return $"Immune System wins with {Combatants.Where(c => c.Type == "Immune System").Select(c => c.Count).Sum()}, ({boost})";
                         done = true;
                         ImmuneWinner = true;
                     }
 
                     if (lastCount == Combatants.Select(c => c.Count).Sum())
                     {
-                        Console.WriteLine($"Draw ({boost})");
+                        return $"Draw ({boost})";
                         done = true;
                     }
 
                     lastCount = Combatants.Select(c => c.Count).Sum();
                 }
-  /*              if (Combatants.Where(c => c.Type == "Infection").Select(c => c.Count).Sum() >= 6000)
-                {
-                    boost += 499;
-                }
-                else if (Combatants.Where(c => c.Type == "Infection").Select(c => c.Count).Sum() >= 1000)
-                    boost += 99;*/
 
                 boost++;
             }
+            return string.Empty;
         }
 
         public void Print()
         {
             foreach (Combatant c in Combatants)
             {
-                Console.WriteLine($"{c.Name} Count: {c.Count}, HP: {c.HP}, AttackPower: {c.AttackDamage}, AttackType: {c.Attacktype} Immune:{string.Join(",",c.Immune)} Weak: {string.Join(",", c.Weaknesses)}, Initiative: {c.Initiative}");
+                Console.WriteLine($"{c.Name} Count: {c.Count}, HP: {c.HP}, AttackPower: {c.AttackDamage}, AttackType: {c.Attacktype} Immune:{string.Join(",", c.Immune)} Weak: {string.Join(",", c.Weaknesses)}, Initiative: {c.Initiative}");
             }
         }
 
@@ -252,7 +251,7 @@ namespace AdventOfCode2018.Days
             public List<string> Weaknesses { get; set; }
             public List<string> Immune { get; set; }
             public int Initiative { get; set; }
-            public string  Name { get; set; }
+            public string Name { get; set; }
 
             public int DefendAgainst(string attack, int HP)
             {

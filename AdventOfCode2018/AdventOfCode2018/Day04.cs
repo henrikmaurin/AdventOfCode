@@ -1,15 +1,17 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day4 : AdventOfCode2018
+    public class Day04 : DayBase, IDay
     {
-        public Day4()
+        public Day04() : base(2018, 4)
         {
             log = new List<Log>();
-            string[] data = SplitLines(ReadData("4.txt"));
+            string[] data = input.GetDataCached().SplitOnNewlineArray();
             int currentGuard = 0;
             foreach (string line in data.OrderBy(d => d.Substring(0, 18)))
             {
@@ -18,7 +20,7 @@ namespace AdventOfCode2018.Days
                 if (line.Contains("begins shift"))
                 {
                     logLine.Action = Action.Shiftstart;
-                    currentGuard = int.Parse(Tokenize(line)[3].Replace("#", ""));
+                    currentGuard = int.Parse(line.Tokenize()[3].Replace("#", ""));
                 }
                 if (line.Contains("wakes up"))
                 {
@@ -31,6 +33,7 @@ namespace AdventOfCode2018.Days
                 logLine.GuardNo = currentGuard;
                 log.Add(logLine);
             }
+
 
             guards = new List<Guard>();
             for (int i = 0; i < log.Count; i++)
@@ -54,26 +57,36 @@ namespace AdventOfCode2018.Days
                 }
             }
         }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: {result2}");
+        }
 
         public List<Log> log { get; set; }
         public List<Guard> guards { get; set; }
 
-        public void Problem1()
+        public int Problem1()
         {
             Guard mostAsleepGuard = guards.OrderByDescending(g => g.AlseepMinutes.Sum()).First();
             int mostAsleepMinuteTimes = mostAsleepGuard.AlseepMinutes.OrderByDescending(m => m).First();
             int mostAsleepMinute = mostAsleepGuard.AlseepMinutes.FindIndex(m => m == mostAsleepMinuteTimes);
 
             Console.WriteLine($"Id of guard: {mostAsleepGuard.GuardNo}, Most asleep minute: {mostAsleepMinute}, Answer: {mostAsleepGuard.GuardNo * mostAsleepMinute}");
+            return mostAsleepGuard.GuardNo * mostAsleepMinute;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
             var asleepGuard = guards.Select(g => new { g.GuardNo, maxminutes = g.AlseepMinutes.Max() }).OrderByDescending(g => g.maxminutes).First();
             List<int> alseepMinutes = guards.Where(g => g.GuardNo == asleepGuard.GuardNo).Select(g => g.AlseepMinutes).First();
             int mostAsleepMinute = alseepMinutes.FindIndex(m => m == asleepGuard.maxminutes);
 
             Console.WriteLine($"Id of guard: {asleepGuard.GuardNo}, Most asleep minute: {mostAsleepMinute}, Answer: {asleepGuard.GuardNo * mostAsleepMinute}");
+            return asleepGuard.GuardNo * mostAsleepMinute;
         }
 
 

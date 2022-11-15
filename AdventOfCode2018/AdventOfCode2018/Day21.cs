@@ -1,32 +1,40 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using static AdventOfCode2018.ElfCode;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day21 : AdventOfCode2018
+    public class Day21 : DayBase, IDay
     {
         public List<int> reg { get; set; }
         public ElfCode Computer { get; set; }
 
-        public Day21()
+        public Day21() : base(2018, 21)
         {
             //Instructions = SplitLines(ReadData("21.txt")).ToList();
             reg = new List<int>();
 
             Computer = new ElfCode();
             Computer.CreateMachine(6);
-            Computer.LoadAssembyCode("data\\21.txt");
+            string instructions = input.GetDataCached();
+            Computer.LoadAssembyCodeContents(instructions);
 
         }
 
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: {result1}");
 
-            //Compile();
+            int result2 = Problem2();
+            Console.WriteLine($"P2: {result2}");
+        }
 
+        public int Problem1()
+        {
             BreakPoint bp = new BreakPoint
             {
                 line = 28,
@@ -34,7 +42,7 @@ namespace AdventOfCode2018.Days
             };
             Computer.Run(bp);
 
-            Console.WriteLine(Computer.register[3]);
+            return Computer.register[3];
         }
 
         public bool Breakpoint1()
@@ -62,12 +70,11 @@ namespace AdventOfCode2018.Days
 
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
-//            string op = Instructions[0];
-//            Parse(op);
-//            Instructions.RemoveAt(0);
+            //            string op = Instructions[0];
+            //            Parse(op);
+            //            Instructions.RemoveAt(0);
             List<int> reg = new List<int>();
             int val = 0; ;
 
@@ -82,16 +89,17 @@ namespace AdventOfCode2018.Days
                 else
                 {
                     dup = true;
-                    Console.WriteLine(reg.Last());
-                    return;
+
+                    return reg.Last();
                 }
             }
+            return 0;
         }
 
         public void Problem2_BruteForce()
         {
             Console.WriteLine("Problem 2 brute force");
-  //          Compile();
+            //          Compile();
 
             Console.WriteLine(DateTime.Now);
             BreakPoint bp = new BreakPoint
@@ -102,62 +110,62 @@ namespace AdventOfCode2018.Days
             Computer.Run(bp);
 
         }
- /*       public void Run_1()
-        {
-            if (CompiledCode == null)
-            {
-                return;
-            }
+        /*       public void Run_1()
+               {
+                   if (CompiledCode == null)
+                   {
+                       return;
+                   }
 
-            int codeLength = CompiledCode.Count() / 4;
-            int ip = GetIp();
-            while (ip >= 0 && ip < codeLength)
-            {
-                if (ip == 28)
-                {
-                    return;
-                }
+                   int codeLength = CompiledCode.Count() / 4;
+                   int ip = GetIp();
+                   while (ip >= 0 && ip < codeLength)
+                   {
+                       if (ip == 28)
+                       {
+                           return;
+                       }
 
-                Processor[CompiledCode[ip * 4]].Invoke(CompiledCode[ip * 4 + 1], CompiledCode[ip * 4 + 2], CompiledCode[ip * 4 + 3]);
-                ip = IpInc();
-            }
-        }
+                       Processor[CompiledCode[ip * 4]].Invoke(CompiledCode[ip * 4 + 1], CompiledCode[ip * 4 + 2], CompiledCode[ip * 4 + 3]);
+                       ip = IpInc();
+                   }
+               }
 
-        public void Run_2()
-        {
-            if (CompiledCode == null)
-            {
-                return;
-            }
+               public void Run_2()
+               {
+                   if (CompiledCode == null)
+                   {
+                       return;
+                   }
 
-            List<int> reg = new List<int>();
+                   List<int> reg = new List<int>();
 
-            int codeLength = CompiledCode.Count() / 4;
-            int ip = GetIp();
-            while (ip >= 0 && ip < codeLength)
-            {
-                if (ip == 28)
-                {
-                    if (!reg.Contains(register[3]))
-                    {
-                        reg.Add(register[3]);
-                        if (reg.Count() % 1000 == 0)
-                        {
-                            Console.WriteLine(reg.Count());
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine(reg.Last());
-                        Console.WriteLine(DateTime.Now);
-                        return;
-                    }
-                }
-                Processor[CompiledCode[ip * 4]].Invoke(CompiledCode[ip * 4 + 1], CompiledCode[ip * 4 + 2], CompiledCode[ip * 4 + 3]);
-                ip = IpInc();
-            }
-        }
-        */
+                   int codeLength = CompiledCode.Count() / 4;
+                   int ip = GetIp();
+                   while (ip >= 0 && ip < codeLength)
+                   {
+                       if (ip == 28)
+                       {
+                           if (!reg.Contains(register[3]))
+                           {
+                               reg.Add(register[3]);
+                               if (reg.Count() % 1000 == 0)
+                               {
+                                   Console.WriteLine(reg.Count());
+                               }
+                           }
+                           else
+                           {
+                               Console.WriteLine(reg.Last());
+                               Console.WriteLine(DateTime.Now);
+                               return;
+                           }
+                       }
+                       Processor[CompiledCode[ip * 4]].Invoke(CompiledCode[ip * 4 + 1], CompiledCode[ip * 4 + 2], CompiledCode[ip * 4 + 3]);
+                       ip = IpInc();
+                   }
+               }
+               */
         public int Logic(int a)
         {
             a |= 0x10000;

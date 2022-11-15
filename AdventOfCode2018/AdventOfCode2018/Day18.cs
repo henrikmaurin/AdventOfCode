@@ -1,17 +1,24 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day18 : AdventOfCode2018
+    public class Day18 : DayBase, IDay
     {
         public List<char[]> Maps { get; set; }
         public int DimX { get; set; }
         public int DimY { get; set; }
-        public Day18()
+        public Day18() : base(2018, 18)
         {
-            string[] data = SplitLines(ReadData("18.txt"));
+
+        }
+
+        public void Init()
+        {
+            string[] data = input.GetDataCached().SplitOnNewlineArray();
             Maps = new List<char[]>();
             DimX = data[0].Length;
             DimY = data.Length;
@@ -26,9 +33,19 @@ namespace AdventOfCode2018.Days
             Maps.Add(Map);
         }
 
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem1");
+            Init(); int result1 = Problem1();
+
+            Console.WriteLine($"P1: Trees times lumberyards: {result1}");
+
+            Init();
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Trees times lumberyards: {result2}");
+        }
+
+        public int Problem1()
+        {
             for (int i = 0; i < 10; i++)
             {
                 char[] nextmap = new char[DimX * DimY];
@@ -86,18 +103,15 @@ namespace AdventOfCode2018.Days
 
             Print();
 
-            Console.WriteLine($"Trees times lumberyards { lumberyards * trees   }");
-
-
+            return lumberyards * trees;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem2");
             int cutoff = 600;
             for (int i = 0; i < cutoff; i++)
             {
-              
+
                 char[] nextmap = new char[DimX * DimY];
                 for (int y = 0; y < DimY; y++)
                 {
@@ -144,15 +158,6 @@ namespace AdventOfCode2018.Days
 
                 }
                 Maps[0] = nextmap;
-                //                int trees = Maps.Last().Where(m => m == '|').Count();
-                //                int lumberyards = Maps.Last().Where(m => m == '#').Count();
-                //                if(i%28==4)
-                //                Console.WriteLine($"{i}: {trees} {lumberyards}");
-                //                                 Print();
-                //                               Console.ReadKey();
-
-                //Console.WriteLine($"Trees times lumberyards { lumberyards * trees   }");
-
             }
 
             for (int i = 0; i < 27; i++)
@@ -201,7 +206,7 @@ namespace AdventOfCode2018.Days
                         }
 
                     }
-                  
+
 
                 }
                 Maps.Add(nextmap);
@@ -213,10 +218,7 @@ namespace AdventOfCode2018.Days
             int trees = Maps[maptoview].Where(m => m == '|').Count();
             int lumberyards = Maps[maptoview].Where(m => m == '#').Count();
 
-            Console.WriteLine($"Trees times lumberyards { lumberyards * trees   }");
-
-
-
+            return lumberyards * trees;
         }
 
 

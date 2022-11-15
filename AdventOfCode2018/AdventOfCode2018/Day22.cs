@@ -1,11 +1,13 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day22
+    public class Day22 : DayBase, IDay
     {
         public ulong[] Map { get; set; }
         public int[] SimpleMap { get; set; }
@@ -13,18 +15,30 @@ namespace AdventOfCode2018.Days
         public int DimX { get; set; }
         public int DimY { get; set; }
         public List<int> theWay { get; set; }
+        private int depth;
+        private int targetX;
+        private int targetY;
 
-        public void Problem1()
+
+        public Day22() : base(2018, 22)
         {
-            Console.WriteLine("Problem 1");
-            int depth = 3198;
-            int targetX = 12;
-            int targetY = 757;
-            //
-            //       depth = 510;
-            //       targetX = 10;
-            //       targetY = 10;
+            List<string> data = input.GetDataCached().SplitOnNewline();
+            depth = data[0].Replace("depth: ", "").Trim().ToInt();
+            targetX = data[1].Replace("target: ", "").Trim().Split(",").First().ToInt();
+            targetY = data[1].Replace("target: ", "").Trim().Split(",").Last().ToInt();
+        }
 
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Dangerlevel: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Travel Takes {result2} minutes");
+        }
+
+        public int Problem1()
+        {
             DimX = targetX + 1;
             DimY = targetY + 1;
 
@@ -40,7 +54,7 @@ namespace AdventOfCode2018.Days
 
             int sum = Map.Select(m => (int)m % 3).Sum();
 
-            Console.WriteLine($"Dangerlevel: {sum}");
+            return sum;
         }
 
         public void Printmap()
@@ -120,14 +134,8 @@ namespace AdventOfCode2018.Days
 
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
-
-            int depth = 3198;
-            int targetX = 12;
-            int targetY = 757;
-
             depth = 510;
             targetX = 10;
             targetY = 10;
@@ -173,14 +181,11 @@ namespace AdventOfCode2018.Days
 
             Traverse(targetX, targetY);
 
-            ExportMap(targetX, targetY);
-
-
+            //            ExportMap(targetX, targetY);
 
             int answer = Lowest(CostMap[targetX + targetY * DimX].CostFlashlight, CostMap[targetX + targetY * DimX].CostClimbing + 7);
 
-
-            Console.WriteLine($"Travel Takes {answer} minutes");
+            return answer;
         }
 
         public bool CalcCost(int x, int y)
@@ -437,7 +442,7 @@ namespace AdventOfCode2018.Days
             switch (currenground)
             {
                 case 0:
-                    if ( (CostMap[currentTile].CostClimbing == CostMap[compareTile].CostClimbing + 1 || CostMap[currentTile].CostClimbing == CostMap[compareTile].CostNone + 8 || CostMap[currentTile].CostClimbing == CostMap[compareTile].CostFlashlight + 8))
+                    if ((CostMap[currentTile].CostClimbing == CostMap[compareTile].CostClimbing + 1 || CostMap[currentTile].CostClimbing == CostMap[compareTile].CostNone + 8 || CostMap[currentTile].CostClimbing == CostMap[compareTile].CostFlashlight + 8))
                     {
                         return CostMap[compareTile].CostClimbing;
                     }
@@ -459,7 +464,7 @@ namespace AdventOfCode2018.Days
                     }
                     break;
                 case 2:
-                    if ( (CostMap[currentTile].CostNone == CostMap[compareTile].CostNone + 1 || CostMap[currentTile].CostNone == CostMap[compareTile].CostClimbing + 8 || CostMap[currentTile].CostNone == CostMap[compareTile].CostFlashlight + 8))
+                    if ((CostMap[currentTile].CostNone == CostMap[compareTile].CostNone + 1 || CostMap[currentTile].CostNone == CostMap[compareTile].CostClimbing + 8 || CostMap[currentTile].CostNone == CostMap[compareTile].CostFlashlight + 8))
                     {
                         return CostMap[compareTile].CostNone;
                     }

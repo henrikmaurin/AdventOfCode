@@ -1,20 +1,28 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day2 : AdventOfCode2018
+    public class Day02 : DayBase, IDay
     {
         private string[] boxes;
-        public Day2()
+        public Day02() : base(2018, 2)
         {
-            boxes = SplitLines(ReadData("2.txt"));
+            boxes = input.GetDataCached().SplitOnNewlineArray();
         }
 
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Checksum: {result1}");
 
+            string result2 = Problem2();
+            Console.WriteLine($"P2: Common chars: {result2}");
+        }
+        public int Problem1()
+        {
             int hasdouble = 0, hastriple = 0;
 
             foreach (string box in boxes)
@@ -29,12 +37,11 @@ namespace AdventOfCode2018.Days
                     hastriple++;
                 }
             }
-            Console.WriteLine($"Checksum: {hasdouble * hastriple}");
+            return hasdouble * hastriple;
         }
 
-        public void Problem2()
+        public string Problem2()
         {
-            Console.WriteLine("Problem 2");
             string commonchars = string.Empty;
             for (int box1 = 0; box1 < boxes.Count() - 1; box1++)
             {
@@ -47,16 +54,13 @@ namespace AdventOfCode2018.Days
                             commonchars += boxes[box1][pos];
 
                     }
-                    if (commonchars.Length == boxes[box1].Length-1)
+                    if (commonchars.Length == boxes[box1].Length - 1)
                     {
-                        Console.WriteLine($"Common chars: {commonchars}");
-                        return;
+                        return commonchars;
                     }
                 }
             }
-
-
-
+            return String.Empty;
         }
     }
 }

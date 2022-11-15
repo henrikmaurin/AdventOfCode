@@ -1,19 +1,27 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day9 : AdventOfCode2018
+    public class Day09 : DayBase, IDay
     {
-        public Day9()
+        public Day09() : base(2018, 9)
         {
-            marbles = new LinkedList<int>();
-            players = 471;
-            //players = 10;
-            score = new ulong[players];
-            goalscore = 72026;
-            //goalscore = 1618;
+            string[] data = input.GetDataCached().IsSingleLine().Split(" ");
+
+            players = data[0].ToInt();
+            goalscore = data[6].ToInt();
+        }
+        public void Run()
+        {
+            ulong result1 = Problem1();
+            Console.WriteLine($"P1: {result1}");
+
+            ulong result2 = Problem2();
+            Console.WriteLine($"P2: {result2}");
         }
 
         public LinkedList<int> marbles { get; set; }
@@ -26,10 +34,13 @@ namespace AdventOfCode2018.Days
             int currentmarble = 1;
             int currentelf = 0;
             int marble = 0;
+            score = new ulong[players];
+            marbles = new LinkedList<int>();
+
 
             LinkedListNode<int> currentNode = marbles.AddFirst(0);
 
-            while (currentmarble != targetValue + 1)
+            while (currentmarble <= targetValue)
             {
                 if (currentmarble % 23 == 0)
                 {
@@ -46,7 +57,7 @@ namespace AdventOfCode2018.Days
                 else
                 {
                     currentNode = currentNode.NextCircular(2);
- 
+
                     currentNode = marbles.AddBefore(currentNode, currentmarble);
                 }
 
@@ -57,15 +68,13 @@ namespace AdventOfCode2018.Days
             return score.Max();
         }
 
-        public void Problem1()
+        public ulong Problem1()
         {
-            Console.WriteLine("Problem 1");
-            Console.WriteLine($"Score: {Play(goalscore)}");
+            return Play(goalscore);
         }
-        public void Problem2()
+        public ulong Problem2()
         {
-            Console.WriteLine("Problem 2");
-            Console.WriteLine($"Score: {Play(goalscore * 100)}");
+            return Play(goalscore * 100);
         }
 
 

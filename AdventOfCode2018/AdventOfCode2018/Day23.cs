@@ -1,55 +1,53 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day23 : AdventOfCode2018
+    public class Day23 : DayBase, IDay
     {
         public List<Bot> Bots { get; set; }
-        public Day23()
+        public Day23() : base(2018, 23)
         {
-            List<string> botdata = SplitLines(ReadData("23.txt")).ToList();
-
-/*
-            botdata = SplitLines(@"pos=<10,12,12>, r=2
-pos=<12,14,12>, r=2
-pos=<16,12,12>, r=4
-pos=<14,14,14>, r=6
-pos=<50,50,50>, r=200
-pos=<10,10,10>, r=5").ToList();
-*/
+            List<string> botdata = input.GetDataCached().SplitOnNewline();
 
             Bots = new List<Bot>();
 
             foreach (string data in botdata)
             {
-                string[] coords = Tokenize(data)[0].Replace("pos=<", "").Replace(">,", "").Split(",");
+                string[] coords = data.Tokenize()[0].Replace("pos=<", "").Replace(">,", "").Split(",");
                 Bot newBot = new Bot();
                 newBot.X = int.Parse(coords[0]);
                 newBot.Y = int.Parse(coords[1]);
                 newBot.Z = int.Parse(coords[2]);
-                newBot.R = int.Parse(Tokenize(data)[1].Replace("r=", ""));
+                newBot.R = int.Parse(data.Tokenize()[1].Replace("r=", ""));
 
                 Bots.Add(newBot);
             }
         }
-
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Number of bots: {result1}");
 
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Distance: {result2}");
+        }
+
+        public int Problem1()
+        {
             int maxRadius = Bots.Select(t => t.R).Max();
             Bot maxTower = Bots.Where(t => t.R == maxRadius).Single();
 
             int towerCount = Bots.Where(t => Math.Abs(t.X - maxTower.X) + Math.Abs(t.Y - maxTower.Y) + Math.Abs(t.Z - maxTower.Z) <= maxRadius).Count();
 
-            Console.WriteLine($"Number of bots: {towerCount}");
+            return towerCount;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
             Box startbox = new Box();
 
             int min = Lowest(Lowest(Bots.Select(b => b.X).Min(), Bots.Select(b => b.Y).Min()), Bots.Select(b => b.Z).Min());
@@ -61,13 +59,7 @@ pos=<10,10,10>, r=5").ToList();
             startbox.Size = max - min;
             startbox.Dist = 0;
 
- /*           startbox.X = 11;
-            startbox.Y = 11;
-            startbox.Z = 11;
-            startbox.Size = 1;
-            */
             startbox.CalcDistance();
-
 
             startbox.CountBots(Bots);
             List<Box> boxes = new List<Box>();
@@ -90,7 +82,7 @@ pos=<10,10,10>, r=5").ToList();
                 }
             }
 
-            Console.WriteLine($"Distance: {currentbox.Dist}");
+            return currentbox.Dist;
 
         }
 

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day17 : AdventOfCode2018
+    public class Day17 : DayBase, IDay
     {
         public char[,] Map { get; set; }
         public int xmin { get; }
@@ -13,10 +14,10 @@ namespace AdventOfCode2018.Days
         public int ymin { get; }
         public int ymax { get; }
 
-        public Day17()
+        public Day17() : base(2018, 17)
         {
             List<Filler> fillers = new List<Filler>();
-            foreach (string line in SplitLines(ReadData("17.txt")))
+            foreach (string line in input.GetDataCached().SplitOnNewlineArray())
             {
                 string[] data = line.Split(", ");
                 Filler newFiller = new Filler();
@@ -62,30 +63,32 @@ namespace AdventOfCode2018.Days
 
             }
 
-
-
-
-            Export("InitialMap.txt");
+            //Export("InitialMap.txt");
 
         }
-        public void Problem1()
+
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Amount of water: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Amount of water: {result2}");
+        }
+        public int Problem1()
+        {
             Spill(500, 0);
             int water = Export("Filled.txt");
 
-            Console.WriteLine($"Amount of water: {water}");
-
+            return water;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 1");
             Drain();
             int water = Export("Drained.txt");
 
-            Console.WriteLine($"Amount of water: {water}");
-
+            return water;
         }
 
         public void Drain()
@@ -302,7 +305,7 @@ namespace AdventOfCode2018.Days
                 result += line + "\n";
             }
 
-            File.WriteAllText($"C:\\temp\\{filename}", result);
+            //File.WriteAllText($"C:\\temp\\{filename}", result);
             return counter;
         }
     }

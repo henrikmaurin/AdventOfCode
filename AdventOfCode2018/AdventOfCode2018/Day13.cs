@@ -1,27 +1,34 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode2018
 {
-    public class Day13 : AdventOfCode2018
+    public class Day13 : DayBase, IDay
     {
         public MapTile[,] Map { get; set; }
         public List<Cart> Carts { get; set; }
         public int XDim { get; set; }
         public int YDim { get; set; }
-        public Day13()
+        public string[] MapData { get; set; }
+        public Day13() : base(2018, 13)
+        {
+            MapData = input.GetDataCached().SplitOnNewlineArray();
+        }
+
+        private void InitMap()
         {
             Carts = new List<Cart>();
-            string[] mapdata = SplitLines(ReadData("13.txt"));
-            XDim = mapdata[0].Length;
-            YDim = mapdata.Count();
+            XDim = MapData[0].Length;
+            YDim = MapData.Count();
             Map = new MapTile[XDim, YDim];
             int cartCounter = 0;
             for (int y = 0; y < YDim; y++)
 
             {
-                char[] tiledata = mapdata[y].ToCharArray();
+                char[] tiledata = MapData[y].ToCharArray();
                 MapTile newTile = null;
                 for (int x = 0; x < XDim; x++)
                 {
@@ -111,6 +118,15 @@ namespace AdventOfCode2018
             }
         }
 
+        public void Run()
+        {
+            string result1 = Problem1();
+            Console.WriteLine($"P1: {result1}");
+
+            string result2 = Problem2();
+            Console.WriteLine($"P2: {result2}");
+        }
+
         public bool MoveCart(Cart cart)
         {
             if (cart.CartID == 0)
@@ -176,9 +192,10 @@ namespace AdventOfCode2018
             return false;
         }
 
-        public void Problem1()
+        public string Problem1()
         {
             Console.WriteLine("Problem 1");
+            InitMap();
             bool running = true;
             int xCrash = 0, yCrash = 0;
 
@@ -206,20 +223,21 @@ namespace AdventOfCode2018
                     }
                 }
 
- /*               foreach (Cart cart in Carts)
-                {
-                    Console.Write($"{cart.X},{cart.Y} ");
-                }
-                Console.WriteLine();
-                */
+                /*               foreach (Cart cart in Carts)
+                               {
+                                   Console.Write($"{cart.X},{cart.Y} ");
+                               }
+                               Console.WriteLine();
+                               */
 
             }
 
-            Console.Write($"Crash at {xCrash},{yCrash}");
+            return $"Crash at {xCrash},{yCrash}";
         }
-        public void Problem2()
+        public string Problem2()
         {
-            Console.WriteLine("Problem 1");
+            Console.WriteLine("Problem 2");
+            InitMap();
             bool running = true;
             int xCrash = 0, yCrash = 0;
             ulong counter = 0;
@@ -250,7 +268,7 @@ namespace AdventOfCode2018
             }
             Cart remainingCart = Carts.Where(c => !c.Crashed).Single();
 
-            Console.WriteLine($"Last cart {remainingCart.X},{remainingCart.Y} after {counter} moves");
+            return $"Last cart {remainingCart.X},{remainingCart.Y} after {counter} moves";
         }
 
 

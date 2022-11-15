@@ -1,10 +1,12 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day16 : AdventOfCode2018
+    public class Day16 : DayBase, IDay
     {
         public int[] register { get; set; }
         public List<Observation> Observations { get; set; }
@@ -14,11 +16,11 @@ namespace AdventOfCode2018.Days
         public ElfCode Computer { get; set; }
         public List<string> Instructions { get; set; }
 
-        public Day16()
+        public Day16() : base(2018, 16)
         {
             register = new int[4];
             Observations = new List<Observation>();
-            string[] lines = SplitLines(ReadData("16.txt"));
+            string[] lines = input.GetDataCached().SplitOnNewlineArray(false);
             Instructions = new List<string>();
 
             Op = new List<int>[16];
@@ -30,8 +32,11 @@ namespace AdventOfCode2018.Days
             int counter = 0;
             Observation currentObs = null;
 
-            while (lines[counter] != "BREAK")
+            bool isBlank = false;
+
+            while (lines[counter].Length != 0 || isBlank == false)
             {
+                isBlank = true;
                 if (lines[counter].StartsWith("Before"))
                 {
                     currentObs = new Observation();
@@ -39,10 +44,12 @@ namespace AdventOfCode2018.Days
                     currentObs.Precondition[1] = byte.Parse("" + lines[counter][12]);
                     currentObs.Precondition[2] = byte.Parse("" + lines[counter][15]);
                     currentObs.Precondition[3] = byte.Parse("" + lines[counter][18]);
+                    isBlank = false;
                 }
                 if (lines[counter].Length > 5 && lines[counter].Length < 15)
                 {
                     currentObs.Opcode = lines[counter].Split(" ").Select(l => byte.Parse(l)).ToArray();
+                    isBlank = false;
                 }
                 if (lines[counter].StartsWith("After"))
                 {
@@ -53,6 +60,7 @@ namespace AdventOfCode2018.Days
                     currentObs.Postcondition[3] = byte.Parse("" + lines[counter][18]);
                     Observations.Add(currentObs);
                     currentObs = null;
+                    isBlank = false;
                 }
                 counter++;
             }
@@ -72,11 +80,17 @@ namespace AdventOfCode2018.Days
 
         }
 
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            int result1 = Problem1();
+            Console.WriteLine($"P1: {result1} observations");
 
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Register 0 contais: {result2}");
+        }
 
+        public int Problem1()
+        {
             int hasAtleast3 = 0;
             foreach (Observation observation in Observations)
             {
@@ -102,20 +116,18 @@ namespace AdventOfCode2018.Days
                     hasAtleast3++;
                 }
             }
-            Console.WriteLine($"{hasAtleast3} observations");
-
+            return hasAtleast3;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
             Computer.Processor = Reconfigure();
             Computer.LoadSeparatedMachineCode(Instructions);
             //Computer.Assemble();
             Computer.InitRegisters(new int[] { 0, 0, 0, 0, 0 });
             Computer.Run();
 
-            Console.WriteLine($"Register 0 contais: {Computer.register[0]}");
+            return Computer.register[0];
         }
 
         public Action<int, int, int>[] Reconfigure()
@@ -152,8 +164,6 @@ namespace AdventOfCode2018.Days
 
             return remappedActions.ToArray();
         }
-
-        
 
         public void Eqrr(int a, int b, int c)
         {

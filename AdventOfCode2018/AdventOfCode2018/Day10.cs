@@ -1,29 +1,40 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day10 : AdventOfCode2018
+    public class Day10 : DayBase, IDay
     {
-        public Day10()
+        public Day10() : base(2018, 10)
         {
-            data = SplitLines(ReadData("10.txt"));
+            data = input.GetDataCached().SplitOnNewlineArray();
             Lights = new List<Light>();
             foreach (string line in data)
             {
                 string replaced = line.Replace("position=<", "").Replace("> velocity=<", ",").Replace(">", "").Replace(",", " ").Trim().Replace("  ", " ").Replace("  ", " ");
-                string[] t = Tokenize(replaced);
+                string[] t = replaced.Tokenize();
                 int[] coords = t.Select(r => int.Parse(r)).ToArray();
                 Light newLight = new Light { X = coords[0], Y = coords[1], HVelocity = coords[2], VVelocity = coords[3] };
                 Lights.Add(newLight);
             }
         }
 
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Would have taken {result1} seconds");
+
+            //int result2 = Problem2();
+            //Console.WriteLine($"P2: {result2}");
+        }
+
         public string[] data { get; private set; }
         public List<Light> Lights { get; set; }
 
-        public void Problem1()
+        public int Problem1()
         {
             int minY = int.MinValue;
 
@@ -42,7 +53,7 @@ namespace AdventOfCode2018.Days
 
             Print();
 
-            Console.WriteLine($"Would have taken {count} seconds");
+            return count;
 
         }
 

@@ -1,22 +1,31 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day5 : AdventOfCode2018
+    public class Day05 : DayBase, IDay
     {
-        public Day5()
+        public Day05() : base(2018, 5)
         {
-            data = ReadData("5.txt");
+            data = input.GetDataCached().IsSingleLine();
+        }
+
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Resuling units: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Resuling units: {result2}");
         }
 
         public string data { get; private set; }
 
-        public void Problem1()
+        public int Problem1()
         {
-            Console.WriteLine("Problem 1");
-
             List<char> result = new List<char>();
 
             foreach (char c in data.ToCharArray())
@@ -46,18 +55,16 @@ namespace AdventOfCode2018.Days
                 }
             }
 
-            Console.WriteLine($"Resuling units: {result.Count}");
+            return result.Count;
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
-
-            List<char> result = new List<char>();
             int shortest = int.MaxValue;
 
             for (char eliminator = 'a'; eliminator <= 'z'; eliminator++)
             {
+                List<char> result = new List<char>();
                 foreach (char c in data.ToCharArray())
                 {
                     if (!(char.ToLower(c) == eliminator))
@@ -86,13 +93,13 @@ namespace AdventOfCode2018.Days
                             result.Add(c);
                         }
                     }
-                  
+
                 }
                 if (result.Count < shortest)
                     shortest = result.Count;
             }
 
-            Console.WriteLine($"Resuling units: {shortest}");
+            return shortest;
         }
     }
 }

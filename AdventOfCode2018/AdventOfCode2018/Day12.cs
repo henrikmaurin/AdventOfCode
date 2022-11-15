@@ -1,132 +1,171 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day12 : AdventOfCode2018
+    public class Day12 : DayBase, IDay
     {
-        public char[,] Pots { get; set; }
+        //  public char[,] Pots { get; set; }
+        public char[] Pots { get; set; }
         public Dictionary<string, char> Rules { get; set; }
 
         private ulong iterations = 20;
         private ulong longiterations = 160;
-        private ulong size = 1000;
+        private int size = 1000;
         private int startingpoint = 5;
+        private string[] lines;
 
-        public Day12()
+        public Day12() : base(2018, 12)
         {
+            lines = input.GetDataCached().SplitOnNewlineArray();
+        }
 
-            Pots = new char[longiterations + 1, size];
-            string[] lines = SplitLines(ReadData("12.txt"));
+        public void InitPots()
+        {
+            //Pots = new char[longiterations + 1, size];
+            Pots = new char[size];
+
             string initial = lines[0].Replace("initial state: ", "");
             int pos = startingpoint;
-            for (ulong j = 0; j <= longiterations; j++)
-            {
-                for (ulong i = 0; i < size; i++)
-                {
-                    Pots[j, i] = '.';
-                }
-            }
+
+            for (int i = 0; i < size; i++)
+                Pots[i] = '.';
 
             foreach (char c in initial.ToCharArray())
             {
-                Pots[0, pos++] = c;
+                Pots[pos++] = c;
             }
 
             Rules = new Dictionary<string, char>();
 
-            for (int i = 2; i < lines.Count(); i++)
+            for (int i = 1; i < lines.Count(); i++)
             {
                 string Key = lines[i].Split(" => ")[0].Trim();
                 char Value = lines[i].Split(" => ")[1].Trim()[0];
 
-
                 Rules.Add(Key, Value);
             }
-
         }
 
-        public void Problem1()
+        public void Run()
         {
-            Console.WriteLine("Problem 1");
+            string result1 = Problem1();
+            Console.WriteLine($"P1: {result1}");
+
+            string result2 = Problem2();
+            Console.WriteLine($"P2: {result2}");
+        }
+
+        public string Problem1()
+        {
+            InitPots();
+
+            char[] lastPots = Pots;
+            char[] pots = new char[size];
+
             for (ulong i = 0; i < iterations; i++)
             {
-                for (ulong pos = 2; pos < size - 2; pos++)
+                pots = new char[size];
+                pots[0] = '.';
+                pots[1] = '.';
+                pots[size - 1] = '.';
+                pots[size - 2] = '.';
+
+                for (int pos = 2; pos < size - 2; pos++)
                 {
 
-                    string potCombo = "" + Pots[i, pos - 2] + Pots[i, pos - 1] + Pots[i, pos] + Pots[i, pos + 1] + Pots[i, pos + 2];
+                    string potCombo = "" + lastPots[pos - 2] + lastPots[pos - 1] + lastPots[pos] + lastPots[pos + 1] + lastPots[pos + 2];
                     char newVal = Rules[potCombo];
-                    Pots[i + 1, pos] = newVal;
+                    pots[pos] = newVal;
                 }
+                lastPots = pots;
             }
 
             ulong sum = 0;
 
-            for (ulong i = 0; i < size; i++)
+            for (int i = 0; i < size; i++)
             {
-                sum += Pots[iterations, i] == '#' ? i - (ulong)startingpoint : 0;
+                sum += pots[i] == '#' ? (ulong)(i - startingpoint) : 0;
 
             }
 
-            ulong lastButOneSum = 0;
-
-            for (ulong i = 0; i < size; i++)
-            {
-                lastButOneSum += Pots[iterations - 1, i] == '#' ? i - (ulong)startingpoint : 0;
-
-            }
-
-            Console.WriteLine($"Pot Sum: {sum}");
-
-            ulong difference = sum - lastButOneSum;
-
-            ulong bigsum = sum + (50000000000 - iterations) * difference;
-
-            Console.WriteLine($"Difference per line: {difference} gives total sum of {bigsum}");
-
+            return $"Pot Sum: {sum}";
         }
 
-        public void Problem2()
+        public string Problem2()
         {
-            Console.WriteLine("Problem 2");
+            InitPots();
+            char[] lastPots = Pots;
+            char[] pots = new char[size];
+            ulong repeatPos = 0;
+
             for (ulong i = 0; i < longiterations; i++)
             {
-                for (ulong pos = 2; pos < size - 2; pos++)
+                pots = new char[size];
+                pots[0] = '.';
+                pots[1] = '.';
+                pots[size - 1] = '.';
+                pots[size - 2] = '.';
+
+                for (int pos = 2; pos < size - 2; pos++)
                 {
 
-                    string potCombo = "" + Pots[i, pos - 2] + Pots[i, pos - 1] + Pots[i, pos] + Pots[i, pos + 1] + Pots[i, pos + 2];
+                    string potCombo = "" + lastPots[pos - 2] + lastPots[pos - 1] + lastPots[pos] + lastPots[pos + 1] + lastPots[pos + 2];
                     char newVal = Rules[potCombo];
-                    Pots[i + 1, pos] = newVal;
+                    pots[pos] = newVal;
                 }
+                if (EqualAsLast(lastPots, pots))
+                {
+                    repeatPos = i;
+                    break;
+                }
+                lastPots = pots;
+
+
             }
 
             ulong sum = 0;
 
-            for (ulong i = 0; i < size; i++)
+            for (int i = 0; i < size; i++)
             {
-                sum += Pots[iterations, i] == '#' ? i - (ulong)startingpoint : 0;
+                sum += pots[i] == '#' ? (ulong)(i - startingpoint) : 0;
 
             }
 
             ulong lastButOneSum = 0;
 
-            for (ulong i = 0; i < size; i++)
+            for (int i = 0; i < size; i++)
             {
-                lastButOneSum += Pots[iterations - 1, i] == '#' ? i - (ulong)startingpoint : 0;
-
+                lastButOneSum += lastPots[i] == '#' ? (ulong)(i - startingpoint) : 0;
             }
 
             ulong difference = sum - lastButOneSum;
 
-            ulong bigsum = sum + (50000000000 - longiterations) * difference;
+            ulong bigsum = sum + (50000000000 - repeatPos - 1) * difference;
 
-            Console.WriteLine($"Difference per line: {difference} gives total sum of {bigsum}");
+            return $"Difference per line: {difference} gives total sum of {bigsum}";
 
         }
 
 
+        private bool EqualAsLast(char[] lastPots, char[] currentPots)
+        {
+            string current = new string(currentPots).Trim('.');
+
+            string previous = new string(lastPots).Trim('.');
+
+            if (previous == current)
+                return true;
+
+            return false;
+        }
 
 
     }
+
+
+
 }

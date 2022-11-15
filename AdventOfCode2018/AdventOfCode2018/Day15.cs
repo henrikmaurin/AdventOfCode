@@ -1,24 +1,33 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day15 : AdventOfCode2018
+    public class Day15 : DayBase, IDay
     {
         public int[,] Map { get; set; }
         public int[,] WorkingMap { get; set; }
         public List<Combatant> Combatants { get; set; }
-        public int xSize { get; }
-        public int ySize { get; }
+        public int xSize { get; private set; }
+        public int ySize { get; private set; }
         public List<Coord> targets { get; private set; }
+        public string[] Data { get; set; }
 
-        public Day15()
+        public Day15() : base(2018, 15)
         {
-            string[] data = SplitLines(ReadData("15.txt"));
-            xSize = data[0].Length;
-            ySize = data.Length;
+            Data = input.GetDataCached().SplitOnNewlineArray();
+
+        }
+
+        private void InitMap()
+        {
+            xSize = Data[0].Length;
+            ySize = Data.Length;
 
             Combatants = new List<Combatant>();
 
@@ -28,14 +37,14 @@ namespace AdventOfCode2018.Days
             {
                 for (int x = 0; x < xSize; x++)
                 {
-                    switch (data[y][x])
+                    switch (Data[y][x])
                     {
                         case '#':
                             Map[x, y] = int.MaxValue;
                             break;
                         case 'E':
                         case 'G':
-                            Combatant p = new Combatant { X = x, Y = y, Type = data[y][x], HP = 200, Dead = false };
+                            Combatant p = new Combatant { X = x, Y = y, Type = Data[y][x], HP = 200, Dead = false };
                             Map[x, y] = 0;
                             Combatants.Add(p);
                             break;
@@ -44,43 +53,95 @@ namespace AdventOfCode2018.Days
             }
             DumpMap(Map, "Initial.txt");
         }
-        public void Problem1()
+
+        public void Run()
         {
+            string result1 = Problem1();
+            Console.WriteLine($"P1: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: {result2}");
+        }
+        public string Problem1()
+        {
+            InitMap();
             bool done = false;
             int rounds = 0;
 
+            DumpMapLarge(Map, "Large_init.txt");
+
             while (!done)
             {
-                /*               foreach (Combatant u in Combatants.Where(c=>c.Dieing==true))
-                               {
-                                   u.Dead = true;
-                                   u.Dieing = false;
-                               }*/
-                //Console.WriteLine($"Round {rounds}");
                 List<Combatant> remaining = Combatants.Where(a => !a.Dead).OrderBy(a => a.Y).ThenBy(a => a.X).ToList();
-                if (rounds == 126)
-                {
-                    rounds = 126;
-                }
 
                 foreach (Combatant c in remaining)
                 {
+                    //                    DumpMap(Map, "Anim.txt");
+                    //                    Thread.Sleep(5);
+
                     if (!c.Dead)
                     {
                         targets = FindTargets(c);
-                        if (c.X == 3 && c.Y == 15)
-                        {
-                            Console.WriteLine("Här");
-                        }
 
                         ClumsyMap(c.X, c.Y);
-                        //                       DumpMap(WorkingMap, "state");
+                        DumpMapLarge(WorkingMap, "Working.txt", new Coord { X = c.X, Y = c.Y });
+
+                        //                        DumpMap(WorkingMap, "Anim.txt");
+                        //                     Thread.Sleep(5);
+                        int minDistance = int.MaxValue;
+
                         foreach (Coord target in targets)
                         {
+
                             if (WorkingMap[target.X, target.Y] > 0 && WorkingMap[target.X, target.Y] < int.MaxValue)
                             {
                                 target.Distance = WorkingMap[target.X, target.Y];
                                 target.InReach = true;
+                                if (target.Distance <= minDistance)
+                                {
+                                    minDistance = target.Distance;
+                                    Coord backtrackDir;
+                                    if (WorkingMap[target.X, target.Y - 1] == minDistance - 1)
+                                    {
+                                        backtrackDir = Backtrack(target.X, target.Y - 1).Last();
+                                    }
+                                    else if (WorkingMap[target.X - 1, target.Y] == minDistance - 1)
+                                    {
+                                        backtrackDir = Backtrack(target.X - 1, target.Y).Last();
+                                    }
+                                    else if (WorkingMap[target.X + 1, target.Y] == minDistance - 1)
+                                    {
+                                        backtrackDir = Backtrack(target.X + 1, target.Y).Last();
+                                    }
+                                    else if (WorkingMap[target.X, target.Y + 1] == minDistance - 1)
+                                    {
+                                        backtrackDir = Backtrack(target.X, target.Y + 1).Last();
+                                    }
+                                    else
+                                    {
+                                        //target.Distance = int.MaxValue;
+                                        backtrackDir = new Coord();
+                                    }
+
+
+
+
+                                    if (backtrackDir.Y < c.Y)
+                                        target.TravelRank = 0;
+                                    else if (backtrackDir.Y > c.Y)
+                                        target.TravelRank = 3;
+                                    else
+                                    {
+                                        if (backtrackDir.X < c.X)
+                                            target.TravelRank = 1;
+                                        else
+                                            target.TravelRank = 2;
+                                    }
+                                }
+                                else
+                                    target.TravelRank = 4;
+
+
                             }
                             if (target.X == c.X && target.Y == c.Y)
                             {
@@ -89,7 +150,13 @@ namespace AdventOfCode2018.Days
                             }
 
                         }
-                        Coord ChosenTarget = targets?.Where(t => t.InReach == true).OrderBy(t => t.Distance).ThenBy(t => t.Y).ThenBy(t => t.X).FirstOrDefault();
+                        Coord ChosenTarget = targets?.Where(t => t.InReach == true).OrderBy(t => t.Distance).ThenBy(t => t.TravelRank).FirstOrDefault();
+                        if (rounds == 23 && c.Y == 15)
+                        {
+                            //DumpMap(Map, "FoundPath.txt", new Coord { X = c.X, Y = c.Y }, Backtrack(ChosenTarget.X, ChosenTarget.Y), new Coord { X = ChosenTarget.X, Y = ChosenTarget.Y });
+                        }
+
+
                         if (ChosenTarget != null && !(ChosenTarget.X == c.X && ChosenTarget.Y == c.Y))
                         {
                             List<Coord> nextMove = Backtrack(ChosenTarget.X, ChosenTarget.Y);
@@ -114,10 +181,9 @@ namespace AdventOfCode2018.Days
                             {
                                 rounds++;
                             }
+                            DumpMap(Map, "End.txt");
 
-                            Console.WriteLine($"Done after {rounds} rounds, Remaining HP: {remainingHP}, Answer: {rounds * remainingHP} ");
-                            return;
-                            // DumpMap(Map, "End.txt");
+                            return $"Done after {rounds} rounds, Remaining HP: {remainingHP}, Answer: {rounds * remainingHP} ";
 
                         }
                     }
@@ -125,15 +191,17 @@ namespace AdventOfCode2018.Days
                     ///Console.ReadKey();
                 }
                 targets.Clear();
-                DumpMap(Map, $"Round1.txt");
+                DumpMap(Map, $"Round{rounds}.txt");
                 //Console.ReadKey();
                 rounds++;
             }
+            return string.Empty;
         }
 
 
         public int Problem2(int ElfPower = 3)
         {
+            InitMap();
             bool done = false;
             int rounds = 0;
             int elfCount = Combatants.Where(e => e.Type == 'E').Count();
@@ -205,17 +273,17 @@ namespace AdventOfCode2018.Days
                     ///Console.ReadKey();
                 }
                 targets.Clear();
-                DumpMap(Map, $"Round1.txt");
+                //DumpMap(Map, $"Round1.txt");
                 //Console.ReadKey();
                 rounds++;
             }
             return int.MaxValue;
         }
 
-        public List<Coord> FindTargets(Combatant c)
+        public List<Coord> FindTargets(Combatant combatant)
         {
             targets = new List<Coord>();
-            foreach (Combatant enemy in Combatants.Where(e => e.Type != c.Type && !e.Dead && e != c))
+            foreach (Combatant enemy in Combatants.Where(e => e.Type != combatant.Type && !e.Dead && e != combatant))
             {
                 if (Map[enemy.X - 1, enemy.Y] == 0)
                 {
@@ -301,19 +369,19 @@ namespace AdventOfCode2018.Days
             int currentVal = WorkingMap[x, y];
             while (currentVal > 1)
             {
-                if (WorkingMap[x, y - 1] == currentVal - 1)
+                if (WorkingMap[x, y + 1] == currentVal - 1)
                 {
                     y--;
                 }
-                else if (WorkingMap[x - 1, y] == currentVal - 1)
+                else if (WorkingMap[x + 1, y] == currentVal - 1)
                 {
                     x--;
                 }
-                else if (WorkingMap[x + 1, y] == currentVal - 1)
+                else if (WorkingMap[x - 1, y] == currentVal - 1)
                 {
                     x++;
                 }
-                else if (WorkingMap[x, y + 1] == currentVal - 1)
+                else if (WorkingMap[x, y - 1] == currentVal - 1)
                 {
                     y++;
                 }
@@ -321,84 +389,6 @@ namespace AdventOfCode2018.Days
                 currentVal--;
             }
             return track;
-        }
-
-        public void ClumsyMapold(int xpos, int ypos)
-        {
-            int changes = 1;
-            WorkingMap = new int[xSize, ySize];
-            while (changes != 0)
-            {
-                foreach (Combatant c in Combatants.Where(c => !c.Dead))
-                {
-                    WorkingMap[c.X, c.Y] = int.MaxValue;
-                }
-
-                if (WorkingMap[xpos - 1, ypos] == 0 && Map[xpos - 1, ypos] != int.MaxValue)
-                {
-                    WorkingMap[xpos - 1, ypos] = 1;
-                }
-
-                if (WorkingMap[xpos + 1, ypos] == 0 && Map[xpos + 1, ypos] != int.MaxValue)
-                {
-                    WorkingMap[xpos + 1, ypos] = 1;
-                }
-
-                if (WorkingMap[xpos, ypos - 1] == 0 && Map[xpos, ypos - 1] != int.MaxValue)
-                {
-                    WorkingMap[xpos, ypos - 1] = 1;
-                }
-
-                if (WorkingMap[xpos, ypos + 1] == 0 && Map[xpos, ypos + 1] != int.MaxValue)
-                {
-                    WorkingMap[xpos, ypos + 1] = 1;
-                }
-
-                changes = 0;
-
-                for (int y = 0; y < ySize; y++)
-                {
-                    for (int x = 0; x < xSize; x++)
-                    {
-                        if (WorkingMap[x, y] == 0)
-                        {
-                            if (Map[x, y] == int.MaxValue)
-                            {
-                                WorkingMap[x, y] = int.MaxValue;
-                            }
-                            else
-                            {
-                                int minvalue = int.MaxValue;
-                                if (WorkingMap[x - 1, y] != 0 && WorkingMap[x - 1, y] < minvalue)
-                                {
-                                    minvalue = WorkingMap[x - 1, y];
-                                }
-
-                                if (WorkingMap[x + 1, y] != 0 && WorkingMap[x + 1, y] < minvalue)
-                                {
-                                    minvalue = WorkingMap[x + 1, y];
-                                }
-
-                                if (WorkingMap[x, y - 1] != 0 && WorkingMap[x, y - 1] < minvalue)
-                                {
-                                    minvalue = WorkingMap[x, y - 1];
-                                }
-
-                                if (WorkingMap[x, y + 1] != 0 && WorkingMap[x, y + 1] < minvalue)
-                                {
-                                    minvalue = WorkingMap[x, y + 1];
-                                }
-                                if (minvalue > 0 && minvalue < int.MaxValue)
-                                {
-                                    changes++;
-                                    WorkingMap[x, y] = minvalue + 1;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
         }
 
         public void ClumsyMap(int xpos, int ypos)
@@ -447,7 +437,6 @@ namespace AdventOfCode2018.Days
                         }
                         else if (WorkingMap[x, y] == range)
                         {
-                            int minvalue = int.MaxValue;
                             if (WorkingMap[x - 1, y] == 0)
                             {
                                 WorkingMap[x - 1, y] = range + 1;
@@ -545,6 +534,89 @@ namespace AdventOfCode2018.Days
             }
             File.WriteAllText($"C:\\temp\\{filename}", result);
         }
+
+        public void DumpMapLarge(int[,] map, string filename, Coord h1 = null, List<Coord> h2 = null, Coord h3 = null)
+        {
+            string result = string.Empty;
+            string line1 = string.Empty;
+            string line2 = string.Empty;
+
+
+            for (int y = 0; y < ySize; y++)
+            {
+                for (int x = 0; x < xSize; x++)
+                {
+                    StringBuilder l1 = new StringBuilder("  ");
+                    string l2 = "  ";
+
+                    Combatant combatant = Combatants.Where(c => c.X == x && c.Y == y && !c.Dead).SingleOrDefault();
+                    Coord target = targets?.Where(t => t.X == x && t.Y == y).SingleOrDefault();
+                    if (h1?.X == x && h1?.Y == y)
+                    {
+                        l1[1] = 'H';
+                    }
+
+                    if (h3?.X == x && h3?.Y == y)
+                    {
+                        l1[1] = 'T';
+                    }
+
+                    if (h2 != null && h2.Any(h => h.X == x && h.Y == y))
+                    {
+                        l1[1] += '·';
+                    }
+
+                    if (combatant != null)
+                    {
+                        l1[0] = combatant.Type;
+                    }
+
+                    if (target != null)
+                    {
+                        l1[1] = '$';
+                    }
+
+                    if (combatant == null)
+                    {
+                        if (map[x, y] == int.MaxValue)
+                        {
+                            l1 = new StringBuilder("##");
+                            l2 = "##";
+                        }
+                    }
+
+                    if (map[x, y] == 0)
+                    {
+                        l1 = new StringBuilder("  ");
+                        l2 = "  ";
+                    }
+
+                    if (map[x, y] > 0 && map[x, y] < int.MaxValue)
+                    {
+                        l2 = $"{map[x, y].ToString("00")}";
+                    }
+
+                    line1 += l1.ToString();
+                    line2 += l2;
+                }
+                result += line1;
+                result += "   ";
+
+                foreach (Combatant c in Combatants.Where(a => !a.Dead).Where(a => a.Y == y).OrderBy(a => a.X))
+                {
+                    result += $"{c.Type} HP: {c.HP}  ";
+                }
+
+                result += "\n";
+                result += line2;
+                result += "\n";
+                line1 = string.Empty;
+                line2 = string.Empty;
+            }
+            File.WriteAllText($"C:\\temp\\{filename}", result);
+        }
+
+
     }
 
     public class Coord
@@ -553,6 +625,7 @@ namespace AdventOfCode2018.Days
         public int Y { get; set; }
         public int Distance { get; set; }
         public bool InReach { get; set; }
+        public int TravelRank { get; set; }
     }
     public class Combatant
     {

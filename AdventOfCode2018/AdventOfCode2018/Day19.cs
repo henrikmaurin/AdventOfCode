@@ -1,33 +1,46 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode2018.Days
+namespace AdventOfCode2018
 {
-    public class Day19 : AdventOfCode2018
+    public class Day19 : DayBase, IDay
 
     {
         public List<string> Instructions { get; set; }
         public ElfCode Computer { get; set; }
         public int Counter { get; set; }
-        public Day19()
+        public Day19() : base(2018, 19)
         {
             Computer = new ElfCode();
             Computer.CreateMachine(6);
-            Computer.LoadAssembyCode("data\\19.txt");
+            string assemblyCode = input.GetDataCached();
+            Computer.LoadAssembyCodeContents(assemblyCode);
         }
-        public void Problem1()
-        {
-            Console.WriteLine("Problem 1");
 
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Register 0 contains: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Register 0 contains: {result2}");
+        }
+        public int Problem1()
+        {
             Computer.Run();
 
-            Console.WriteLine($"Register 0 contains {Computer.register[0]}");
+            return Computer.register[0];
         }
 
-        public void Problem2()
+        public int Problem2()
         {
-            Console.WriteLine("Problem 2");
+            Computer.CreateMachine(6);
+            string assemblyCode = input.GetDataCached();
+            Computer.LoadAssembyCodeContents(assemblyCode);
+
             Counter = 0;
             ElfCode.BreakPoint bp = new ElfCode.BreakPoint
             {
@@ -53,7 +66,7 @@ namespace AdventOfCode2018.Days
                 }
             }
 
-            Console.WriteLine($"Register 0 contains {result}");
+            return result;
         }
 
         public bool Problem2Breakpoint()
