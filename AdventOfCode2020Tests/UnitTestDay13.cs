@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static AdventOfCode2020.Days.Day13;
+using static AdventOfCode2020.Day13;
 
 namespace Tests
 {

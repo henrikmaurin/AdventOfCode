@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static AdventOfCode2020.Days.Day11;
+using static AdventOfCode2020.Day11;
 
 namespace Tests
 {
@@ -25,12 +25,12 @@ namespace Tests
 				"L.LLLLL.LL"
 			};
 
-			Ferry erry = new Ferry();
-			erry.Setup(testData);
-			int rounds = erry.RunUntilStable();
+			Ferry ferry = new Ferry();
+			ferry.Setup(testData);
+			int rounds = ferry.RunUntilStable();
 
 			Assert.AreEqual(5, rounds);
-			Assert.AreEqual(37, erry.Occupied);
+			Assert.AreEqual(37, ferry.Occupied);
 
 		}
 

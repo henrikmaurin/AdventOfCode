@@ -1,32 +1,41 @@
 ﻿using AdventOfCode;
+using Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day4
+	public class Day04 : DayBase, IDay
 	{
-
-		public static int Problem1()
+		private List<string> passportData;
+		public Day04() : base(2020, 4)
 		{
-			List<string> passportData = File.ReadAllLines("Data/Day4.txt").ToList();
+			passportData = input.GetDataCached().SplitOnNewline(false);
+		}
+		public void Run()
+		{
+			int result1 = Problem1();
+			Console.WriteLine($"P1: Number of passports: {result1}");
+
+			int result2 = Problem2();
+			Console.WriteLine($"P2: Number of passports: {result2}");
+		}
+
+		public int Problem1()
+		{
 			List<Passport> passports = Passport.ListFactory(passportData);
 
 			int result = ValidPassports(passports);
-			Console.WriteLine(result);
 			return result;
 		}
 
-		public static int Problem2()
+		public int Problem2()
 		{
-			List<string> passportData = File.ReadAllLines("Data/Day4.txt").ToList();
 			List<Passport> passports = Passport.ListFactory(passportData);
 
 			int result = ValidPassports(passports, true);
-			Console.WriteLine(result);
 			return result;
 		}
 

@@ -1,30 +1,37 @@
 ﻿using AdventOfCode;
+using Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day10
+	public class Day10 : DayBase, IDay
 	{
-		public static int Problem1()
+		Joltages joltages;
+		public Day10() : base(2020, 10)
 		{
-			Joltages joltages = new Joltages();
-			joltages.JoltagesList = File.ReadAllLines("Data/Day10.txt").Select(v => v.ToInt()).ToList();
+			joltages = new Joltages();
+			joltages.JoltagesList = input.GetDataCached().SplitOnNewline().ToInt();
+		}
 
+		public void Run()
+		{
+			int result1 = Problem1();
+			Console.WriteLine($"P1: Product: {result1}");
+
+			long result2 = Problem2();
+			Console.WriteLine($"P2: Product: {result2}");
+		}
+		public int Problem1()
+		{
 			joltages.GenerateStats();
 			int result = joltages.OneJumps * joltages.ThreeJumps;
-			Console.WriteLine(result);
 			return result;
 		}
-		public static long Problem2()
+		public long Problem2()
 		{
-			Joltages joltages = new Joltages();
-			joltages.JoltagesList = File.ReadAllLines("Data/Day10.txt").Select(v => v.ToInt()).ToList();
-
 			long result = joltages.GetCominationsCount();
-			Console.WriteLine(result);
 			return result;
 		}
 

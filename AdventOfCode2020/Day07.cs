@@ -1,39 +1,44 @@
 ﻿using AdventOfCode;
+using Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day7
+	public class Day07 : DayBase, IDay
 	{
-
-		public static int Problem1()
+		private List<string> data;
+		public Day07() : base(2020, 7)
 		{
-			List<string> data = File.ReadAllLines("Data/Day7.txt").ToList();
+			data = input.GetDataCached().SplitOnNewline();
+		}
 
+		public void Run()
+		{
+			int result1 = Problem1();
+			Console.WriteLine($"P1: Contains shiny gold: {result1}");
+
+			int result2 = Problem2();
+			Console.WriteLine($"P2: Individual bags Containing shiny gold: {result2}");
+		}
+		public int Problem1()
+		{
 			BagRules rules = new BagRules();
 			rules.ParseRules(data);
-
 
 			int result = rules.Contains("shiny gold");
 
-			Console.WriteLine(result);
 			return result;
 		}
 
-		public static int Problem2()
+		public int Problem2()
 		{
-			List<string> data = File.ReadAllLines("Data/Day7.txt").ToList();
-
 			BagRules rules = new BagRules();
 			rules.ParseRules(data);
 
-
 			int result = rules.TotalBags("shiny gold");
 
-			Console.WriteLine(result);
 			return result;
 		}
 

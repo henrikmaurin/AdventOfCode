@@ -1,29 +1,38 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day6
+	public class Day06 : DayBase, IDay
 	{
-		public static int Problem1()
+		private List<string> data;
+		public Day06() : base(2020, 6)
 		{
-			List<string> data = File.ReadAllLines("Data/Day6.txt").ToList();
+			data = input.GetDataCached().SplitOnNewline(false);
+		}
 
+		public void Run()
+		{
+			int result1 = Problem1();
+			Console.WriteLine($"P1: Sum: {result1}");
+
+			int result2 = Problem2();
+			Console.WriteLine($"P2: Sum: {result2}");
+		}
+		public int Problem1()
+		{
 			int result = Process(data);
 
-			Console.WriteLine(result);
 			return result;
 		}
 
-		public static int Problem2()
+		public int Problem2()
 		{
-			List<string> data = File.ReadAllLines("Data/Day6.txt").ToList();
-
 			int result = Process2(data);
 
-			Console.WriteLine(result);
 			return result;
 		}
 
@@ -68,7 +77,7 @@ namespace AdventOfCode2020.Days
 				}
 				else
 				{
-					declaration.Fill(line,Declaration.Mode.Add);
+					declaration.Fill(line, Declaration.Mode.Add);
 				}
 			}
 			if (declaration != null)

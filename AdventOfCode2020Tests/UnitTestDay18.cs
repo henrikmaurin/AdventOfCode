@@ -1,4 +1,4 @@
-﻿using AdventOfCode2020.Days;
+﻿using AdventOfCode2020;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests

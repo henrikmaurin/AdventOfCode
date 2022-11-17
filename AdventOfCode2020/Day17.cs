@@ -1,34 +1,43 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day17
+	public class Day17 : DayBase, IDay
 	{
-		public static int Problem1()
+		private List<string> data;
+		public Day17() : base(2020, 17)
 		{
-			List<string> data = File.ReadAllLines("Data/Day17.txt").ToList();
+			data = input.GetDataCached().SplitOnNewline();
+		}
 
+		public void Run()
+		{
+			int result1 = Problem1();
+			Console.WriteLine($"P1: Cubes: {result1}");
+
+			int result2 = Problem2();
+			Console.WriteLine($"P2: Cubes left: {result2}");
+		}
+		public int Problem1()
+		{
 			Cubes cubes = new Cubes();
 			cubes.Init(data);
 			int result = cubes.RunCycles(6);
 
-			Console.WriteLine(result);
 			return result;
 		}
 
-		public static int Problem2()
+		public int Problem2()
 		{
-			List<string> data = File.ReadAllLines("Data/Day17.txt").ToList();
-
 			Cubes cubes = new Cubes();
 			cubes.Init(data);
 			int result = cubes.RunCyclesHyperCube(6);
 
-			Console.WriteLine(result);
 			return result;
 		}
 

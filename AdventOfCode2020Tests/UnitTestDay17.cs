@@ -1,10 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static AdventOfCode2020.Days.Day17;
+using static AdventOfCode2020.Day17;
 
 namespace Tests
 {
@@ -17,7 +13,7 @@ namespace Tests
 		public void Example1()
 		{
 			List<string> testData = new List<string>
-			{ 
+			{
 				".#.",
 				"..#",
 				"###"
@@ -26,8 +22,8 @@ namespace Tests
 			Cubes cubes = new Cubes();
 			cubes.Init(testData);
 
-			
-			int result =cubes.RunCycles(6);
+
+			int result = cubes.RunCycles(6);
 
 			Assert.AreEqual(112, result);
 		}

@@ -1,11 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static AdventOfCode2020.Days.Day14;
+using static AdventOfCode2020.Day14;
 
 namespace Tests
 {
 	[TestClass]
-	public class UnitTestsDay14
+	public class UnitTestDay14
 	{
 
 		[TestMethod("Day 14, Part 1")]

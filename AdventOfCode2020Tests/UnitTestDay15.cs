@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static AdventOfCode2020.Days.Day15;
+using static AdventOfCode2020.Day15;
 
 namespace Tests
 {
@@ -119,7 +119,7 @@ namespace Tests
 		public void Example22()
 		{
 			ElfGame game = new ElfGame();
-		
+
 			int result = game.GetNthNumber2(new List<int> { 1, 3, 2 }, 30000000);
 
 			Assert.AreEqual(2578, result);

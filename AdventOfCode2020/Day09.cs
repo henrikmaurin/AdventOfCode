@@ -1,33 +1,42 @@
 ﻿using AdventOfCode;
+using Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day9
+	public class Day09 : DayBase, IDay
 	{
-		public static long Problem1()
-		{
-			List<long> data = File.ReadAllLines("Data/Day9.txt").Select(r => r.ToLong()).ToList();
+		List<long> data;
 
+		public Day09() : base(2020, 9)
+		{
+			data = input.GetDataCached().SplitOnNewline().ToLong();
+		}
+
+		public void Run()
+		{
+			long result1 = Problem1();
+			Console.WriteLine($"P1: Number: {result1}");
+
+			long result2 = Problem2();
+			Console.WriteLine($"P2: Encryption weakness: {result2}");
+		}
+		public long Problem1()
+		{
 			Sequence sequence = new Sequence(25);
 
 			long result = sequence.FirstNonCompliant(data);
-			Console.WriteLine(result);
 
 			return result;
 		}
 
-		public static long Problem2()
+		public long Problem2()
 		{
-			List<long> data = File.ReadAllLines("Data/Day9.txt").Select(r => r.ToLong()).ToList();
-
 			Sequence sequence = new Sequence(25);
 
-			long result = sequence.FindWeakness(167829540, data);
-			Console.WriteLine(result);
+			long result = sequence.FindWeakness(sequence.FirstNonCompliant(data), data);
 
 			return result;
 		}

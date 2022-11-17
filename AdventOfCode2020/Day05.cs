@@ -1,24 +1,36 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day5
+	public class Day05 : DayBase, IDay
 	{
-		public static int Problem1()
+		private List<Seat> seats;
+		public Day05() : base(2020, 5)
 		{
-			List<Seat> seats = File.ReadAllLines("Data/Day5.txt").Select(l => new Seat(l)).ToList();
+			seats = input.GetDataCached().SplitOnNewline().Select(l => new Seat(l)).ToList();
+		}
+
+		public void Run()
+		{
+			int result1 = Problem1();
+			Console.WriteLine($"P1: Highest ID: {result1}");
+
+			int result2 = Problem2();
+			Console.WriteLine($"P2: My Seat ID: {result2}");
+		}
+
+		public int Problem1()
+		{
 			int result = seats.Select(s => s.Id).Max();
-			Console.WriteLine(result);
 			return result;
 		}
 
-		public static int Problem2()
+		public int Problem2()
 		{
-			List<Seat> seats = File.ReadAllLines("Data/Day5.txt").Select(l => new Seat(l)).ToList();
-
 			for (int row = 0; row <= 127; row++)
 			{
 				if (seats.Where(s => s.Row == row).Count() == 7)
@@ -28,7 +40,6 @@ namespace AdventOfCode2020.Days
 						if (!seats.Where(s => s.Column == col && s.Row == row).Any())
 						{
 							Seat seat = new Seat { Column = col, Row = row };
-							Console.WriteLine(seat.ToString());
 							return seat.Id;
 						}
 					}

@@ -1,16 +1,29 @@
 ﻿using AdventOfCode;
+using Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day16
+	public class Day16 : DayBase, IDay
 	{
-		public static long Problem2()
+		private List<string> data;
+		public Day16() : base(2020, 16)
 		{
-			List<string> data = File.ReadAllLines("Data/Day16.txt").ToList();
+			data = input.GetDataCached().SplitOnNewline();
+		}
+
+		public void Run()
+		{
+			int result1 = Problem1();
+			Console.WriteLine($"P1: Error rate: {result1}");
+
+			long result2 = Problem2();
+			Console.WriteLine($"P2: Product: {result2}");
+		}
+		public long Problem2()
+		{
 			TicketValidator validator = new TicketValidator();
 
 			validator.ParseData(data);
@@ -22,19 +35,15 @@ namespace AdventOfCode2020.Days
 			foreach (Rule rule in departureRules)
 				result *= validator.MyTicket._values.ElementAt(rule.Column);
 
-
-			Console.WriteLine(result);
 			return result;
 		}
 
-		public static int Problem1()
+		public int Problem1()
 		{
-			List<string> data = File.ReadAllLines("Data/Day16.txt").ToList();
 			TicketValidator validator = new TicketValidator();
 
 			validator.ParseData(data);
 			int result = validator.ValidateAllNumbers();
-			Console.WriteLine(result);
 			return result;
 		}
 

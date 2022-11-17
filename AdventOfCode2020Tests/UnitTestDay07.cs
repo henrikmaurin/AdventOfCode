@@ -1,12 +1,11 @@
-﻿using AdventOfCode2020.Days;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static AdventOfCode2020.Days.Day7;
+using static AdventOfCode2020.Day07;
 
 namespace Tests
 {
 	[TestClass]
-	public class UnitTestDay7
+	public class UnitTestDay07
 	{
 		[TestMethod]
 		public void Example1()
@@ -56,17 +55,6 @@ namespace Tests
 			int count = bagRules.TotalBags(startBag);
 
 			Assert.AreEqual(126, count);
-		}
-		[TestMethod]
-		public void Promblem1()
-		{
-			Assert.AreEqual(278, Day7.Problem1());
-		}
-
-		[TestMethod]
-		public void Promblem2()
-		{
-			Assert.AreEqual(45157, Day7.Problem2());
 		}
 	}
 }

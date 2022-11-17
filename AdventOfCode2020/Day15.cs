@@ -1,39 +1,45 @@
 ﻿using AdventOfCode;
+using Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day15
+	public class Day15 : DayBase, IDay
 	{
-		public static int Problem1()
+		List<int> data;
+		public Day15() : base(2020, 15)
 		{
-			List<int> input = File.ReadAllText("Data/Day15.txt").Split(",").Select(i => i.ToInt()).ToList();
+			data = input.GetDataCached().IsSingleLine().Tokenize(',').ToInt().ToList();
+		}
 
+		public void Run()
+		{
+			int result1 = Problem1();
+			Console.WriteLine($"P1: 2020th number: {result1}");
 
+			int result2 = Problem2();
+			Console.WriteLine($"P2: 30000000th number: {result2}");
+		}
+		public int Problem1()
+		{
 			ElfGame game = new ElfGame();
 
-			foreach (int number in input)
+			foreach (int number in data)
 				game.AddNumber(number);
 
 			int result = game.GetNthNumber(2020);
-			Console.WriteLine(result);
 
-			
 			return result;
 		}
 
-		public static int Problem2()
+		public int Problem2()
 		{
-			List<int> input = File.ReadAllText("Data/Day15.txt").Split(",").Select(i => i.ToInt()).ToList();
-
 			ElfGame game = new ElfGame();
-			
-			int result = game.GetNthNumber2(input,30000000);
-			Console.WriteLine(result);
-			
+
+			int result = game.GetNthNumber2(data, 30000000);
+
 			return result;
 		}
 

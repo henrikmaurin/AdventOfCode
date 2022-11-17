@@ -1,27 +1,38 @@
 ﻿using AdventOfCode;
+using Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day12
+	public class Day12 : DayBase, IDay
 	{
-		public static long Problem1()
+
+		private List<string> data;
+		public Day12() : base(2020, 12)
+		{
+			data = input.GetDataCached().SplitOnNewline();
+		}
+		public void Run()
+		{
+			long result1 = Problem1();
+			Console.WriteLine($"P1: Distance: {result1}");
+
+			long result2 = Problem2();
+			Console.WriteLine($"P2: Distance: {result2}");
+		}
+		public long Problem1()
 		{
 			Navigation nav = new Navigation();
-			List<string> data = File.ReadAllLines("Data/Day12.txt").ToList();
 
 			long result = nav.RunInstructions(data);
 			Console.WriteLine(result);
 			return result;
 		}
 
-		public static long Problem2()
+		public long Problem2()
 		{
 			Navigation nav = new Navigation();
-			List<string> data = File.ReadAllLines("Data/Day12.txt").ToList();
 
 			long result = nav.RunInstructions2(data);
 			Console.WriteLine(result);

@@ -1,18 +1,31 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using AdventOfCode;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day13
+	public class Day13 : DayBase, IDay
 	{
-		public static long Problem1()
+		private List<string> data;
+		public Day13() : base(2020, 13)
 		{
-			List<string> input = File.ReadAllLines("Data/Day13.txt").ToList();
-			int earliest = input[0].ToInt();
-			List<string> ids = input[1].Split(",").ToList();
+			data = input.GetDataCached().SplitOnNewline();
+		}
+
+		public void Run()
+		{
+			long result1 = Problem1();
+			Console.WriteLine($"P1: Bus ID: {result1}");
+
+			long result2 = Problem2();
+			Console.WriteLine($"P2: Timestamp: {result2}");
+		}
+		public long Problem1()
+		{
+			int earliest = data[0].ToInt();
+			List<string> ids = data[1].Split(",").ToList();
 
 			BusLines busslines = new BusLines();
 
@@ -21,10 +34,9 @@ namespace AdventOfCode2020.Days
 			return result;
 		}
 
-		public static long Problem2()
+		public long Problem2()
 		{
-			List<string> input = File.ReadAllLines("Data/Day13.txt").ToList();
-			List<string> ids = input[1].Split(",").ToList();
+			List<string> ids = data[1].Split(",").ToList();
 
 			BusLines busslines = new BusLines();
 

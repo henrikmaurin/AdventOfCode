@@ -1,12 +1,11 @@
-﻿using AdventOfCode2020.Days;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static AdventOfCode2020.Days.Day9;
+using static AdventOfCode2020.Day09;
 
 namespace Tests
 {
 	[TestClass]
-	public class UnitTestDay9
+	public class UnitTestDay09
 	{
 		[TestMethod("Day 9, Part 1")]
 		[TestCategory("Example data 1")]
@@ -92,14 +91,6 @@ namespace Tests
 			Assert.AreEqual(127, result);
 		}
 
-		[TestMethod("Day 9, Part 1")]
-		[TestCategory("Answer")]
-		public void Answer1()
-		{
-			int answer = 167829540;
-			Assert.AreEqual(answer, Day9.Problem1());
-		}
-
 		[TestMethod("Day 9, Part 2")]
 		[TestCategory("Example data sequence")]
 		public void ExampleSequence2()
@@ -135,14 +126,5 @@ namespace Tests
 
 			Assert.AreEqual(62, result);
 		}
-
-		[TestMethod("Day 9, Part 2")]
-		[TestCategory("Answer")]
-		public void Answer2()
-		{
-			int answer = 28045630;
-			Assert.AreEqual(answer, Day9.Problem2());
-		}
-
 	}
 }

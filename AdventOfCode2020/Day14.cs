@@ -1,16 +1,29 @@
 ﻿using AdventOfCode;
+using Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day14
+	public class Day14 : DayBase, IDay
 	{
-		public static ulong Problem1()
+		private List<string> instructions;
+		public Day14() : base(2020, 14)
 		{
-			List<string> instructions = File.ReadAllLines("Data/Day14.txt").ToList();
+			instructions = input.GetDataCached().SplitOnNewline();
+		}
+
+		public void Run()
+		{
+			ulong result1 = Problem1();
+			Console.WriteLine($"P1: Sum of values: {result1}");
+
+			ulong result2 = Problem2();
+			Console.WriteLine($"P2: Sum of values: {result2}");
+		}
+		public ulong Problem1()
+		{
 			PortComputer pc = new PortComputer();
 			pc.ParseInstuctions(instructions);
 			ulong result = pc.Sum();
@@ -18,9 +31,8 @@ namespace AdventOfCode2020.Days
 			return result;
 		}
 
-		public static ulong Problem2()
+		public ulong Problem2()
 		{
-			List<string> instructions = File.ReadAllLines("Data/Day14.txt").ToList();
 			PortComputer pc = new PortComputer();
 			pc.ParseInstuctions2(instructions);
 			ulong result = pc.Sum();

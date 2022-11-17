@@ -53,6 +53,11 @@ namespace AdventOfCode
 			return s.Select(str => str.ToLong()).ToArray();
 		}
 
+		public static List<long> ToLong(this List<string> s)
+		{
+			return s.Select(str => str.ToLong()).ToList();
+		}
+
 		public static ulong ToUlong(this string s)
 		{
 			ulong.TryParse(s, out ulong outVal);

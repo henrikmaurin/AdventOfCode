@@ -1,4 +1,4 @@
-﻿using AdventOfCode2020.Days;
+﻿using AdventOfCode2020;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
@@ -32,14 +32,6 @@ namespace Tests
 
 			Assert.AreEqual(7, joltages.OneJumps);
 			Assert.AreEqual(5, joltages.ThreeJumps);
-		}
-
-		[TestMethod("Day 10, Part 1")]
-		[TestCategory("Answer")]
-		public void Answer1()
-		{
-			int answer = 2263;
-			Assert.AreEqual(answer, Day10.Problem1());
 		}
 
 		[TestMethod("Day 10, Part 1")]
@@ -106,14 +98,5 @@ namespace Tests
 
 			Assert.AreEqual(19208, result);
 		}
-
-		[TestMethod("Day 10, Part 2")]
-		[TestCategory("Answer")]
-		public void Answer2()
-		{
-			long answer = 396857386627072;
-			Assert.AreEqual(answer, Day10.Problem2());
-		}
-
 	}
 }

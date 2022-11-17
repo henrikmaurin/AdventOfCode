@@ -1,17 +1,18 @@
-﻿using AdventOfCode2020.Days;
+﻿using AdventOfCode2020;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {
 	[TestClass]
-	public class UnitTestDay5
+	public class UnitTestDay05
 	{
 		[TestMethod]
 		public void Example1()
 		{
 			string seatData = "BFFFBBFRRR";
 
-			Day5.Seat resultSeat = new Day5.Seat(seatData);
+			Day05.Seat resultSeat = new Day05.Seat(seatData);
 			Assert.AreEqual(567, resultSeat.Id);
 		}
 		[TestMethod]
@@ -19,7 +20,7 @@ namespace Tests
 		{
 			string seatData = "FFFBBBFRRR";
 
-			Day5.Seat resultSeat = new Day5.Seat(seatData);
+			Day05.Seat resultSeat = new Day05.Seat(seatData);
 			Assert.AreEqual(119, resultSeat.Id);
 		}
 		[TestMethod]
@@ -27,7 +28,7 @@ namespace Tests
 		{
 			string seatData = "BBFFBBFRLL";
 
-			Day5.Seat resultSeat = new Day5.Seat(seatData);
+			Day05.Seat resultSeat = new Day05.Seat(seatData);
 			Assert.AreEqual(820, resultSeat.Id);
 		}
 
@@ -36,20 +37,8 @@ namespace Tests
 		{
 			string seatData = "FBFBBFFRLR";
 
-			Day5.Seat resultSeat = new Day5.Seat(seatData);
+			Day05.Seat resultSeat = new Day05.Seat(seatData);
 			Assert.AreEqual(357, resultSeat.Id);
-		}
-
-		[TestMethod]
-		public void Problem1()
-		{
-			Assert.AreEqual(801, Day5.Problem1());
-		}
-
-		[TestMethod]
-		public void Problem2()
-		{
-			Assert.AreEqual(597, Day5.Problem2());
 		}
 	}
 }

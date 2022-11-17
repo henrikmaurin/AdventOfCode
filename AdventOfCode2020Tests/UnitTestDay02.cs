@@ -1,18 +1,18 @@
-﻿using AdventOfCode2020.Days;
+﻿using AdventOfCode2020;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 namespace Tests
 {
 	[TestClass]
-	public class UnitTestDay2
+	public class UnitTestDay02
 	{
 		[TestMethod("Day 2, Part 1")]
 		[TestCategory("Example data 1")]
 		public void Part1_1()
 		{
 			string password = "1-3 a: abcde";
-			bool result = Day2.ValidatePassword(password);
+			bool result = Day02.ValidatePassword(password);
 
 			Assert.IsTrue(result);
 		}
@@ -22,7 +22,7 @@ namespace Tests
 		public void Part1_2()
 		{
 			string password = "1-3 b: cdefg";
-			bool result = Day2.ValidatePassword(password);
+			bool result = Day02.ValidatePassword(password);
 
 			Assert.IsFalse(result);
 		}
@@ -32,7 +32,7 @@ namespace Tests
 		public void Part1_3()
 		{
 			string password = "2-9 c: ccccccccc";
-			bool result = Day2.ValidatePassword(password);
+			bool result = Day02.ValidatePassword(password);
 
 			Assert.IsTrue(result);
 		}
@@ -48,25 +48,16 @@ namespace Tests
 					"2-9 c: ccccccccc"
 				};
 
-			int result = Day2.ValidatePasswords(passwords);
+			int result = Day02.ValidatePasswords(passwords);
 			Assert.AreEqual(2, result);
 		}
-
-		[TestMethod("Day 2, Part 1")]
-		[TestCategory("Answer")]
-		public void Answer1()
-		{
-			int answer = 625;
-			Assert.AreEqual(answer, Day2.Problem1());
-		}
-
 
 		[TestMethod("Day 2, Part 2")]
 		[TestCategory("Example data 1")]
 		public void Part2_1()
 		{
 			string password = "1-3 a: abcde";
-			bool result = Day2.ValidatePasswordNew(password);
+			bool result = Day02.ValidatePasswordNew(password);
 
 			Assert.IsTrue(result);
 		}
@@ -76,7 +67,7 @@ namespace Tests
 		public void Part2_2()
 		{
 			string password = "1-3 b: cdefg";
-			bool result = Day2.ValidatePasswordNew(password);
+			bool result = Day02.ValidatePasswordNew(password);
 
 			Assert.IsFalse(result);
 		}
@@ -86,7 +77,7 @@ namespace Tests
 		public void Part2_3()
 		{
 			string password = "2-9 c: ccccccccc";
-			bool result = Day2.ValidatePasswordNew(password);
+			bool result = Day02.ValidatePasswordNew(password);
 
 			Assert.IsFalse(result);
 		}
@@ -102,16 +93,8 @@ namespace Tests
 					"2-9 c: ccccccccc"
 				};
 
-			int result = Day2.ValidatePasswordsNew(passwords);
+			int result = Day02.ValidatePasswordsNew(passwords);
 			Assert.AreEqual(1, result);
-		}
-
-		[TestMethod("Day 2, Part 1")]
-		[TestCategory("Answer")]
-		public void Problem2()
-		{
-			int answer = 391;
-			Assert.AreEqual(answer, Day2.Problem2());
 		}
 	}
 }

@@ -1,13 +1,14 @@
-﻿using AdventOfCode2020.Days;
+﻿using AdventOfCode2020;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static AdventOfCode2020.Days.Day4;
+using static AdventOfCode2020.Day04;
 
 namespace Tests
 {
 	[TestClass]
-	public class UnitTestDay4
+	public class UnitTestDay04
 	{
+
 		[TestMethod("Day 4, Part 1")]
 		[TestCategory("Example data")]
 		public void Part1()
@@ -34,14 +35,6 @@ namespace Tests
 			int result = ValidPassports(passports);
 
 			Assert.AreEqual(2, result);
-		}
-
-		[TestMethod("Day 4, Part 1")]
-		[TestCategory("Answer")]
-		public void Answer1()
-		{
-			int answer = 170;
-			Assert.AreEqual(answer, Day4.Problem1());
 		}
 
 		[TestMethod("Day 4, Part 2")]
@@ -92,19 +85,11 @@ namespace Tests
 				"iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719"
 			};
 
-			List<Day4.Passport> passports = Passport.ListFactory(passportData);
+			List<Day04.Passport> passports = Passport.ListFactory(passportData);
 
-			int result = Day4.ValidPassports(passports, true);
+			int result = Day04.ValidPassports(passports, true);
 
 			Assert.AreEqual(4, result);
-		}
-
-		[TestMethod("Day 4, Part 2")]
-		[TestCategory("Answer")]
-		public void Answer2()
-		{
-			int answer = 103;
-			Assert.AreEqual(answer, Day4.Problem2());
 		}
 	}
 }

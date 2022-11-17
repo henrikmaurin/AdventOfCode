@@ -1,11 +1,11 @@
-using AdventOfCode2020.Days;
+using AdventOfCode2020;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 namespace Tests
 {
 	[TestClass]
-	public class UnitTestDay1
+	public class UnitTestDay01
 	{
 		[TestMethod("Day 1, Part 1")]
 		[TestCategory("Example data")]
@@ -20,17 +20,9 @@ namespace Tests
 									675,
 									1456};
 
-			int result = Day1.FindAndMultiplyX(values, goalvalue, 2);
+			int result = Day01.FindAndMultiplyX(values, goalvalue, 2);
 
 			Assert.AreEqual(514579, result);
-		}
-
-		[TestMethod("Day 1, Part 1")]
-		[TestCategory("Answer")]
-		public void Answer1()
-		{
-			int answer = 1018336;
-			Assert.AreEqual(answer, Day1.Problem1());
 		}
 
 		[TestMethod("Day 1, Part 2")]
@@ -46,18 +38,9 @@ namespace Tests
 									675,
 									1456};
 
-			int result = Day1.FindAndMultiplyX(values, goalvalue, 3);
+			int result = Day01.FindAndMultiplyX(values, goalvalue, 3);
 
 			Assert.AreEqual(241861950, result);
 		}
-
-		[TestMethod("Day 1, Part 2")]
-		[TestCategory("Answer")]
-		public void Answer2()
-		{
-			long answer = 288756720;
-			Assert.AreEqual(answer, Day1.Problem2());
-		}
-
 	}
 }

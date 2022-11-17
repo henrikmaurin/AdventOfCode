@@ -1,29 +1,41 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day1
+	public class Day01 : DayBase, IDay
 	{
-		public static int Problem1()
+		private List<int> values;
+		public Day01() : base(2020, 1)
 		{
-			List<int> values = File.ReadAllLines("Data/Day1.txt").Select(v => int.Parse(v)).ToList();
+			values = input.GetDataCached().SplitOnNewline().ToInt();
+		}
+
+		public void Run()
+		{
+			int result1 = Problem1();
+			Console.WriteLine($"P1: Product: {result1}");
+
+			int result2 = Problem2();
+			Console.WriteLine($"P2: Product: {result2}");
+		}
+
+		public int Problem1()
+		{
 			int goalValue = 2020;
 
 			int result = FindAndMultiplyX(values, goalValue, 2);
-			Console.WriteLine(result);
 			return result;
 		}
 
-		public static int Problem2()
+		public int Problem2()
 		{
-			List<int> values = File.ReadAllLines("Data/Day1.txt").Select(v => int.Parse(v)).ToList();
 			int goalValue = 2020;
 
 			int result = FindAndMultiplyX(values, goalValue, 3);
-			Console.WriteLine(result);
 			return result;
 		}
 

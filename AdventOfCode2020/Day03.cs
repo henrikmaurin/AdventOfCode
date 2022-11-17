@@ -1,25 +1,38 @@
-﻿using System;
+﻿using AdventOfCode;
+using Common;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day3
+	public class Day03 : DayBase, IDay
 	{
-		public static int Problem1()
+		private List<string> mapData;
+		public Day03() : base(2020, 3)
 		{
-			List<string> mapData = File.ReadAllLines("Data/Day3.txt").ToList();
+			mapData = input.GetDataCached().SplitOnNewline();
+		}
+
+		public void Run()
+		{
+			int result1 = Problem1();
+			Console.WriteLine($"P1: Number of trees: {result1}");
+
+			long result2 = Problem2();
+			Console.WriteLine($"P2: Multiplied number of trees: {result2}");
+		}
+
+		public int Problem1()
+		{
 			Map map = Map.MapFactory(mapData);
 			int result = CountTrees(3, 1, map);
 
-			Console.WriteLine(result);
 			return result;
 		}
 
-		public static long Problem2()
+		public long Problem2()
 		{
-			List<string> mapData = File.ReadAllLines("Data/Day3.txt").ToList();
 			Map map = Map.MapFactory(mapData);
 
 			long result = CountTrees(1, 1, map);
@@ -28,7 +41,6 @@ namespace AdventOfCode2020.Days
 			result *= CountTrees(7, 1, map);
 			result *= CountTrees(1, 2, map);
 
-			Console.WriteLine(result);
 			return result;
 		}
 

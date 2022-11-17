@@ -1,36 +1,45 @@
 ﻿using AdventOfCode;
+using Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace AdventOfCode2020.Days
+namespace AdventOfCode2020
 {
-	public class Day8
+	public class Day08 : DayBase, IDay
 	{
-		public static int Problem1()
-		{
-			List<string> programCode = File.ReadAllLines("Data/Day8.txt").ToList();
+		private List<string> programCode;
 
+		public Day08() : base(2020, 8)
+		{
+			programCode = input.GetDataCached().SplitOnNewline();
+		}
+
+		public void Run()
+		{
+			int result1 = Problem1();
+			Console.WriteLine($"P1: Accumulator: {result1}");
+
+			int result2 = Problem2();
+			Console.WriteLine($"P2: Accumulator: {result2}");
+		}
+		public int Problem1()
+		{
 			Computer computer = new Computer();
 			computer.Load(programCode);
 
 			int result = computer.RunUntilRepeat();
 
-			Console.WriteLine(result);
 			return result;
 		}
 
-		public static int Problem2()
+		public int Problem2()
 		{
-			List<string> programCode = File.ReadAllLines("Data/Day8.txt").ToList();
-
 			Computer computer = new Computer();
 			computer.Load(programCode);
 
 			int result = ModifyUntilExecuteToEnd(computer);
 
-			Console.WriteLine(result);
 			return result;
 		}
 
