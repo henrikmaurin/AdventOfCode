@@ -4,11 +4,13 @@
     public class DayBase
     {
 
-        public DayBase(int year, int day)
+        public DayBase(int year, int day, bool runtests = false)
         {
             Year = year;
             Day = day;
 
+            if (runtests)
+                return;
 
             if (!File.Exists("AOCCookie.txt"))
             {

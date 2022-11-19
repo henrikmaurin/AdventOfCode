@@ -1,14 +1,17 @@
-﻿using AdventOfCode;
-using Common;
+﻿using Common;
 
 namespace AdventOfCodeTemplate
 {
+
     public class Day03 : DayBase, IDay
     {
+        private const int day = 3;
         List<string> data;
-        public Day03(bool runtests) : base(runtests) { }
-        public Day03() : base(Global.Year, 3)
+        public Day03(bool runtests = false) : base(Global.Year, day, runtests)
         {
+            if (runtests)
+                return;
+
             data = input.GetDataCached().SplitOnNewline();
         }
         public void Run()
