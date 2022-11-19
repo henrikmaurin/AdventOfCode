@@ -4,10 +4,15 @@ namespace AdventOfCode2015
 {
     public class Day06 : DayBase, IDay
     {
+        private const int day = 6;
         private int[,] grid = new int[1000, 1000];
         private bool useNewInstructions = false;
 
-        public Day06() : base(2015, 6) { }
+        public Day06(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+        }
 
         public int Problem1()
         {

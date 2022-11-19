@@ -1,10 +1,5 @@
 ﻿using AdventOfCode2015;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2015Tests
 {
@@ -12,24 +7,24 @@ namespace AdventOfCode2015Tests
     public class Day05Tests
     {
         Day05 day;
-        
+
         [TestInitialize]
         public void Init()
         {
-            day = new Day05();
+            day = new Day05(true);
         }
 
         [TestMethod]
         public void TestMethod1()
         {
-              string str = "ugknbfddgicrmopn";
+            string str = "ugknbfddgicrmopn";
             Assert.IsTrue(day.Nice(str));
         }
 
         [TestMethod]
         public void TestMethod2()
         {
-             string str = "aaa";
+            string str = "aaa";
             Assert.IsTrue(day.Nice(str));
         }
 
@@ -43,14 +38,14 @@ namespace AdventOfCode2015Tests
         [TestMethod]
         public void TestMethod4()
         {
-             string str = "haegwjzuvuyypxyu";
+            string str = "haegwjzuvuyypxyu";
             Assert.IsTrue(day.Naughty(str));
         }
 
         [TestMethod]
         public void TestMethod5()
         {
-              string str = "dvszwmarrgswjxmb";
+            string str = "dvszwmarrgswjxmb";
             Assert.IsTrue(day.Naughty(str));
         }
 

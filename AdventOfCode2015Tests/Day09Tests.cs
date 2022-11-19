@@ -10,7 +10,7 @@ namespace AdventOfCode2015Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day09();
+            day = new Day09(true);
         }
 
         [TestMethod]

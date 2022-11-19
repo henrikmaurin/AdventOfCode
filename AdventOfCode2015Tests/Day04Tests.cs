@@ -6,24 +6,28 @@ namespace AdventOfCode2015Tests
     [TestClass]
     public class Day04Tests
     {
+        private Day04 day;
+
+        [TestInitialize]
+        public void Init()
+        {
+            day = new Day04(true);
+        }
+
         [TestMethod]
         public void TestMethod1()
         {
-            Day04 day04 = new Day04();
-
             string key = "abcdef";
 
-            Assert.AreEqual(609043, day04.FindFirst(key));
+            Assert.AreEqual(609043, day.FindFirst(key));
         }
 
         [TestMethod]
         public void TestMethod2()
         {
-            Day04 day04 = new Day04();
-
             string key = "pqrstuv";
 
-            Assert.AreEqual(1048970, day04.FindFirst(key));
+            Assert.AreEqual(1048970, day.FindFirst(key));
         }
     }
 }

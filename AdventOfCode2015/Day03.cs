@@ -4,7 +4,12 @@ namespace AdventOfCode2015
 {
     public class Day03 : DayBase, IDay
     {
-        public Day03() : base(2015, 3) { }
+        private const int day = 3;
+        public Day03(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+        }
 
         public int Problem1()
         {

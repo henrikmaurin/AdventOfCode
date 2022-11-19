@@ -7,15 +7,16 @@ namespace AdventOfCode2017
 {
     public class Day11 : DayBase, IDay
     {
+        private const int day = 1;
         public List<string> Instuctions { get; set; }
-        public Day11() : base(2017, 11)
+        public Day11(bool runtests = false) : base(Global.Year, day, runtests)
         {
+            if (runtests)
+                return;
+
             Instuctions = input.GetDataCached().IsSingleLine().Split(",").ToList();
         }
-        public Day11(bool runTests) : base(runTests)
-        {
 
-        }
 
         public void Run()
         {

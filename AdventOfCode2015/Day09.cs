@@ -4,9 +4,14 @@ namespace AdventOfCode2015
 {
     public class Day09 : DayBase, IDay
     {
+        private const int day = 9;
         private Dictionary<string, int> _distances;
 
-        public Day09() : base(2015, 9) { }
+        public Day09(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+        }
 
         public int Problem1()
         {

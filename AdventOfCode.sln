@@ -31,11 +31,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode2019", "AdventO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Runner", "Runner\Runner.csproj", "{52497569-7B12-44D4-9A26-334519D77735}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode2017Tests.cs", "AdventOfCode2017Tests.cs\AdventOfCode2017Tests.cs.csproj", "{BAE829FA-E41A-4192-A7EC-1BBF8C41E3BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode2017Tests", "AdventOfCode2017Tests.cs\AdventOfCode2017Tests.csproj", "{BAE829FA-E41A-4192-A7EC-1BBF8C41E3BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCodeTemplate", "AdventOfCodeTemplate\AdventOfCodeTemplate.csproj", "{086C648E-0E62-410A-A1C9-4ED55557DD34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCodeTemplate", "AdventOfCodeTemplate\AdventOfCodeTemplate.csproj", "{086C648E-0E62-410A-A1C9-4ED55557DD34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCodeTestsTemplate", "AdventOfCodeTestsTemplate\AdventOfCodeTestsTemplate.csproj", "{6C1D5690-B9D8-4449-8851-8B1398FAF24C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCodeTestsTemplate", "AdventOfCodeTestsTemplate\AdventOfCodeTestsTemplate.csproj", "{6C1D5690-B9D8-4449-8851-8B1398FAF24C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

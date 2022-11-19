@@ -1,10 +1,5 @@
 ﻿using AdventOfCode2015;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2015Tests
 {
@@ -15,7 +10,7 @@ namespace AdventOfCode2015Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day06();
+            day = new Day06(true);
         }
 
         [TestMethod]

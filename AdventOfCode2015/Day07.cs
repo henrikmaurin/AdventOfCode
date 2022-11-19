@@ -4,9 +4,17 @@ namespace AdventOfCode2015
 {
     public class Day07 : DayBase, IDay
     {
+        private const int day = 7;
         private Dictionary<string, Gate> _gates;
 
-        public Day07() : base(2015, 7)
+        public Day07(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+        }
+
+        public void Init()
         {
             _gates = new Dictionary<string, Gate>();
             OutputExtension.SetGates(ref _gates);
@@ -14,6 +22,7 @@ namespace AdventOfCode2015
 
         public ushort? Problem2(int newVal)
         {
+            Init();
             string[] lines = input.GetDataCached().SplitOnNewlineArray(true);
 
             foreach (string line in lines)
@@ -29,6 +38,7 @@ namespace AdventOfCode2015
 
         public ushort? Problem1()
         {
+            Init();
             string[] lines = input.GetDataCached().SplitOnNewlineArray(true);
 
             foreach (string line in lines)
@@ -58,6 +68,8 @@ namespace AdventOfCode2015
 
         public bool Parse(string line)
         {
+
+
             if (string.IsNullOrEmpty(line))
                 return false;
 

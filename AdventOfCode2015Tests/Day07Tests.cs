@@ -1,21 +1,17 @@
 ﻿using AdventOfCode2015;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2015Tests
 {
     [TestClass]
-    public class Day07Test
+    public class Day07Tests
     {
         private Day07 day;
         [TestInitialize]
         public void Init()
         {
-            day = new Day07();
+            day = new Day07(true);
+            day.Init();
         }
 
         [TestMethod]
@@ -50,7 +46,7 @@ namespace AdventOfCode2015Tests
 
         [TestMethod]
         public void TestMethod3()
-        {            
+        {
             day.Parse("y RSHIFT 2 -> g");
             day.Parse("NOT x -> h");
             day.Parse("NOT y -> i");
