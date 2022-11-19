@@ -1,4 +1,4 @@
-﻿using AdventOfCode;
+﻿using Common;
 using Common;
 
 namespace AdventOfCode2019

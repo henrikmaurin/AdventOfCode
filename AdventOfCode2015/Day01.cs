@@ -1,11 +1,10 @@
-﻿using AdventOfCode;
-using Common;
+﻿using Common;
 
 namespace AdventOfCode2015
 {
     public class Day01 : DayBase, IDay
     {
-        public Day01() : base(2015, 1) { }
+        public Day01() : base(Global.Year, 1) { }
         public int Problem1()
         {
             string data = input.GetDataCached();

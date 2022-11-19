@@ -1,5 +1,4 @@
-﻿using AdventOfCode;
-using Common;
+﻿using Common;
 using System.Collections.Generic;
 
 namespace AdventOfCode2016

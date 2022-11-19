@@ -2,6 +2,10 @@
 
 namespace AdventOfCode2015
 {
+    public static class Global
+    {
+        public const int Year = 2015;
+    }
     public class Year : IYear
     {
         public IDay? Day(int day)

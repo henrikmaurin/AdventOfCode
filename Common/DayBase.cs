@@ -1,6 +1,4 @@
-﻿using Common;
-
-namespace AdventOfCode
+﻿namespace Common
 {
 
     public class DayBase

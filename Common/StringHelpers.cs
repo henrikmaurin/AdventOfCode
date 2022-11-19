@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace AdventOfCode
+namespace Common
 {
 	public static class StringHelpers
 	{
