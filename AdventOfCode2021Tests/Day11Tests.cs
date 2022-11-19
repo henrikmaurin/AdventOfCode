@@ -1,10 +1,5 @@
 ﻿using AdventOfCode2021;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021Tests
 {
@@ -16,7 +11,7 @@ namespace AdventOfCode2021Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day11();
+            day = new Day11(true);
         }
 
         [TestMethod]
@@ -38,17 +33,17 @@ namespace AdventOfCode2021Tests
 
             day.Init(instructions);
 
-        
+
             Assert.AreEqual(0, day.CountFlashes(1));
             Assert.AreEqual(35, day.CountFlashes(1));
-            Assert.AreEqual(80,day.CountFlashes(1));
+            Assert.AreEqual(80, day.CountFlashes(1));
             Assert.AreEqual(96, day.CountFlashes(1));
             Assert.AreEqual(104, day.CountFlashes(1));
             Assert.AreEqual(105, day.CountFlashes(1));
             Assert.AreEqual(112, day.CountFlashes(1));
             Assert.AreEqual(136, day.CountFlashes(1));
-            Assert.AreEqual(136+39, day.CountFlashes(1));
-            Assert.AreEqual(136 + 39+29, day.CountFlashes(1));
+            Assert.AreEqual(136 + 39, day.CountFlashes(1));
+            Assert.AreEqual(136 + 39 + 29, day.CountFlashes(1));
 
         }
         [TestMethod]
@@ -71,7 +66,7 @@ namespace AdventOfCode2021Tests
             day.Init(instructions);
 
 
-        
+
             Assert.AreEqual(204, day.CountFlashes(10));
 
         }

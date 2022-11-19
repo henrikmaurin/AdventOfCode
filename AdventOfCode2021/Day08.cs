@@ -1,33 +1,41 @@
-﻿using AdventOfCode;
-using Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day08 : DayBase
-    {      
+    public class Day08 : DayBase, IDay
+    {
+        private const int day = 8;
+        private string[] data;
+        public Day08(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+            data = input.GetDataCached().SplitOnNewlineArray();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Times digis appear: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Sum: {result2}");
+        }
+
         public int Problem1()
         {
-            string[] data = input.GetDataCached(2021, 8).SplitOnNewlineArray();
-
             return CountOutputEasyDigits(data);
         }
 
         public int Problem2()
         {
-            string[] data = input.GetDataCached(2021, 8).SplitOnNewlineArray();
-
             int result = 0;
-            foreach (string s in data.Where(d=>!string.IsNullOrEmpty(d)))
+            foreach (string s in data.Where(d => !string.IsNullOrEmpty(d)))
                 result += Decode(s);
 
             return result;
         }
-         
+
         public int Decode(string str)
         {
             List<string> digitdata = str.Split('|').First().Trim().Split(' ').ToList();
@@ -57,10 +65,10 @@ namespace AdventOfCode2021
             string[] digits = { zero, one, two, three, four, five, six, seven, eight, nine };
             for (int i = 0; i < 10; i++)
                 digits[i] = new string(digits[i].ToCharArray().OrderBy(d => d).ToArray());
- 
+
             int multiplier = 1000;
             int result = 0;
-            for (int i=0; i <4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 string ordered = new string(number[i].ToCharArray().OrderBy(d => d).ToArray());
 
@@ -72,7 +80,7 @@ namespace AdventOfCode2021
 
             return result;
         }
-            
+
 
 
         public int CountOutputEasyDigits(string[] data)
@@ -89,8 +97,8 @@ namespace AdventOfCode2021
 
 
             return count;
-        }          
-       
+        }
+
     }
     public static class Extension
     {

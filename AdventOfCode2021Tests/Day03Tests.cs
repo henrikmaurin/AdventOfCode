@@ -1,11 +1,6 @@
-﻿using AdventOfCode;
+﻿using Common;
 using AdventOfCode2021;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021Tests
 {
@@ -17,7 +12,7 @@ namespace AdventOfCode2021Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day03();
+            day = new Day03(true);
         }
 
         [TestMethod]
@@ -36,7 +31,7 @@ namespace AdventOfCode2021Tests
                             "00010",
                             "01010" };
 
-            Assert.AreEqual(22, day.CalcGamma(data.FromBinary(),data[0].Length));
+            Assert.AreEqual(22, day.CalcGamma(data.FromBinary(), data[0].Length));
 
 
         }

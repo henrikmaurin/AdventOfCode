@@ -1,20 +1,35 @@
-﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day06 : DayBase
+    public class Day06 : DayBase, IDay
     {
+        private const int day = 6;
+        private int[] data;
         Fish fishes;
-        public Day06() : base() { fishes = new Fish(); }
+        public Day06(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+            data = input.GetDataCached().Split(",").ToInt();
+        }
+        public void Run()
+        {
+            long result1 = Problem1();
+            Console.WriteLine($"P1: Number of lanternfish: {result1}");
+
+            long result2 = Problem2();
+            Console.WriteLine($"P2: Number of lanternfish: {result2}");
+        }
+        public void Init()
+        {
+            fishes = new Fish();
+        }
 
         public long Problem1()
         {
-            int[] data = input.GetDataCached(2021, 6).Split(",").ToInt();
+            Init();
 
             long total = 0;
             int days = 80;
@@ -29,7 +44,7 @@ namespace AdventOfCode2021
 
         public long Problem2()
         {
-            int[] data = input.GetDataCached(2021, 6).Split(",").ToInt();
+            Init();
 
             long total = 0;
             int days = 256;
@@ -43,7 +58,7 @@ namespace AdventOfCode2021
         }
     }
 
-    public  class Fish
+    public class Fish
     {
         Dictionary<string, long> cache = new Dictionary<string, long>();
 
@@ -60,16 +75,16 @@ namespace AdventOfCode2021
             {
                 timer--;
                 days--;
-                if (timer<0)
+                if (timer < 0)
                 {
                     timer = 6;
                     total += GetSpawns(8, days);
                 }
                 ;
-                
+
             }
-            cache.Add(key, total);  
-            return total;           
+            cache.Add(key, total);
+            return total;
         }
 
     }

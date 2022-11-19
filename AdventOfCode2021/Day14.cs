@@ -1,20 +1,31 @@
-﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day14 : DayBase
+    public class Day14 : DayBase, IDay
     {
+        private const int day = 14;
+        private string[] instructions;
+
         private LinkedList<char> _template;
         private Dictionary<string, char> insertionRules = null;
-  
+        public Day14(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+            instructions = input.GetDataCached().SplitOnNewline().ToArray();
+        }
+        public void Run()
+        {
+            Int64 result1 = Problem1();
+            Console.WriteLine($"P1: Difference: {result1}");
+
+            Int64 result2 = Problem2();
+            Console.WriteLine($"P2: Difference: {result2}");
+        }
         public Int64 Problem1()
         {
-            string[] instructions = input.GetDataCached(2021, 14).SplitOnNewline().ToArray();
             Parse(instructions);
             Iterate(10);
 
@@ -23,8 +34,6 @@ namespace AdventOfCode2021
 
         public Int64 Problem2()
         {
-            string[] instructions = input.GetDataCached(2021, 14).SplitOnNewline().ToArray();
-
             Parse(instructions);
 
             return RunIterations(40);
@@ -48,9 +57,9 @@ namespace AdventOfCode2021
             for (int i = 0; i < depth; i++)
                 result = Iterate(result);
 
-            var c = result             
-                .GroupBy(g=>g.Key.Substring(0,1))
-                .Select(g=>new {Count = g.Sum(b=> b.Value), Key = g.Key})
+            var c = result
+                .GroupBy(g => g.Key.Substring(0, 1))
+                .Select(g => new { Count = g.Sum(b => b.Value), Key = g.Key })
                 .ToArray();
 
             result.Clear();
@@ -62,11 +71,11 @@ namespace AdventOfCode2021
             return result.Select(r => r.Value).Max() - result.Select(r => r.Value).Min();
         }
 
-       
+
         Dictionary<string, Int64> Iterate(Dictionary<string, Int64> currentState)
         {
             Dictionary<string, Int64> result = new Dictionary<string, Int64>();
-            
+
             foreach (var state in currentState)
             {
                 char c1 = state.Key[0];
@@ -84,7 +93,7 @@ namespace AdventOfCode2021
             }
 
             return result;
-        }        
+        }
 
         public Int64 GetValue()
         {
@@ -136,7 +145,7 @@ namespace AdventOfCode2021
 
             foreach (string instruction in instructions.Skip(1).Where(l => !string.IsNullOrWhiteSpace(l)))
             {
-                AddInsertionRule(instruction);              
+                AddInsertionRule(instruction);
             }
 
         }
@@ -159,7 +168,7 @@ namespace AdventOfCode2021
             char insert = rule.Split("->").Last().Trim()[0];
 
             insertionRules.Add(pair, insert);
-        }      
+        }
 
 
     }

@@ -1,11 +1,6 @@
-﻿using AdventOfCode;
-using AdventOfCode2021;
+﻿using AdventOfCode2021;
+using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021Tests
 {
@@ -17,7 +12,7 @@ namespace AdventOfCode2021Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day15();
+            day = new Day15(true);
         }
 
         [TestMethod]
@@ -36,7 +31,7 @@ namespace AdventOfCode2021Tests
             "2311944581"};
 
             day.Parse(data);
-            Assert.AreEqual(40, day.FindLowest(0, 0, 0)-data[0][0].ToInt());
+            Assert.AreEqual(40, day.FindLowest(0, 0, 0) - data[0][0].ToInt());
         }
 
         [TestMethod]
@@ -55,7 +50,7 @@ namespace AdventOfCode2021Tests
             "2311944581"};
 
             day.Parse(data);
-           
+
             Assert.AreEqual(40, day.RunAStar());
 
         }
@@ -75,7 +70,7 @@ namespace AdventOfCode2021Tests
             "1293138521",
             "2311944581"};
 
-            day.ParseMega(data);      
+            day.ParseMega(data);
             Assert.AreEqual(315, day.RunAStar());
 
         }

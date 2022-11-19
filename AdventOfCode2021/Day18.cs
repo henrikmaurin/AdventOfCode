@@ -1,21 +1,33 @@
-﻿using AdventOfCode;
-using Common;
+﻿using Common;
 using System.Text;
 
 namespace AdventOfCode2021
 {
-    public class Day18 : DayBase
+    public class Day18 : DayBase, IDay
     {
+        private const int day = 18;
+        private string[] data;
         private List<Token> tokens;
         //private TreeBranch topBranch;
-        public Day18()
+        public Day18(bool runtests = false) : base(Global.Year, day, runtests)
         {
+            if (runtests)
+                return;
 
+            data = input.GetDataCached().SplitOnNewlineArray().Where(s => !string.IsNullOrEmpty(s)).ToArray();
+        }
+
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Magnitude: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Magnitude: {result2}");
         }
 
         public int Problem1()
         {
-            string[] data = input.GetDataCached().SplitOnNewlineArray().Where(s => !string.IsNullOrEmpty(s)).ToArray();
             AddAllNumbers(data);
 
             string resultString = ToString();
@@ -28,7 +40,6 @@ namespace AdventOfCode2021
         }
         public int Problem2()
         {
-            string[] data = input.GetDataCached().SplitOnNewlineArray().Where(s => !string.IsNullOrEmpty(s)).ToArray();
             return FindMax(data);
         }
 

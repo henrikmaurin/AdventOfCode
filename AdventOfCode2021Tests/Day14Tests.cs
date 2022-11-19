@@ -1,10 +1,5 @@
 ﻿using AdventOfCode2021;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021Tests
 {
@@ -16,7 +11,7 @@ namespace AdventOfCode2021Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day14();
+            day = new Day14(true);
         }
 
         [TestMethod]
@@ -71,7 +66,7 @@ namespace AdventOfCode2021Tests
                             "CN -> C",};
 
             day.Parse(data);
-           
+
             Assert.AreEqual(1588, day.RunIterations(10));
 
 
@@ -129,7 +124,7 @@ namespace AdventOfCode2021Tests
                             "CC -> N",
                             "CN -> C",};
 
-            day.Parse(data);           
+            day.Parse(data);
             Assert.AreEqual(5, day.RunIterations(2));
         }
 

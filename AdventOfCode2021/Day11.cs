@@ -1,23 +1,37 @@
-﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Common;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021
 {
-    public class Day11 : DayBase
+    public class Day11 : DayBase, IDay
     {
+        private const int day = 11;
+        private string[] instructions;
+
         int[,] octopuses;
         int sizeX = 0;
         int sizeY = 0;
         int flashes = 0;
+
+        public Day11(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+            instructions = input.GetDataCached().SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Total flashes: {result1}");
+
+            Int64 result2 = Problem2();
+            Console.WriteLine($"P2: Step: {result2}");
+        }
+
         public int Problem1()
         {
-            string[] instructions = input.GetDataCached(2021, 11).SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
             Init(instructions);
-
 
             return CountFlashes(100);
         }
@@ -25,9 +39,7 @@ namespace AdventOfCode2021
 
         public Int64 Problem2()
         {
-            string[] instructions = input.GetDataCached(2021, 11).SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
             Init(instructions);
-
 
             return FindTotalFlash();
         }
@@ -46,7 +58,7 @@ namespace AdventOfCode2021
         {
             int i = 0;
             flashes = 0;
-            while (flashes != sizeX*sizeY)
+            while (flashes != sizeX * sizeY)
             {
                 i++;
                 flashes = 0;
@@ -61,9 +73,9 @@ namespace AdventOfCode2021
             for (int i = 0; i < cycles; i++)
             {
                 for (int y = 0; y < sizeY; y++)
-                    for (int x = 0; x < sizeX; x++)                    
+                    for (int x = 0; x < sizeX; x++)
                         Increase(x, y);
-                   
+
                 ResetFlashed();
             }
 

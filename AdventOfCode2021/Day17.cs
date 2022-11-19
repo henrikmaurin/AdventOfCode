@@ -1,27 +1,37 @@
-﻿using AdventOfCode;
-using Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day17:DayBase
+    public class Day17 : DayBase, IDay
     {
-       
+        private const int day = 17;
+        private string hitzone;
+
         public HitZone hitZone;
+
+        public Day17(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+            hitzone = input.GetDataCached().SplitOnNewline()[0];
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Y pos: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Total values: {result2}");
+        }
         public int Problem1()
         {
-            string hitzone = input.GetDataCached(2021, 17).SplitOnNewline()[0];
             Parse(hitzone);
 
             return FindHighest();
         }
         public int Problem2()
         {
-            string hitzone = input.GetDataCached(2021, 17).SplitOnNewline()[0];
             Parse(hitzone);
 
             return FindAll();
@@ -41,7 +51,7 @@ namespace AdventOfCode2021
             int yLimit = new List<int> { Math.Abs(hitZone.Corner1.Y), Math.Abs(hitZone.Corner2.Y) }.Max();
             int xLimit = new List<int> { Math.Abs(hitZone.Corner1.X), Math.Abs(hitZone.Corner2.X) }.Max();
 
-            for (int x = -xLimit; x <xLimit; x++)
+            for (int x = -xLimit; x < xLimit; x++)
                 for (int y = 0; y < yLimit; y++)
                 {
                     Probe probe = new Probe();
@@ -51,7 +61,7 @@ namespace AdventOfCode2021
                         probe.Step();
                     }
                     if (hitZone.IsHit(probe))
-                        if(probe.MaxHeight > MaxHeight)
+                        if (probe.MaxHeight > MaxHeight)
                             MaxHeight = probe.MaxHeight;
 
                 }
@@ -75,7 +85,7 @@ namespace AdventOfCode2021
                         probe.Step();
                     }
                     if (hitZone.IsHit(probe))
-                       Counter++;
+                        Counter++;
 
                 }
             return Counter;

@@ -1,27 +1,34 @@
-﻿using AdventOfCode;
-using Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day01 : DayBase
+    public class Day01 : DayBase, IDay
     {
-        public Day01() : base() { }
+        private const int day = 1;
+        private int[] data;
+        public Day01(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+            data = input.GetDataCached().SplitOnNewlineArray().ToInt();
+        }
+
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Mesurements: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Sums: {result2}");
+        }
         public int Problem1()
         {
-            int[] data = input.GetDataCached(2021, 1).SplitOnNewlineArray().ToInt();
-
             return (CountIncreases(data));
         }
 
         public int Problem2()
         {
-            int[] data = input.GetDataCached(2021, 1).SplitOnNewlineArray().ToInt();
-
             return (CountIncreases(data, 3));
         }
 

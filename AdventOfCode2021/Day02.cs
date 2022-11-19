@@ -1,51 +1,69 @@
-﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day02 : DayBase
+    public class Day02 : DayBase, IDay
     {
-        public int Pos { get; set; }
-        public int Depth { get; set; }
-        public int Aim { get; set; }
+        private const int day = 2;
+        public long Pos { get; set; }
+        public long Depth { get; set; }
+        public long Aim { get; set; }
+        private string[] data;
 
-        public Day02() : base() { }
+        public Day02(bool runtests = false) : base(Global.Year, day, runtests)
 
-        public int Problem1()
         {
-            string[] data = input.GetDataCached(2021, 2).SplitOnNewlineArray();
+            if (runtests)
+                return;
 
+            data = input.GetDataCached().SplitOnNewlineArray();
+        }
+
+        public void Run()
+        {
+            long result1 = Problem1();
+            Console.WriteLine($"P1: Horizontal by depth: {result1}");
+
+            long result2 = Problem2();
+            Console.WriteLine($"P2: Horizontal by depth: {result2}");
+        }
+
+        public void Reset()
+        {
+            Aim = 0;
+            Depth = 0;
+            Pos = 0;
+        }
+
+        public long Problem1()
+        {
+            Reset();
             foreach (string line in data)
-                Parse(line);    
+                Parse(line);
 
             return Pos * Depth;
         }
 
-        public int Problem2()
+        public long Problem2()
         {
-            string[] data = input.GetDataCached(2021, 2).SplitOnNewlineArray();
-
+            Reset();
             foreach (string line in data)
-                Parse(line,true);
+                Parse(line, true);
 
             return Pos * Depth;
         }
 
         public void Parse(string command, bool useAim = false)
         {
-            Process(command.Split(" ").First(), command.Split(" ").Last().ToInt(),useAim);
+            Process(command.Split(" ").First(), command.Split(" ").Last().ToInt(), useAim);
         }
 
-        public void Process(string command, int amount,bool useAim = false)
+        public void Process(string command, int amount, bool useAim = false)
         {
             switch (command)
             {
                 case "forward":
-                    Pos+=amount;
+                    Pos += amount;
                     if (useAim)
                         Depth += Aim * amount;
                     break;
@@ -59,7 +77,7 @@ namespace AdventOfCode2021
                     if (useAim)
                         Aim += amount;
                     else
-                        Depth += amount;    
+                        Depth += amount;
                     break;
 
             }

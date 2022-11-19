@@ -1,10 +1,5 @@
 ﻿using AdventOfCode2021;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021Tests
 {
@@ -16,22 +11,8 @@ namespace AdventOfCode2021Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day18();
+            day = new Day18(true);
         }
-
-        /* [TestMethod]
-         public void TestMetod1_stack()
-         {
-             string data = "[[[[[9,8],1],2],3],4]";
-             var parsed = day.ParseToTree(data);
-             string unpacked = parsed.ToString();
-             Assert.AreEqual(data, unpacked);
-
-
-             //Assert.AreEqual("[[[[0,9],2],3],4]", day.ToString());
-         }
-        */
-
 
         [TestMethod]
         public void TestMetod1()
@@ -39,7 +20,7 @@ namespace AdventOfCode2021Tests
             string data = "[[[[[9,8],1],2],3],4]";
             day.Init(data);
             day.ParseUntilDone();
-            Assert.AreEqual("[[[[0,9],2],3],5]", day.ToString());
+            Assert.AreEqual("[[[[0,9],2],3],4]", day.ToString());
         }
 
         [TestMethod]
@@ -193,9 +174,9 @@ namespace AdventOfCode2021Tests
 
 
             Assert.AreEqual(3993, day.FindMax(data));
-                
 
-        }     
+
+        }
 
     }
 }

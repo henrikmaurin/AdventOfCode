@@ -1,14 +1,12 @@
-﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day15 : DayBase
+    public class Day15 : DayBase, IDay
     {
+        private const int day = 15;
+        private string[] instructions;
+
         private RiskLevel[,] _RiskLevel;
         private int sizeX;
         private int sizeY;
@@ -16,17 +14,30 @@ namespace AdventOfCode2021
 
         private AStar AStar = new AStar();
 
+        public Day15(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+            instructions = input.GetDataCached().SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Risk level: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Risk level: {result2}");
+        }
         public int Problem1()
         {
-            string[] instructions = input.GetDataCached(2021, 15).SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
-            Parse(instructions);            
+            Parse(instructions);
 
             return RunAStar();
         }
 
         public int Problem2()
         {
-            string[] instructions = input.GetDataCached(2021, 15).SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
             ParseMega(instructions);
 
             return RunAStar();
@@ -153,7 +164,7 @@ namespace AdventOfCode2021
     public class AStar
     {
         public PriorityQueue<AStarNode, int> ToProcess { get; set; }
-        public Dictionary<string,AStarNode> Visited { get; set; }
+        public Dictionary<string, AStarNode> Visited { get; set; }
         public RiskLevelMap Map { get; set; }
         private int _goalX;
         private int _goalY;
@@ -196,7 +207,7 @@ namespace AdventOfCode2021
                         if (visited.Cost > current.Cost + level.Value)
                         {
                             Visited.Remove($"{visited.X},{visited.Y}");
-                                                        visited.CameFrom = current;
+                            visited.CameFrom = current;
                             visited.Cost = current.Cost + level.Value;
                             ToProcess.Enqueue(visited, visited.Cost + distance.Value);
                         }
@@ -274,19 +285,19 @@ namespace AdventOfCode2021
 
         }
 
-        public static  AStarNode AddOrUpdate(this Dictionary<string, AStarNode> dict, AStarNode node)
+        public static AStarNode AddOrUpdate(this Dictionary<string, AStarNode> dict, AStarNode node)
         {
             string key = $"{node.X},{node.Y}";
 
-            if (dict .ContainsKey(key))
+            if (dict.ContainsKey(key))
             {
-                if (dict[key].Cost> node.Cost)
+                if (dict[key].Cost > node.Cost)
                     dict[key].Cost = node.Cost;
                 return dict[key];
             }
 
             dict.Add(key, node); ;
-            return node; 
+            return node;
         }
     }
 

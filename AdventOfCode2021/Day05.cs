@@ -1,23 +1,35 @@
-﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Common;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021
 {
-    public class Day05 : DayBase
+    public class Day05 : DayBase, IDay
     {
+        private const int day = 5;
+        private string[] data;
         private List<DrawInstructions> _drawInstructions;
-        public Day05() : base()
+        public Day05(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+            data = input.GetDataCached().SplitOnNewlineArray();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Number of points: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Number of points: {result2}");
+        }
+        public void Init()
         {
             _drawInstructions = new List<DrawInstructions>();
         }
+
         public int Problem1()
         {
-            string[] data = input.GetDataCached(2021, 5).SplitOnNewlineArray();
-
+            Init();
             foreach (string line in data.Where(d => !string.IsNullOrEmpty(d)))
                 _drawInstructions.Add(Parse(line));
 
@@ -31,8 +43,7 @@ namespace AdventOfCode2021
 
         public int Problem2()
         {
-            string[] data = input.GetDataCached(2021, 5).SplitOnNewlineArray();
-
+            Init();
             foreach (string line in data.Where(d => !string.IsNullOrEmpty(d)))
                 _drawInstructions.Add(Parse(line));
 

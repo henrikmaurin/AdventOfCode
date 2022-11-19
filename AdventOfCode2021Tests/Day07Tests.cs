@@ -1,10 +1,5 @@
 ﻿using AdventOfCode2021;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021Tests
 {
@@ -16,15 +11,15 @@ namespace AdventOfCode2021Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day07();
+            day = new Day07(true);
         }
 
         [TestMethod]
         public void TestMethod1()
         {
-           int[] data = { 16,1,2,0,4,2,7,1,2,14};
+            int[] data = { 16, 1, 2, 0, 4, 2, 7, 1, 2, 14 };
 
-           
+
             Assert.AreEqual(37, day.CalcMinCost(data));
         }
 
@@ -39,7 +34,7 @@ namespace AdventOfCode2021Tests
 
         [TestMethod]
         public void TestMethod3()
-        {            
+        {
             Assert.AreEqual(1, day.SumSeries(1));
         }
 

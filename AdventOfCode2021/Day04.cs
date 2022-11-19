@@ -1,27 +1,32 @@
-﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day04 : DayBase
+    public class Day04 : DayBase, IDay
     {
+        private const int day = 4;
+        private string data;
         private List<BingoBoard> boards;
         private int[] numbers;
 
-
-        public Day04() : base()
+        public Day04(bool runtests = false) : base(Global.Year, day, runtests)
         {
-            boards = new List<BingoBoard>();
+            if (runtests)
+                return;
+
+            data = input.GetDataCached();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Final score: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Sums: {result2}");
         }
 
         public int Problem1()
         {
-            string data = input.GetDataCached(2021, 4);
-
             Parse(data);
 
             return FindBingoScore();
@@ -29,8 +34,6 @@ namespace AdventOfCode2021
 
         public int Problem2()
         {
-            string data = input.GetDataCached(2021, 4);
-
             Parse(data);
 
             return FindBingoScore(true);
@@ -38,7 +41,8 @@ namespace AdventOfCode2021
 
         public void Parse(string data)
         {
-            string[] lines = data.SplitOnNewlineArray();
+            boards = new List<BingoBoard>();
+            string[] lines = data.SplitOnNewlineArray(false);
 
             numbers = lines[0].Split(",").ToInt();
 
@@ -114,7 +118,7 @@ namespace AdventOfCode2021
 
         public bool Bingo()
         {
-            if (HasBingo) 
+            if (HasBingo)
                 return true;
 
             for (int i = 0; i < 5; i++)

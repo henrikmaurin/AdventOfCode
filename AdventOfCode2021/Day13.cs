@@ -1,37 +1,46 @@
-﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Common;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021
 {
-    public class Day13 : DayBase
+    public class Day13 : DayBase, IDay
     {
-        /*private int sizeX;
-        private int sizeY;
-        private int[] paper;
-        */
+        private const int day = 13;
+        private string[] instructions;
 
-        List<Coord> coords = new List<Coord>();
+        List<Coord> coords;
+
+        public Day13(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+            instructions = input.GetDataCached().SplitOnNewline().ToArray();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Visible dots: {result1}");
+
+            string result2 = Problem2();
+            Console.WriteLine($"P2: Code:{Environment.NewLine}{result2}");
+        }
 
         public int Problem1()
         {
-            string[] instructions = input.GetDataCached(2021, 13).SplitOnNewline().ToArray();
             Parse(instructions, 1);
             return CountSet();
         }
 
         public string Problem2()
         {
-            string[] instructions = input.GetDataCached(2021, 13).SplitOnNewline().ToArray();
             Parse(instructions);
             return ToString();
         }
 
-        public void Parse(string[] instructions, int foldsCount=0)
+        public void Parse(string[] instructions, int foldsCount = 0)
         {
+            coords = new List<Coord>();
             List<string> folds = new List<string>();
 
             foreach (string instruction in instructions)
@@ -52,7 +61,7 @@ namespace AdventOfCode2021
                 }
             }
 
-            if (foldsCount==0)
+            if (foldsCount == 0)
                 foldsCount = folds.Count;
 
             foreach (string fold in folds.Take(foldsCount))
@@ -86,7 +95,7 @@ namespace AdventOfCode2021
         public string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            for (int y = coords.Min(c => c.Y); y<=coords.Max(c => c.Y); y++)
+            for (int y = coords.Min(c => c.Y); y <= coords.Max(c => c.Y); y++)
             {
                 for (int x = coords.Min(c => c.X); x <= coords.Max(c => c.X); x++)
                 {

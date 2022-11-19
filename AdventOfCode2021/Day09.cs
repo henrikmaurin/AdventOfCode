@@ -1,37 +1,44 @@
-﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day09 : DayBase
+    public class Day09 : DayBase, IDay
     {
+        private const int day = 9;
         public string[] map { get; set; }
         public bool[,] counted;
+        public Day09(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+            map = input.GetDataCached().SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Risk value: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Basins: {result2}");
+        }
 
         public int Problem1()
         {
-            map = input.GetDataCached(2021, 9).SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
-
             return CalcRiskValue();
         }
 
 
         public int Problem2()
         {
-            map = input.GetDataCached(2021, 9).SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
-
             return GetBasins();
         }
 
         public int GetBasins()
         {
             List<int> basins = new List<int>();
-            
-            
+
+
             counted = new bool[map.Length, map[0].Length];
 
             for (int y = 0; y < map.Length; y++)
@@ -44,13 +51,13 @@ namespace AdventOfCode2021
                     }
                 }
 
-            int[] top3=basins.OrderByDescending(b => b).Take(3).ToArray();
+            int[] top3 = basins.OrderByDescending(b => b).Take(3).ToArray();
             return top3[0] * top3[1] * top3[2];
         }
 
         public int GetBasin(int x, int y)
         {
-            if (x < 0 || y < 0  || y >= map.Length )
+            if (x < 0 || y < 0 || y >= map.Length)
                 return 0;
 
             if (x >= map[y].Length)
@@ -72,8 +79,8 @@ namespace AdventOfCode2021
         {
             int riskval = 0;
             for (int y = 0; y < map.Length; y++)
-                for(int x = 0; x < map[y].Length; x++)
-                    if(IsLowPoint(x,y))
+                for (int x = 0; x < map[y].Length; x++)
+                    if (IsLowPoint(x, y))
                         riskval += 1 + map[y][x].ToInt();
 
 

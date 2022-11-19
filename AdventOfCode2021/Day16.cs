@@ -1,19 +1,29 @@
-﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day16:DayBase
+    public class Day16 : DayBase, IDay
     {
+        private const int day = 16;
+        private string instructions;
         private BitsPacket topPacket;
+        public Day16(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+            instructions = input.GetDataCached();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Sum of versions: {result1}");
+
+            Int64 result2 = Problem2();
+            Console.WriteLine($"P2: Evaluated expression: {result2}");
+        }
         public int Problem1()
         {
-            string instructions = input.GetDataCached(2021, 16);
-               
             topPacket = new BitsPacket();
             topPacket.ParseHex(instructions);
 
@@ -22,8 +32,6 @@ namespace AdventOfCode2021
         }
         public Int64 Problem2()
         {
-            string instructions = input.GetDataCached(2021, 16);
-            
             topPacket = new BitsPacket();
             topPacket.ParseHex(instructions);
 
@@ -44,7 +52,7 @@ namespace AdventOfCode2021
             if (packet.TypeId == 4)
                 return packet.Version;
 
-            return packet.Version+ packet.SubPackets.Select(p => SumVersions(p)).Sum();
+            return packet.Version + packet.SubPackets.Select(p => SumVersions(p)).Sum();
         }
 
     }
@@ -63,7 +71,7 @@ namespace AdventOfCode2021
             if (TypeId == 4)
                 return Value.Value;
 
-            List<Int64> valueList = SubPackets.Select(sp=>sp.GetValue()).ToList();
+            List<Int64> valueList = SubPackets.Select(sp => sp.GetValue()).ToList();
 
 
             switch (TypeId)
@@ -71,7 +79,7 @@ namespace AdventOfCode2021
                 case 0:
                     return valueList.Sum();
                 case 1:
-                    return valueList.Aggregate((Int64)1, (acc, val) =>(Int64) acc * (Int64) val);
+                    return valueList.Aggregate((Int64)1, (acc, val) => (Int64)acc * (Int64)val);
                 case 2:
                     return valueList.Min();
                 case 3:
@@ -97,7 +105,7 @@ namespace AdventOfCode2021
         public int Parse(string bits)
         {
             int parsePos = 0;
-       
+
             string workBits = bits.Substring(parsePos, 3);
             parsePos += 3;
             Version = Convert.ToInt32(workBits, 2);
@@ -110,7 +118,7 @@ namespace AdventOfCode2021
             if (TypeId == 4)
             {
                 workBits = bits.Substring(parsePos, 5);
-                 bool keepReading = true;
+                bool keepReading = true;
                 string bitValue = string.Empty;
                 while (keepReading)
                 {
@@ -119,7 +127,7 @@ namespace AdventOfCode2021
                     bitValue += workBits.Substring(1);
                     if (keepReading)
                         workBits = bits.Substring(parsePos, 5);
-                   
+
                 }
                 Value = Convert.ToInt64(bitValue, 2);
             }
@@ -131,7 +139,7 @@ namespace AdventOfCode2021
                 int subPacketsBitsLengths = LengthTypeId == 1 ? 11 : 15;
                 workBits = bits.Substring(parsePos, subPacketsBitsLengths);
                 parsePos += subPacketsBitsLengths;
-                
+
 
                 BitsPacket subPacket = new BitsPacket();
                 int parsedCount = subPacket.Parse(bits.Substring(parsePos));

@@ -1,10 +1,5 @@
 ﻿using AdventOfCode2021;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021Tests
 {
@@ -16,7 +11,7 @@ namespace AdventOfCode2021Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day09();
+            day = new Day09(true);
         }
 
         [TestMethod]
@@ -32,7 +27,7 @@ namespace AdventOfCode2021Tests
             };
 
             Assert.AreEqual(15, day.CalcRiskValue());
-            
+
         }
 
         [TestMethod]

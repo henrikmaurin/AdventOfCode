@@ -1,10 +1,5 @@
 ﻿using AdventOfCode2021;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static AdventOfCode2021.Day05;
 
 namespace AdventOfCode2021Tests
@@ -12,14 +7,15 @@ namespace AdventOfCode2021Tests
     [TestClass]
     public class Day05Tests
     {
-    
+
         private Day05 day;
         private Map map;
 
         [TestInitialize]
         public void Init()
         {
-            day = new Day05();
+            day = new Day05(true);
+            day.Init();
             map = new Map(10, 10);
         }
 
@@ -59,7 +55,7 @@ namespace AdventOfCode2021Tests
         [TestMethod]
         public void TestMethod3()
         {
-            map.Draw(0, 9, 5, 9,true);
+            map.Draw(0, 9, 5, 9, true);
             map.Draw(8, 0, 0, 8, true);
             map.Draw(9, 4, 3, 4, true);
             map.Draw(2, 2, 2, 1, true);

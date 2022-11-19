@@ -1,10 +1,5 @@
 ﻿using AdventOfCode2021;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021Tests
 {
@@ -16,7 +11,7 @@ namespace AdventOfCode2021Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day10();
+            day = new Day10(true);
         }
 
         [TestMethod]
@@ -62,7 +57,7 @@ namespace AdventOfCode2021Tests
             };
 
             Assert.AreEqual(294, day.AutoComplete(instructions[9]));
-            
+
 
             Assert.AreEqual(288957, day.GetMiddleAutocompleteValue(instructions));
 

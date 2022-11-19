@@ -1,10 +1,5 @@
 ﻿using AdventOfCode2021;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021Tests
 {
@@ -15,20 +10,20 @@ namespace AdventOfCode2021Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day02();
+            day = new Day02(true);
         }
 
         [TestMethod]
         public void TestMethod1()
         {
-            day.Process("forward",5);
-            day.Process("down",5);
-            day.Process("forward",8);
-            day.Process("up",3);
-            day.Process("down",8);
-            day.Process("forward",2);
+            day.Process("forward", 5);
+            day.Process("down", 5);
+            day.Process("forward", 8);
+            day.Process("up", 3);
+            day.Process("down", 8);
+            day.Process("forward", 2);
 
-            Assert.AreEqual(15,day.Pos);
+            Assert.AreEqual(15, day.Pos);
             Assert.AreEqual(10, day.Depth);
         }
 
@@ -49,7 +44,7 @@ namespace AdventOfCode2021Tests
         [TestMethod]
         public void TestMethod3()
         {
-            day.Process("forward", 5,true);
+            day.Process("forward", 5, true);
             day.Process("down", 5, true);
             day.Process("forward", 8, true);
             day.Process("up", 3, true);

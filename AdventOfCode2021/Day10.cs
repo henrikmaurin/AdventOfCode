@@ -1,35 +1,43 @@
-﻿using AdventOfCode;
-using Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day10:DayBase
+    public class Day10 : DayBase, IDay
     {
+        private const int day = 10;
+        private string[] instructions;
+        public Day10(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
+
+            instructions = input.GetDataCached().SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
+        }
+
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Syntax error score: {result1}");
+
+            Int64 result2 = Problem2();
+            Console.WriteLine($"P2: Middle score: {result2}");
+        }
         public int Problem1()
         {
-            string[] instructions = input.GetDataCached(2021, 10).SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
-
             return TotalErrorValue(instructions);
         }
 
 
         public Int64 Problem2()
         {
-            string[] instructions = input.GetDataCached(2021, 10).SplitOnNewline().Where(s => !string.IsNullOrEmpty(s)).ToArray();
-
             return GetMiddleAutocompleteValue(instructions);
         }
 
         public int TotalErrorValue(string[] instructions)
         {
             int totalvalue = 0;
-            foreach(string instruction in instructions)
-                totalvalue+=ErrorValue(instruction);
+            foreach (string instruction in instructions)
+                totalvalue += ErrorValue(instruction);
 
             return totalvalue;
         }
@@ -47,7 +55,7 @@ namespace AdventOfCode2021
 
             return autocompleteValues
                   .OrderBy(v => v)
-                  .ElementAt((autocompleteValues.Count-1) / 2);
+                  .ElementAt((autocompleteValues.Count - 1) / 2);
 
 
         }
@@ -62,7 +70,7 @@ namespace AdventOfCode2021
                 {
                     charStack.Push(c);
                     continue;
-                }           
+                }
 
                 switch (c)
                 {
@@ -122,10 +130,10 @@ namespace AdventOfCode2021
             }
 
             Int64 poppedSum = 0;
-            while(charStack.TryPop(out char popped))
+            while (charStack.TryPop(out char popped))
             {
                 poppedSum *= 5;
-                switch(popped)
+                switch (popped)
                 {
                     case '(':
                         poppedSum += 1;

@@ -1,37 +1,45 @@
-﻿using AdventOfCode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common;
 
 namespace AdventOfCode2021
 {
-    public class Day03 : DayBase
+    public class Day03 : DayBase, IDay
     {
-        public Day03() : base() { }
+        private const int day = 3;
+        private string[] data;
+        public Day03(bool runtests = false) : base(Global.Year, day, runtests)
+        {
+            if (runtests)
+                return;
 
+            data = input.GetDataCached().SplitOnNewlineArray();
+        }
+        public void Run()
+        {
+            int result1 = Problem1();
+            Console.WriteLine($"P1: Power consumption: {result1}");
+
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Life support rating: {result2}");
+        }
         public int Problem1()
         {
-            string[] data = input.GetDataCached(2021, 3).SplitOnNewlineArray();
             int len = data[0].Length;
 
-            return CalcGamma(data.FromBinary(), len) * CalcEpsilon(data.FromBinary(), len); 
+            return CalcGamma(data.FromBinary(), len) * CalcEpsilon(data.FromBinary(), len);
         }
 
         public int Problem2()
         {
-            string[] data = input.GetDataCached(2021, 3).SplitOnNewlineArray();
             int len = data[0].Length;
 
             return CalcOxygenRating(data.FromBinary(), len) * CalcScrubberRating(data.FromBinary(), len);
         }
 
-        public int CalcGamma(int[] values,int bits)
+        public int CalcGamma(int[] values, int bits)
         {
             int result = 0;
-            int shift = 1 << bits-1;
-            while (shift>0)
+            int shift = 1 << bits - 1;
+            while (shift > 0)
             {
                 if (values.Where(v => (v & shift) > 0).Count() > values.Where(v => (v & shift) == 0).Count())
                     result += shift;
@@ -44,7 +52,7 @@ namespace AdventOfCode2021
         public int CalcEpsilon(int[] values, int bits)
         {
             int result = 0;
-            int shift = 1 << bits-1;
+            int shift = 1 << bits - 1;
             while (shift > 0)
             {
                 if (values.Where(v => (v & shift) > 0).Count() < values.Where(v => (v & shift) == 0).Count())
@@ -59,7 +67,7 @@ namespace AdventOfCode2021
         {
             int result = 0;
             int shift = 1 << bits - 1;
-            while (shift > 0 && values.Count()>1)
+            while (shift > 0 && values.Count() > 1)
             {
                 int lookFor = shift;
 

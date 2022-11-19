@@ -1,10 +1,6 @@
 ﻿using AdventOfCode2021;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021Tests
 {
@@ -16,7 +12,7 @@ namespace AdventOfCode2021Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day16();
+            day = new Day16(true);
         }
 
         [TestMethod]
@@ -28,7 +24,7 @@ namespace AdventOfCode2021Tests
 
             bitsPacket.ParseHex(data);
 
-            Assert.AreEqual(6,bitsPacket.Version);
+            Assert.AreEqual(6, bitsPacket.Version);
             Assert.AreEqual(4, bitsPacket.TypeId);
             Assert.AreEqual(2021, bitsPacket.Value);
         }
@@ -80,7 +76,7 @@ namespace AdventOfCode2021Tests
             bitsPacket.ParseHex(data);
 
             Assert.AreEqual(3, bitsPacket.GetValue());
-                  }
+        }
 
         [TestMethod]
         public void TestMethod5()

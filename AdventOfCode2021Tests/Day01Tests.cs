@@ -11,7 +11,7 @@ namespace AdventOfCode2021Tests
         [TestInitialize]
         public void Init()
         {
-            day = new Day01();
+            day = new Day01(true);
         }
 
         [TestMethod]
@@ -27,7 +27,7 @@ namespace AdventOfCode2021Tests
         {
             int[] testData = { 199, 200, 208, 210, 200, 207, 240, 269, 260, 263 };
 
-            Assert.AreEqual(5, day.CountIncreases(testData,3));
+            Assert.AreEqual(5, day.CountIncreases(testData, 3));
         }
 
 
