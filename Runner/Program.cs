@@ -4,10 +4,58 @@
 using Common;
 using Runner;
 
-Console.WriteLine("Year:");
-int year = Console.ReadLine().ToInt();
-Console.WriteLine("Day:");
-int day = Console.ReadLine().ToInt();
+string lastrunfile = "lastrun.txt";
+string lastrun = string.Empty;
+int lastRunYear = 0;
+int lastRunDay = 0;
+
+
+
+if (File.Exists(lastrunfile))
+{
+    lastrun = File.ReadAllText(lastrunfile);
+    if (!string.IsNullOrEmpty(lastrun))
+    {
+        lastRunYear = lastrun.Tokenize(',').First().ToInt();
+        lastRunDay = lastrun.Tokenize(',').Last().ToInt();
+    }
+
+}
+
+
+
+Console.WriteLine("Today(Enter)/Repeat(R)/Year(YYYY):");
+string input = Console.ReadLine();
+
+int year = 0;
+int day = 0;
+
+switch (input)
+{
+    case "":
+        if (DateTime.Now.Month == 12)
+        {
+            year = DateTime.Now.Year;
+            day = DateTime.Now.Day;
+        }
+        else
+            Console.WriteLine("Current month is not December");
+        break;
+    case "R":
+    case "r":
+        year = lastRunYear;
+        day = lastRunDay;
+        break;
+    default:
+        year = input.ToInt();
+        Console.WriteLine("Day/All(A):");
+        day = Console.ReadLine().Replace("A", "0").Replace("a", "0").ToInt();
+
+        break;
+}
+
+if (year != 0 && day != 0)
+    File.WriteAllText(lastrunfile, $"{year},{day}");
 
 if (!Run(year, day))
 {
@@ -27,14 +75,29 @@ bool Run(int year, int day)
         return false;
     }
 
-    IDay dayToRun = yearToRun.Day(day);
-    if (dayToRun == null)
+    if (day == 0)
     {
-        Console.WriteLine("Could not find day");
-        return false;
-    }
+        Console.WriteLine($"Running all days for {year}");
 
-    dayToRun.Run();
+        for (int i = 1; i <= 25; i++)
+        {
+            Console.WriteLine($"Day {i}");
+            IDay dayToRun = yearToRun.Day(i);
+            if (dayToRun != null)
+                dayToRun.Run();
+        }
+    }
+    else
+    {
+        IDay dayToRun = yearToRun.Day(day);
+        if (dayToRun == null)
+        {
+            Console.WriteLine("Could not find day");
+            return false;
+        }
+
+        dayToRun.Run();
+    }
 
     return true;
 }
