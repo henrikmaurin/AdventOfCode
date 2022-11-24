@@ -1,6 +1,8 @@
 # AdventOfCode
 
+If Present - Remove file AOCCookie.txt in runner project
+
 When first run you have to enter your session cookie
 
-See https://github.com/wimglenn/advent-of-code-wim/issues/1
-for instructions how to copy the cookie. Paste the cookie when asked for it
+You find it here. Copy everything after "session=" 
+![image](https://user-images.githubusercontent.com/35916415/203860828-d56699d1-eea4-4339-adb9-73c6c7ebbeca.png)
