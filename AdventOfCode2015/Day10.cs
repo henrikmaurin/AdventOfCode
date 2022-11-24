@@ -13,12 +13,11 @@ namespace AdventOfCode2015
             if (runtests)
                 return;
 
-            data = "1113122113";
+            data = input.GetDataCached().IsSingleLine();
         }
         public int Problem1()
         {
             string toExpand = data;
-            Console.WriteLine(toExpand);
             for (int i = 0; i < 40; i++)
             {
                 toExpand = Expand(toExpand);
