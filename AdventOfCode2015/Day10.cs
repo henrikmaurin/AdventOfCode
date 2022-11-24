@@ -43,11 +43,11 @@ namespace AdventOfCode2015
 
         public void Run()
         {
-            int finalFloor = Problem1();
-            Console.WriteLine($"P1: Length: {finalFloor}");
+            int length = Problem1();
+            Console.WriteLine($"P1: Length: {length}");
 
-            int position = Problem2();
-            Console.WriteLine($"P2: Length: {position}");
+            length = Problem2();
+            Console.WriteLine($"P2: Length: {length}");
         }
 
         public string Expand(string data)
