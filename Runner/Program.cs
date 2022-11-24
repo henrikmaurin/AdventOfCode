@@ -25,7 +25,7 @@ if (File.Exists(lastrunfile))
 
 
 Console.WriteLine("Today(Enter)/Repeat(R)/Year(YYYY):");
-string input = Console.ReadLine();
+string? input = Console.ReadLine();
 
 int year = 0;
 int day = 0;

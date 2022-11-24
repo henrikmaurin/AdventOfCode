@@ -6,7 +6,7 @@ namespace AdventOfCode2015
     {
         private const int day = 11;
         private string data;
-        private string result;
+
         public Day11(bool runtests = false) : base(Global.Year, day, runtests)
         {
             if (runtests)

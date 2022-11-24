@@ -5,7 +5,7 @@ namespace AdventOfCode2015
     public class Day07 : DayBase, IDay
     {
         private const int day = 7;
-        private Dictionary<string, Gate> _gates;
+        private Dictionary<string, Gate>? _gates;
 
         public Day07(bool runtests = false) : base(Global.Year, day, runtests)
         {
@@ -130,9 +130,6 @@ namespace AdventOfCode2015
                 gate.ByAmount = split2[1].Trim();
                 _gates.Add(gate.Name, gate);
                 return true;
-
-
-                return false;
             }
             else if (line.Contains("RSHIFT"))
             {
@@ -158,7 +155,6 @@ namespace AdventOfCode2015
                 _gates.Add(gate.Name, gate);
                 return true;
             }
-            return false;
         }
     }
 
@@ -190,8 +186,7 @@ namespace AdventOfCode2015
 
             }
         }
-
-        public string ToString()
+        public override string ToString()
         {
             return $"{Name}, {visits}";
         }
@@ -200,8 +195,8 @@ namespace AdventOfCode2015
 
     public class AndGate : Gate
     {
-        public string Input1 { get; set; }
-        public string Input2 { get; set; }
+        public string? Input1 { get; set; }
+        public string? Input2 { get; set; }
         private int visits = 0;
         private ushort? cache = null;
 
@@ -225,7 +220,7 @@ namespace AdventOfCode2015
                 return cache;
             }
         }
-        public string ToString()
+        public override string ToString()
         {
             return $"{Name}, {visits}";
         }
@@ -254,7 +249,7 @@ namespace AdventOfCode2015
                 return cache;
             }
         }
-        public string ToString()
+        public override string ToString()
         {
             return $"{Name}, {visits}";
         }
@@ -280,7 +275,7 @@ namespace AdventOfCode2015
                 return cache;
             }
         }
-        public string ToString()
+        public override string ToString()
         {
             return $"{Name}, {visits}";
         }
@@ -307,7 +302,7 @@ namespace AdventOfCode2015
                 return cache;
             }
         }
-        public string ToString()
+        public override string ToString()
         {
             return $"{Name}, {visits}";
         }
@@ -336,7 +331,7 @@ namespace AdventOfCode2015
                 return cache;
             }
         }
-        public string ToString()
+        public override string ToString()
         {
             return $"{Name}, {visits}";
         }

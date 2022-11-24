@@ -55,7 +55,6 @@ namespace AdventOfCode2015
             int pos = 0;
             char lastchar = data[0];
             int counter = 0;
-            bool buffer = false;
             while (pos < data.Length)
             {
                 char c = data[pos];
@@ -73,15 +72,5 @@ namespace AdventOfCode2015
 
             return expanded.ToString();
         }
-
-        private int FindNextDifferent(string s, char c)
-        {
-            for (int i = 0; i < s.Length; i++)
-                if (s[i] != c)
-                    return i + 1;
-
-            return s.Length + 1;
-        }
-
     }
 }
