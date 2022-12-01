@@ -20,6 +20,7 @@
             {
                 var message = new HttpRequestMessage(HttpMethod.Get, $"/{_year}/day/{_day}/input");
                 message.Headers.Add("Cookie", $"session={_cookie}");
+                message.Headers.Add("User-Agent", "github.dev/henrikmaurin/AdventOfCode henrik@henrikmaurin.se");
                 var result = client.SendAsync(message).Result;
                 return result.Content.ReadAsStringAsync().Result;
             }
