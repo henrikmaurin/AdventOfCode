@@ -1,4 +1,6 @@
-﻿namespace Common
+﻿using System.Net.Http.Headers;
+
+namespace Common
 {
     public class AOCGetInput
     {
@@ -19,8 +21,13 @@
             using (var client = new HttpClient(handler) { BaseAddress = baseAddress })
             {
                 var message = new HttpRequestMessage(HttpMethod.Get, $"/{_year}/day/{_day}/input");
+                var repo = new ProductInfoHeaderValue("(+http://github.dev/henrikmaurin/AdventOfCode)");
+                var mailaddress = new ProductInfoHeaderValue("(+henrik@henrikmaurin.se)");
+
                 message.Headers.Add("Cookie", $"session={_cookie}");
-                message.Headers.Add("User-Agent", "github.dev/henrikmaurin/AdventOfCode henrik@henrikmaurin.se");
+                message.Headers.UserAgent.Add(repo);
+                message.Headers.UserAgent.Add(mailaddress);
+
                 var result = client.SendAsync(message).Result;
                 return result.Content.ReadAsStringAsync().Result;
             }

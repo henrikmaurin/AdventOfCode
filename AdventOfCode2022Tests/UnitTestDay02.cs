@@ -15,18 +15,62 @@ namespace AdventOfCode2022Tests
 
 		[TestMethod("Day 2, Part 1")]
 		[TestCategory("Example data")]
-		public void Part1()
+		public void Part1_1()
 		{
+			string data = "A Y";
 
-			Assert.AreEqual(1, 1);
+
+			Assert.AreEqual(8, day.CalcScore(data));
+		}
+
+		[TestMethod("Day 2, Part 1")]
+		[TestCategory("Example data")]
+		public void Part1_2()
+		{
+			string data = "B X";
+
+
+			Assert.AreEqual(1, day.CalcScore(data));
+		}
+		[TestMethod("Day 2, Part 1")]
+		[TestCategory("Example data")]
+		public void Part1_3()
+		{
+			string data = "C Z";
+
+
+			Assert.AreEqual(6, day.CalcScore(data));
+		}
+
+
+
+		[TestMethod("Day 2, Part 2")]
+		[TestCategory("Example data")]
+		public void Part2_1()
+		{
+			string data = "A Y";
+
+
+			Assert.AreEqual(4, day.CalcScore(data, true));
 		}
 
 		[TestMethod("Day 2, Part 2")]
 		[TestCategory("Example data")]
-		public void Part2()
+		public void Part2_2()
 		{
+			string data = "B X";
 
-			Assert.AreEqual(2, 2);
+
+			Assert.AreEqual(1, day.CalcScore(data, true));
+		}
+		[TestMethod("Day 2, Part 2")]
+		[TestCategory("Example data")]
+		public void Part2_3()
+		{
+			string data = "C Z";
+
+
+			Assert.AreEqual(7, day.CalcScore(data, true));
 		}
 	}
 }
