@@ -32,7 +32,7 @@ namespace AdventOfCode2022
             return FindMostNew(data, 3);
         }
 
-        [Obsolete($"Please use {nameof(FindMostNew)}")]
+        [Obsolete("Please use FindMostNew(string data, int count)")]
         public int FindMost(string[] input, int count = 1)
         {
             List<int> Elves = new List<int>();
@@ -58,7 +58,7 @@ namespace AdventOfCode2022
 
         public int FindMostNew(string data, int count = 1)
         {
-            return data.GroupByEmtyLine().Select(g => g.ToInt().Sum()).OrderByDescending(s => s).Take(count).Sum();
+            return data.GroupByEmptyLine().Select(g => g.ToInt().Sum()).OrderByDescending(s => s).Take(count).Sum();
         }
     }
 }

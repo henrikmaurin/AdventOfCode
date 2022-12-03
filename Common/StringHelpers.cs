@@ -120,7 +120,7 @@ namespace Common
 			return retval;
 		}
 
-		public static string[][] GroupByEmtyLine(this string me)
+		public static string[][] GroupByEmptyLine(this string me)
 		{
 			List<string[]> list = new List<string[]>();
 			List<string> group = new List<string>();
