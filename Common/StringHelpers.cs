@@ -106,6 +106,9 @@ namespace Common
 
 		public static string[] SplitOnNewlineArray(this string me, bool removeEmptyLines = true)
 		{
+			if (me == null)
+				return new string[0];
+
 			var retval = me.Split(
 			new[] { "\r\n", "\r", "\n" },
 			StringSplitOptions.None
