@@ -5,11 +5,13 @@ namespace AdventOfCode2022
     public class Day01 : DayBase, IDay
     {
         private const int day = 1;
-        string[] data;
+        private string[] data;
         public Day01(bool runtests = false) : base(Global.Year, day, runtests)
         {
             if (runtests)
+            {
                 return;
+            }
 
             data = input.GetDataCached().SplitOnNewlineArray(false);
         }

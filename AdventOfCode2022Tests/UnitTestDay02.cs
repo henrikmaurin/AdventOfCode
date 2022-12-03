@@ -1,4 +1,5 @@
 using AdventOfCode2022;
+using Common;
 
 namespace AdventOfCode2022Tests
 {
@@ -6,10 +7,17 @@ namespace AdventOfCode2022Tests
 	public class UnitTestDay02
 	{
 		private Day02 day;
+		private string data;
+		private List<string> testdata;
 		[TestInitialize]
 		public void Init()
 		{
-			day = new Day02(true);
+			data = @"A Y
+B X
+C Z";
+			testdata = data.SplitOnNewline();
+
+			day = new Day02(data);
 		}
 
 
@@ -17,8 +25,7 @@ namespace AdventOfCode2022Tests
 		[TestCategory("Example data")]
 		public void Part1_1()
 		{
-			string data = "A Y";
-
+			string data = testdata[0];
 
 			Assert.AreEqual(8, day.CalcScore(data));
 		}
@@ -27,8 +34,7 @@ namespace AdventOfCode2022Tests
 		[TestCategory("Example data")]
 		public void Part1_2()
 		{
-			string data = "B X";
-
+			string data = testdata[1];
 
 			Assert.AreEqual(1, day.CalcScore(data));
 		}
@@ -36,20 +42,23 @@ namespace AdventOfCode2022Tests
 		[TestCategory("Example data")]
 		public void Part1_3()
 		{
-			string data = "C Z";
-
+			string data = testdata[2];
 
 			Assert.AreEqual(6, day.CalcScore(data));
 		}
 
-
+		[TestMethod("Day 2, Part 1")]
+		[TestCategory("Input test")]
+		public void Part1()
+		{
+			Assert.AreEqual(15, day.Problem1());
+		}
 
 		[TestMethod("Day 2, Part 2")]
 		[TestCategory("Example data")]
 		public void Part2_1()
 		{
-			string data = "A Y";
-
+			string data = testdata[0];
 
 			Assert.AreEqual(4, day.CalcScore(data, true));
 		}
@@ -58,8 +67,7 @@ namespace AdventOfCode2022Tests
 		[TestCategory("Example data")]
 		public void Part2_2()
 		{
-			string data = "B X";
-
+			string data = testdata[1];
 
 			Assert.AreEqual(1, day.CalcScore(data, true));
 		}
@@ -67,10 +75,15 @@ namespace AdventOfCode2022Tests
 		[TestCategory("Example data")]
 		public void Part2_3()
 		{
-			string data = "C Z";
-
+			string data = testdata[2];
 
 			Assert.AreEqual(7, day.CalcScore(data, true));
+		}
+		[TestMethod("Day 2, Part 2")]
+		[TestCategory("Input test")]
+		public void Part2()
+		{
+			Assert.AreEqual(12, day.Problem2());
 		}
 	}
 }

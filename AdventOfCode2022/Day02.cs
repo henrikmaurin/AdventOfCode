@@ -6,26 +6,30 @@ namespace AdventOfCode2022
     {
         private const int day = 2;
         List<string> data;
-        public Day02(bool runtests = false) : base(Global.Year, day, runtests)
+        public Day02(string testdata = null) : base(Global.Year, day, testdata != null)
         {
-            if (runtests)
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewline();
                 return;
+            }
 
             data = input.GetDataCached().SplitOnNewline();
         }
         public void Run()
         {
             int result1 = Problem1();
-            Console.WriteLine($"P1: Result: {result1}");
+            Console.WriteLine($"P1: Winning strategy resluts in: {result1}");
 
             int result2 = Problem2();
-            Console.WriteLine($"P2: Result: {result2}");
+            Console.WriteLine($"P2: correct winning strategy resluts in: {result2}");
         }
+
         public int Problem1()
         {
-
             return data.Select(d => CalcScore(d)).Sum();
         }
+
         public int Problem2()
         {
             return data.Select(d => CalcScore(d, true)).Sum();
@@ -92,11 +96,7 @@ namespace AdventOfCode2022
                 if (op == 'C')
                     return (byte)'A';
             }
-
-
             return (byte)'D';
         }
-
-
     }
 }

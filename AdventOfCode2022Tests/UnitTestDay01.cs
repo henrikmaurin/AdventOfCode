@@ -7,9 +7,29 @@ namespace AdventOfCode2022Tests
 	public class UnitTestDay01
 	{
 		private Day01 day;
+		private string data;
+		private string[] testdata;
+
 		[TestInitialize]
 		public void Init()
 		{
+			data = @"1000
+2000
+3000
+
+4000
+
+5000
+6000
+
+7000
+8000
+9000
+
+10000";
+			testdata = data.SplitOnNewlineArray(false);
+
+
 			day = new Day01(true);
 		}
 
@@ -18,46 +38,14 @@ namespace AdventOfCode2022Tests
 		[TestCategory("Example data")]
 		public void Part1()
 		{
-			string[] data = @"1000
-2000
-3000
-
-4000
-
-5000
-6000
-
-7000
-8000
-9000
-
-10000"
-.SplitOnNewlineArray(false);
-
-			Assert.AreEqual(24000, day.FindMost(data));
+			Assert.AreEqual(24000, day.FindMost(testdata));
 		}
 
 		[TestMethod("Day 1, Part 2")]
 		[TestCategory("Example data")]
 		public void Part2()
 		{
-			string[] data = @"1000
-2000
-3000
-
-4000
-
-5000
-6000
-
-7000
-8000
-9000
-
-10000"
-.SplitOnNewlineArray(false);
-
-			Assert.AreEqual(45000, day.FindMost(data, 3));
+			Assert.AreEqual(45000, day.FindMost(testdata, 3));
 		}
 	}
 }

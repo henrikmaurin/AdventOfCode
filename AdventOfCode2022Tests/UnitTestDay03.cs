@@ -21,7 +21,7 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
 
             splittestdata = testdata.SplitOnNewlineArray();
 
-            day = new Day03(true, testdata);
+            day = new Day03(testdata);
         }
 
 

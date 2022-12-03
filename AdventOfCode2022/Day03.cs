@@ -7,9 +7,9 @@ namespace AdventOfCode2022
     {
         private const int day = 3;
         List<string> data;
-        public Day03(bool runtests = false, string testdata = null) : base(Global.Year, day, runtests)
+        public Day03(string testdata = null) : base(Global.Year, day, testdata != null)
         {
-            if (runtests)
+            if (testdata != null)
             {
                 data = testdata.SplitOnNewline();
                 return;
@@ -26,10 +26,12 @@ namespace AdventOfCode2022
             int result2 = Problem2();
             Console.WriteLine($"P2: Sum of group Priorities: {result2}");
         }
+
         public int Problem1()
         {
             return data.Select(r => GetPriority(r)).Sum();
         }
+
         public int Problem2()
         {
             int sum = 0;
