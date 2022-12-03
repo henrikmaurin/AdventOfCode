@@ -1,6 +1,4 @@
-﻿using Common;
-
-namespace AdventOfCode2015
+﻿namespace AdventOfCode2015
 {
     public class Day15 : DayBase, IDay
     {
