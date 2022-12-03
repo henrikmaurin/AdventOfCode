@@ -120,6 +120,32 @@ namespace Common
 			return retval;
 		}
 
+		public static string[][] GroupByEmtyLine(this string me)
+		{
+			List<string[]> list = new List<string[]>();
+			List<string> group = new List<string>();
+			foreach (string line in me.SplitOnNewlineArray(false))
+			{
+				if (group == null)
+					group = new List<string>();
+
+				if (string.IsNullOrEmpty(line))
+				{
+					list.Add(group.ToArray());
+					group = null;
+				}
+				else
+				{
+					group.Add(line);
+				}
+			}
+
+			if (group?.Count > 0)
+				list.Add(group.ToArray());
+
+			return list.ToArray();
+		}
+
 		public static string IsSingleLine(this string me)
 		{
 			return me.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");

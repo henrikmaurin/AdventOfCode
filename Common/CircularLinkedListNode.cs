@@ -2,7 +2,7 @@
 {
     public static class CircularLinkedListNode
     {
-        public static LinkedListNode<int> NextCircular(this LinkedListNode<int> node, int count = 1)
+        public static LinkedListNode<T> NextCircular<T>(this LinkedListNode<T> node, int count = 1)
         {
             if (count > 1)
             {
@@ -16,7 +16,7 @@
 
             return node.Next;
         }
-        public static LinkedListNode<int> PreviousCircular(this LinkedListNode<int> node, int count = 1)
+        public static LinkedListNode<T> PreviousCircular<T>(this LinkedListNode<T> node, int count = 1)
         {
             if (count > 1)
             {

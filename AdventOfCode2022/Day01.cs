@@ -5,7 +5,7 @@ namespace AdventOfCode2022
     public class Day01 : DayBase, IDay
     {
         private const int day = 1;
-        private string[] data;
+        private string data;
         public Day01(bool runtests = false) : base(Global.Year, day, runtests)
         {
             if (runtests)
@@ -13,7 +13,7 @@ namespace AdventOfCode2022
                 return;
             }
 
-            data = input.GetDataCached().SplitOnNewlineArray(false);
+            data = input.GetDataCached();
         }
         public void Run()
         {
@@ -25,13 +25,14 @@ namespace AdventOfCode2022
         }
         public int Problem1()
         {
-            return FindMost(data);
+            return FindMostNew(data);
         }
         public int Problem2()
         {
-            return FindMost(data, 3);
+            return FindMostNew(data, 3);
         }
 
+        [Obsolete($"Please use {nameof(FindMostNew)}")]
         public int FindMost(string[] input, int count = 1)
         {
             List<int> Elves = new List<int>();
@@ -53,6 +54,11 @@ namespace AdventOfCode2022
 
 
             return Elves.OrderByDescending(e => e).Take(count).Sum();
+        }
+
+        public int FindMostNew(string data, int count = 1)
+        {
+            return data.GroupByEmtyLine().Select(g => g.ToInt().Sum()).OrderByDescending(s => s).Take(count).Sum();
         }
     }
 }

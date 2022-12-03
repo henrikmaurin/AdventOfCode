@@ -39,6 +39,8 @@ namespace AdventOfCode2022Tests
 		public void Part1()
 		{
 			Assert.AreEqual(24000, day.FindMost(testdata));
+			Assert.AreEqual(24000, day.FindMostNew(data));
+
 		}
 
 		[TestMethod("Day 1, Part 2")]
@@ -46,6 +48,7 @@ namespace AdventOfCode2022Tests
 		public void Part2()
 		{
 			Assert.AreEqual(45000, day.FindMost(testdata, 3));
+			Assert.AreEqual(45000, day.FindMostNew(data, 3));
 		}
 	}
 }
