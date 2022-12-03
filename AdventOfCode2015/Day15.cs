@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode2015
+﻿using Common;
+
+namespace AdventOfCode2015
 {
     public class Day15 : DayBase, IDay
     {
