@@ -159,5 +159,16 @@ namespace Common
 		{
 			return indata.Split(tokenizer);
 		}
+
+		public static char ToLower(this char indata)
+		{
+			return char.ToLower(indata);
+		}
+
+		public static char ToUpper(this char indata)
+		{
+			return char.ToUpper(indata);
+		}
+
 	}
 }

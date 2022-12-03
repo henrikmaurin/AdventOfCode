@@ -94,22 +94,22 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
         [TestCategory("Example data")]
         public void Part2_1()
         {
-            string data1 = "vJrwpWtwJgWrhcsFMMfFFhFp";
-            string data2 = "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL";
-            string data3 = "PmmdzqPrVvPwwTWBwg";
+            string data1 = splittestdata[0];
+            string data2 = splittestdata[1];
+            string data3 = splittestdata[2];
 
-            Assert.AreEqual(18, day.GetCommonPriority(splittestdata[0], splittestdata[1], splittestdata[2]));
+            Assert.AreEqual(18, day.GetCommonPriority(data1, data2, data3));
         }
 
         [TestMethod("Day 3, Part 2")]
         [TestCategory("Example data")]
         public void Part2_2()
         {
-            string data1 = "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn";
-            string data2 = "ttgJtRGJQctTZtZT";
-            string data3 = "CrZsJsPPZsGzwwsLwLmpwMDw";
+            string data1 = splittestdata[3];
+            string data2 = splittestdata[4];
+            string data3 = splittestdata[5];
 
-            Assert.AreEqual(52, day.GetCommonPriority(splittestdata[3], splittestdata[4], splittestdata[5]));
+            Assert.AreEqual(52, day.GetCommonPriority(data1, data2, data3));
         }
 
         [TestMethod("Day 3, Part 1")]

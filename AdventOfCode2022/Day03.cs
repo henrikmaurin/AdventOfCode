@@ -47,11 +47,10 @@ namespace AdventOfCode2022
             {
                 if (rucksack.Substring(rucksack.Length / 2).Contains(rucksack[i]))
                 {
-                    string content = $"{rucksack[i]}";
-                    if (content == content.ToLower())
-                        return content[0] - 'a' + 1;
+                    if (rucksack[i] == rucksack[i].ToLower())
+                        return rucksack[i] - 'a' + 1;
 
-                    return content.ToLower()[0] - 'a' + 27;
+                    return rucksack[i].ToLower() - 'a' + 27;
                 }
             }
             return 0;
@@ -63,11 +62,10 @@ namespace AdventOfCode2022
             {
                 if (rucksack2.Contains(rucksack1[i]) && rucksack3.Contains(rucksack1[i]))
                 {
-                    string content = $"{rucksack1[i]}";
-                    if (content == content.ToLower())
-                        return content[0] - 'a' + 1;
+                    if (rucksack1[i] == rucksack1[i].ToLower())
+                        return rucksack1[i] - 'a' + 1;
 
-                    return content.ToLower()[0] - 'a' + 27;
+                    return rucksack1[i].ToLower() - 'a' + 27;
                 }
             }
             return 0;
