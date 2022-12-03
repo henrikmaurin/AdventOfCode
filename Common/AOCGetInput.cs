@@ -7,7 +7,8 @@ namespace Common
         private string _cookie;
         private int _year;
         private int _day;
-        public AOCGetInput(string cookie, int year, int day)
+        private string _email;
+        public AOCGetInput(string cookie, string email, int year, int day)
         {
             _cookie = cookie;
             _year = year;
@@ -22,7 +23,7 @@ namespace Common
             {
                 var message = new HttpRequestMessage(HttpMethod.Get, $"/{_year}/day/{_day}/input");
                 var repo = new ProductInfoHeaderValue("(+http://github.dev/henrikmaurin/AdventOfCode)");
-                var mailaddress = new ProductInfoHeaderValue("(+henrik@henrikmaurin.se)");
+                var mailaddress = new ProductInfoHeaderValue($"(+used by {_email})");
 
                 message.Headers.Add("Cookie", $"session={_cookie}");
                 message.Headers.UserAgent.Add(repo);
