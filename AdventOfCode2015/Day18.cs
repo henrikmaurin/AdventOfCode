@@ -44,11 +44,8 @@ namespace AdventOfCode2015
             Console.WriteLine($"P2: Lights on: {result2}");
         }
 
-        public class GameOfLife
+        public class GameOfLife : Map2D<char>
         {
-            public int SizeX { get; private set; }
-            public int SizeY { get; private set; }
-            public char[] Map { get; private set; }
             public bool StuckCorners { get; set; } = false;
 
             public string ToString()
@@ -58,7 +55,7 @@ namespace AdventOfCode2015
                 {
                     for (int x = 0; x < SizeX; x++)
                     {
-                        stringBuilder.Append(Map[x + y * SizeX]);
+                        stringBuilder.Append(this[x, y]);
                     }
                     stringBuilder.Append(Environment.NewLine);
                 }
@@ -68,15 +65,14 @@ namespace AdventOfCode2015
 
             public void Init(string[] data)
             {
-                SizeX = data[0].Length;
-                SizeY = data.Length;
-                Map = new char[SizeX * SizeY];
+                Init(data[0].Length, data.Length);
+                SafeOperations = true;
 
                 for (int y = 0; y < SizeY; y++)
                 {
                     for (int x = 0; x < SizeX; x++)
                     {
-                        Map[x + y * SizeX] = data[y][x];
+                        this[x, y] = data[y][x];
                     }
                 }
                 StuckCornersCheck();
@@ -96,16 +92,16 @@ namespace AdventOfCode2015
                 if (!StuckCorners)
                     return;
 
-                Map[0] = '#';
-                Map[SizeX - 1] = '#';
-                Map[(SizeY - 1) * SizeX] = '#';
-                Map[SizeY * SizeX - 1] = '#';
+                this[0, 0] = '#';
+                this[SizeX - 1, 0] = '#';
+                this[0, SizeY - 1] = '#';
+                this[SizeX - 1, SizeY - 1] = '#';
             }
 
             public void Step()
             {
                 StuckCornersCheck();
-                char[] newMap = new char[SizeX * SizeY];
+                Map2D<char> newMap = CloneEmpty();
 
                 for (int y = 0; y < SizeY; y++)
                 {
@@ -113,15 +109,15 @@ namespace AdventOfCode2015
                     {
                         int neighbors = CountNeighbors(x, y);
                         if (neighbors == 3)
-                            newMap[x + y * SizeX] = '#';
+                            newMap[x, y] = '#';
                         else if (neighbors == 2 && Map[x + y * SizeX] == '#')
-                            newMap[x + y * SizeX] = '#';
+                            newMap[x, y] = '#';
                         else
-                            newMap[x + y * SizeX] = '.';
+                            newMap[x, y] = '.';
                     }
                 }
 
-                Map = newMap;
+                Map = newMap.Map;
                 StuckCornersCheck();
             }
 
@@ -132,14 +128,7 @@ namespace AdventOfCode2015
                 {
                     for (int x1 = x - 1; x1 <= x + 1; x1++)
                     {
-                        if (x1 == x && y1 == y)
-                            continue;
-                        if (x1 < 0 || x1 >= SizeX)
-                            continue;
-                        if (y1 < 0 || y1 >= SizeY)
-                            continue;
-
-                        if (Map[x1 + y1 * SizeX] == '#')
+                        if (!(x1 == x && y1 == y) && this[x1, y1] == '#')
                             count++;
                     }
                 }
