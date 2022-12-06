@@ -5,13 +5,17 @@ namespace AdventOfCode2022
     public class Day06 : DayBase, IDay
     {
         private const int day = 6;
-        List<string> data;
-        public Day06(bool runtests = false) : base(Global.Year, day, runtests)
+        
+        string data;
+        public Day06(string testdata = null) : base(Global.Year, day, testdata != null)
         {
-            if (runtests)
+            if (testdata != null)
+            {
+                data = testdata.IsSingleLine();
                 return;
+            }
 
-            data = input.GetDataCached().SplitOnNewline();
+            data = input.GetDataCached().IsSingleLine();
         }
         public void Run()
         {
@@ -23,10 +27,20 @@ namespace AdventOfCode2022
         }
         public int Problem1()
         {
-            return 0;
+            return FindPacketMarker(4);
         }
         public int Problem2()
         {
+            return FindPacketMarker(14);
+        }
+
+        public int FindPacketMarker(int markerSize)
+        {
+            for (int i = 0; i < data.Length-markerSize; i++)
+            {
+                if (data.ToArray().Skip(i).Take(markerSize).Distinct().Count() == markerSize)
+                    return i + markerSize;
+            }
             return 0;
         }
     }
