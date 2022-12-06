@@ -8,9 +8,11 @@ namespace AdventOfCode2021
         private const int day = 11;
         private string[] instructions;
 
-        int[,] octopuses;
+        private Map2D<int> Octopuses;
+
+        /*int[,] octopuses;
         int sizeX = 0;
-        int sizeY = 0;
+        int sizeY = 0;*/
         int flashes = 0;
 
         public Day11(bool runtests = false) : base(Global.Year, day, runtests)
@@ -46,19 +48,26 @@ namespace AdventOfCode2021
 
         public void Init(string[] energyFieldData)
         {
-            sizeY = energyFieldData.Length;
+            Octopuses = new Map2D<int>();
+            Octopuses.SafeOperations = true;
+            Octopuses.Init(energyFieldData[0].Length, energyFieldData.Length);
+            for (int y = 0; y < Octopuses.SizeY; y++)
+                for (int x = 0; x < Octopuses.SizeX; x++)
+                    Octopuses[x, y] = energyFieldData[y][x].ToInt();
+
+          /*  sizeY = energyFieldData.Length;
             sizeX = energyFieldData[0].Length;
             octopuses = new int[sizeY, sizeX];
             for (int y = 0; y < sizeY; y++)
                 for (int x = 0; x < sizeX; x++)
-                    octopuses[y, x] = energyFieldData[y][x].ToInt();
+                    octopuses[y, x] = energyFieldData[y][x].ToInt();*/
         }
 
         public int FindTotalFlash()
         {
             int i = 0;
             flashes = 0;
-            while (flashes != sizeX * sizeY)
+            while (flashes != Octopuses.SizeX * Octopuses.SizeY)
             {
                 i++;
                 flashes = 0;
@@ -72,8 +81,8 @@ namespace AdventOfCode2021
         {
             for (int i = 0; i < cycles; i++)
             {
-                for (int y = 0; y < sizeY; y++)
-                    for (int x = 0; x < sizeX; x++)
+                for (int y = 0; y < Octopuses.SizeY; y++)
+                    for (int x = 0; x < Octopuses.SizeX; x++)
                         Increase(x, y);
 
                 ResetFlashed();
@@ -85,26 +94,26 @@ namespace AdventOfCode2021
         public void ResetFlashed()
         {
 
-            for (int y = 0; y < sizeY; y++)
-                for (int x = 0; x < sizeX; x++)
-                    if (octopuses[y, x] > 9)
-                        octopuses[y, x] = 0;
+            for (int y = 0; y < Octopuses.SizeY; y++)
+                for (int x = 0; x < Octopuses.SizeX; x++)
+                    if (Octopuses[x, y] > 9)
+                        Octopuses[x, y] = 0;
         }
 
         public bool Increase(int x, int y)
         {
-            if (x < 0 || y < 0 || y >= sizeY)
+            if (x < 0 || y < 0 || y >= Octopuses.SizeY)
                 return false;
 
-            if (x >= sizeX)
+            if (x >= Octopuses.SizeX)
                 return false;
 
-            if (octopuses[y, x] > 9)
+            if (Octopuses[x, y] > 9)
                 return false;
 
-            octopuses[y, x]++;
+            Octopuses[x, y]++;
 
-            if (octopuses[y, x] > 9)
+            if (Octopuses[x, y] > 9)
             {
                 flashes++;
                 IncreaseAdjacant(x, y);
@@ -125,11 +134,11 @@ namespace AdventOfCode2021
         public string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            for (int y = 0; y < sizeY; y++)
+            for (int y = 0; y < Octopuses.SizeY; y++)
             {
-                for (int x = 0; x < sizeX; x++)
+                for (int x = 0; x < Octopuses.SizeX; x++)
                 {
-                    sb.Append(octopuses[y, x]);
+                    sb.Append(Octopuses[x, y]);
                 }
                 sb.Append(Environment.NewLine);
             }
