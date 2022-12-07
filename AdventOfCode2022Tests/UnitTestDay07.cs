@@ -34,28 +34,28 @@ $ ls
 4060174 j
 8033020 d.log
 5626152 d.ext
-7214296 k";
+7214296 k
+";
 
 			testdata = data.SplitOnNewline();
 
 			day = new Day07(data);
+			day.RunLog(testdata);
 		}
 
 
 		[TestMethod("Day 7, Part 1")]
 		[TestCategory("Example data")]
-		public void Part1()
-		{
+		public void Part1()		{
 
-			Assert.AreEqual(95437, day.GetSumOfDirectories(testdata, 100000));
+			Assert.AreEqual(95437, day.Problem1());
 		}
 
 		[TestMethod("Day 7, Part 2")]
 		[TestCategory("Example data")]
 		public void Part2()
 		{
-
-			Assert.AreEqual(2, 2);
-		}
+            Assert.AreEqual(24933642, day.Problem2());
+        }
 	}
 }

@@ -5,7 +5,8 @@ namespace AdventOfCode2022
     public class Day07 : DayBase, IDay
     {
         private const int day = 7;
-        List<string> data;
+        private List<string> data;
+        public Directory Filesystem { get; protected set; }
         public Day07(string testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -13,8 +14,8 @@ namespace AdventOfCode2022
                 data = testdata.SplitOnNewline(); return;
             }
 
-
             data = input.GetDataCached().SplitOnNewline();
+            RunLog(data);
         }
         public void Run()
         {
@@ -26,19 +27,27 @@ namespace AdventOfCode2022
         }
         public int Problem1()
         {
-            return GetSumOfDirectories(data, 100000);
+            return Filesystem.Flatten().Select(d => d.GetTotalSize()).Where(ts => ts <= 100000).Sum();
         }
         public int Problem2()
         {
-            return 0;
+            var dirs = Filesystem.Flatten();
+            int used = Filesystem.GetTotalSize();
+
+            int totalfree = (70000000 - used);
+            int needToFree = 30000000 - totalfree;
+
+            int smallest = dirs.Where(d => d.GetTotalSize() >= needToFree).OrderBy(d => d.GetTotalSize()).Select(d => d.GetTotalSize()).First();
+
+            return smallest;
         }
 
-        public int GetSumOfDirectories(List<string> lines, int maxSize)
+        public void RunLog(List<string> lines)
         {
             int dirSum = 0;
-            Directory root = new Directory { Name = "/" };
-            root.ParentDir = root;
-            Directory currentDir = root;
+            Filesystem = new Directory { Name = "/" };
+            Filesystem.ParentDir = Filesystem;
+            Directory currentDir = Filesystem;
             int currentline = 0;
             while (currentline < lines.Count)
             {
@@ -46,14 +55,14 @@ namespace AdventOfCode2022
                 {
                     dirSum = 0;
                     if (lines[currentline].Split(' ').Last() == "/")
-                        currentDir = root;
+                        currentDir = Filesystem;
                     else if (lines[currentline].Split(' ').Last() == "..")
                     {
                         currentDir = currentDir.ParentDir;
                     }
                     else
                     {
-                        string dirname = lines[currentline].Split(' ').Last();
+                        string dirname = (currentDir.Name + "/" + lines[currentline].Split(' ').Last()).Replace("//", "/");
                         currentDir = currentDir.Directories.Where(d => d.Name == dirname).Single();
                     }
 
@@ -65,12 +74,12 @@ namespace AdventOfCode2022
                 {
                     dirSum = 0;
                     currentline++;
-                    while (currentline < lines.Count - 1 && !lines[currentline].StartsWith("$"))
+                    while (currentline < lines.Count && !lines[currentline].StartsWith("$"))
                     {
                         if (lines[currentline].StartsWith("dir"))
                         {
                             Directory newDir = new Directory();
-                            newDir.Name = lines[currentline].Split(" ").Last();
+                            newDir.Name = (currentDir.Name + "/" + lines[currentline].Split(" ").Last()).Replace("//", "/");
                             newDir.ParentDir = currentDir;
                             currentDir.Directories.Add(newDir);
 
@@ -79,41 +88,17 @@ namespace AdventOfCode2022
                             currentDir.FileSizes += n;
                         currentline++;
                     }
-
-
                     continue;
                 }
                 currentline++;
 
             }
 
-            var dirs = root.Flatten();
 
-            int used = root.GetTotalSize();
-
-            int totalfree = (70000000 - used);
-
-            int needToFree = 30000000 - totalfree;
-
-            int smallest = dirs.Where(d => d.GetTotalSize() >= needToFree).OrderBy(d => d.GetTotalSize()).Select(d => d.GetTotalSize()).First();
-            return smallest;
-
-
-            int sum = 0;
-            foreach (var dir in dirs)
-            {
-                int s = dir.GetTotalSize();
-                if (s <= maxSize)
-                    sum += s;
-
-            }
-
-
-            return sum;
         }
     }
 
-    class Directory
+    public class Directory
     {
         public static int Acc;
         public string Name { get; set; }
@@ -139,5 +124,9 @@ namespace AdventOfCode2022
             return dirs;
         }
 
+        public string ToString()
+        {
+            return $"Name:{Name}, Files:{FileSizes}, TotalSize:{GetTotalSize}";
+        }
     }
 }
