@@ -67,13 +67,10 @@ namespace AdventOfCode2015
             {
                 Init(data[0].Length, data.Length);
                 SafeOperations = true;
-
-                for (int y = 0; y < SizeY; y++)
+               
+                foreach (Coord2D coord in Enumerate())
                 {
-                    for (int x = 0; x < SizeX; x++)
-                    {
-                        this[x, y] = data[y][x];
-                    }
+                    this[coord] = data[coord.Y][coord.X];
                 }
                 StuckCornersCheck();
             }
@@ -101,20 +98,17 @@ namespace AdventOfCode2015
             public void Step()
             {
                 StuckCornersCheck();
-                Map2D<char> newMap = CloneEmpty();
+                Map2D<char> newMap = CloneEmpty();            
 
-                for (int y = 0; y < SizeY; y++)
+                foreach (Coord2D coord in Enumerate())
                 {
-                    for (int x = 0; x < SizeX; x++)
-                    {
-                        int neighbors = CountNeighbors(x, y);
-                        if (neighbors == 3)
-                            newMap[x, y] = '#';
-                        else if (neighbors == 2 && Map[x + y * SizeX] == '#')
-                            newMap[x, y] = '#';
-                        else
-                            newMap[x, y] = '.';
-                    }
+                    int neighbors = CountNeighbors(coord.X, coord.Y);
+                    if (neighbors == 3)
+                        newMap[coord] = '#';
+                    else if (neighbors == 2 && this[coord] == '#')
+                        newMap[coord] = '#';
+                    else
+                        newMap[coord] = '.';
                 }
 
                 Map = newMap.Map;
@@ -124,13 +118,10 @@ namespace AdventOfCode2015
             public int CountNeighbors(int x, int y)
             {
                 int count = 0;
-                for (int y1 = y - 1; y1 <= y + 1; y1++)
+                foreach (Coord2D coord in Directions.GetSurroundingCoordsFor(x, y))
                 {
-                    for (int x1 = x - 1; x1 <= x + 1; x1++)
-                    {
-                        if (!(x1 == x && y1 == y) && this[x1, y1] == '#')
-                            count++;
-                    }
+                    if (this[coord] == '#')
+                        count++;
                 }
                 return count;
             }

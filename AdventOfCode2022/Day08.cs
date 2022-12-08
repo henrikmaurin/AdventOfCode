@@ -103,13 +103,8 @@ namespace AdventOfCode2022
             int canSeeUp = 0;
             int canSeeDown = 0;
 
-            if (xPos == 2 && yPos == 3)
-            { int a = 0; }
+            var diections = Directions.GetNeigboingCoords();
 
-            if (xPos == 2 && yPos == 4)
-            {
-                int a = 0;
-            }
 
             for (int x = xPos-1; x >=0; x--)
                 if (Map[x, yPos].Height < Map[xPos, yPos].Height)
@@ -119,9 +114,6 @@ namespace AdventOfCode2022
                     canSeeLeft++;
                     break;
                 }
-
-
-
             for (int x = xPos + 1; x < Map.SizeX; x++)
                 if (Map[x, yPos].Height < Map[xPos, yPos].Height)
                     canSeeRight++;
@@ -130,7 +122,6 @@ namespace AdventOfCode2022
                     canSeeRight++;
                     break;
                 }
-
             for (int y = yPos - 1; y >= 0; y--)
                 if (Map[xPos, y].Height < Map[xPos, yPos].Height)
                     canSeeUp++;
@@ -139,7 +130,6 @@ namespace AdventOfCode2022
                     canSeeUp++;
                     break;
                 }
-
             for (int y = yPos + 1; y < Map.SizeY; y++)
                 if (Map[xPos, y].Height < Map[xPos, yPos].Height)
                     canSeeDown++;
@@ -147,9 +137,7 @@ namespace AdventOfCode2022
                 {
                     canSeeDown++;
                     break;
-                }
-              
-
+                } 
 
             return canSeeDown * canSeeLeft * canSeeRight * canSeeUp;
 

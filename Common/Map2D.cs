@@ -14,12 +14,14 @@ namespace Common
         public int SizeY { get; protected set; }
         public bool SafeOperations { get; set; }
 
-        public void Init(int sizeX, int sizeY)
+
+        public void Init(int sizeX, int sizeY, T? initialvalue = default(T?))
         {
             SizeX = sizeX;
             SizeY = sizeY;
 
             Map = new T[sizeX * sizeY];
+            Array.Fill(Map, initialvalue);
         }
 
         public virtual T Get(int xPos, int yPos)
@@ -96,6 +98,12 @@ namespace Common
             set { if (SafeOperations) TrySet(x, y, value); else Set(x, y, value); }
         }
 
+        public virtual T this[Coord2D coord]
+        {
+            get { return this[coord.X, coord.Y]; }
+            set { this[coord.X, coord.Y] = value; }
+        }
+
         public Map2D<T> CloneEmpty()
         {
             Map2D<T> clone = new Map2D<T>();
@@ -117,26 +125,113 @@ namespace Common
 
         public bool IsValidCoord(Coord2D coord)
         {
-            return (IsValidCoord(coord.X, coord.Y));
+            return IsValidCoord(coord.X, coord.Y);
+        }
+
+        public List<Coord2D> GetSurrounding(int xPos, int yPos)
+        {
+            return Directions.GetSurroundingCoordsFor(xPos, yPos).Where(coord=>IsValidCoord(coord)).ToList();           
+        }
+
+        public List<Coord2D> GetSurrounding(Coord2D coord)
+        {
+            return GetSurrounding(coord.X, coord.Y);
         }
 
         public List<Coord2D> GetNeighbors(int xPos, int yPos)
         {
-            List<Coord2D> neighbors = new List<Coord2D>();
-            for (int y = yPos - 1; y <= yPos + 1; y++)
-            {
-                for (int x = xPos - 1; x <= xPos + 1; x++)
-                {
-                    if (!(x == xPos && y == yPos) && IsValidCoord(xPos, yPos))
-                        neighbors.Add(new Coord2D { X = x, Y = y });
-                }
-            }
-            return neighbors;
+            return Directions.GetNeighboringCoordsFor(xPos, yPos).Where(coord => IsValidCoord(coord)).ToList();          
         }
 
         public List<Coord2D> GetNeighbors(Coord2D coord)
         {
             return GetNeighbors(coord.X, coord.Y);
+        }
+
+        public Coord2D[] Enumerate()
+        {
+            Coord2D[] coords = new Coord2D[SizeX * SizeY];
+            for (int y = 0; y < SizeY; y++)
+                for (int x = 0; x < SizeX; x++)
+                    coords[x + y * SizeX] = new Coord2D { X = x, Y = y };
+
+            return coords;
+        }
+    }
+
+    public static class Directions
+    {
+        public const int None = 0;
+        public const int Top = 1;
+        public const int Left = 2;
+        public const int Right = 3;
+        public const int Bottom = 4;
+        public const int TopLeft = 5;
+        public const int TopRight = 6;
+        public const int BottomLeft = 7;
+        public const int BottomRight = 8;
+
+        private static Coord2D[] _directions = {
+            new Coord2D{X=0,Y=0},
+            new Coord2D{X=0,Y=-1},
+            new Coord2D{X=-1,Y=0},
+            new Coord2D{X=1,Y=0},
+            new Coord2D{X=0,Y=1},
+            new Coord2D{X=-1,Y=-1},
+            new Coord2D{X=1,Y=-1},
+            new Coord2D{X=-1,Y=1},
+            new Coord2D{X=1,Y=1},
+        };
+
+        public static int[] GetNeighbors()
+        {
+            return new int[] { Top, Left, Right, Bottom };
+        }
+
+        public static int[] GetSurrounding()
+        {
+            return new int[] { TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight };
+        }
+
+        public static Coord2D GetDirection(int direction)
+        {
+            return _directions[direction];
+        }
+
+        public static Coord2D[] GetNeigboingCoords()
+        {
+            return _directions[GetNeighbors().First()..GetNeighbors().Last()];
+        }
+
+        public static Coord2D[] GetNeighboringCoordsFor(int xPos, int yPos)
+        {
+            Coord2D[] retVal = new Coord2D[4];
+            int counter = 0;
+            foreach (int direction in GetNeighbors())
+            {
+                Coord2D c = GetDirection(direction);
+                retVal[counter++] = new Coord2D { X = xPos + c.X, Y = yPos + c.Y };
+            }
+
+            return _directions[GetNeighbors().First()..GetNeighbors().Last()];
+        }
+
+        public static Coord2D[] GetSurroundingCoordsFor(int xPos, int yPos)
+        {
+            Coord2D[] retVal = new Coord2D[8];
+            int counter = 0;
+            foreach (int direction in GetSurrounding())
+            {
+                Coord2D c = GetDirection(direction);
+                retVal[counter++] = new Coord2D { X = xPos + c.X, Y = yPos + c.Y };
+            }
+
+            return retVal;
+        }
+
+        public static Coord2D[] GetSurroundingCoords()
+        {
+            return _directions[GetSurrounding().First()..GetSurrounding().Last()];
         }
     }
 
@@ -144,5 +239,14 @@ namespace Common
     {
         public int X { get; set; }
         public int Y { get; set; }
+        public static Coord2D operator +(Coord2D me, Coord2D coord)
+        {
+            return new Coord2D { X = me.X + coord.X, Y = me.Y + coord.Y };
+        }
+        public static Coord2D operator -(Coord2D me, Coord2D coord)
+        {
+            return new Coord2D { X = me.X - coord.X, Y = me.Y - coord.Y };
+        }
+
     }
 }
