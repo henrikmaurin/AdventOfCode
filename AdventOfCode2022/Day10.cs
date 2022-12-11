@@ -30,7 +30,10 @@ namespace AdventOfCode2022
         }
         public string Problem2()
         {
-            return Render(data);
+            string matrix = Render(data);
+
+
+            return matrix + Environment.NewLine + MatrixToText.Convert(matrix.SplitOnNewlineArray(), 5, '#', '.');
         }
 
         public int CountStrength(List<string> instructions, int cycles)
@@ -40,7 +43,7 @@ namespace AdventOfCode2022
             int instructionCounter = 0;
             {
                 while (cyclecounter + GetCycles(instructions[instructionCounter].Split(" ").First()) < cycles)
-                {             
+                {
                     switch (instructions[instructionCounter].Split(" ").First())
                     {
                         case "addx":
@@ -97,7 +100,7 @@ namespace AdventOfCode2022
                     registerX += add;
                 }
             }
-          
+
             return result;
         }
 
