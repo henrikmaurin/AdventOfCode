@@ -8,7 +8,7 @@ namespace AdventOfCode2022
         private const int day = 9;
         private List<string> data;
         private Dictionary<string, int> visits;
-        public List<Coord2D> Knots;
+        public List<Vector2D> Knots;
         public Day09(string testdata = null) : base(Global.Year, day, testdata != null)
         {
 
@@ -42,14 +42,16 @@ namespace AdventOfCode2022
 
         public void Parse(string[] instructions, int knots = 2)
         {
-            Knots = new List<Coord2D>();
+            Knots = new List<Vector2D>();
             for (int i = 0; i < knots; i++)
             {
-                Knots.Add(new Coord2D());
+                Knots.Add(new Vector2D());
             }
 
-            visits = new Dictionary<string, int>();
-            visits.Add("0,0", 1);
+            visits = new Dictionary<string, int>
+            {
+                { "0,0", 1 }
+            };
 
             foreach (string instruction in instructions)
             {
@@ -66,8 +68,8 @@ namespace AdventOfCode2022
         {
             string direction = instruction.Split(" ").First();
             int positions = instruction.Split(" ").Last().ToInt();
-            Coord2D dir = new Coord2D();
-            Coord2D lastTail = new Coord2D();
+            Vector2D dir = new Vector2D();
+            Vector2D lastTail = new Vector2D();
 
             switch (direction)
             {
@@ -94,9 +96,9 @@ namespace AdventOfCode2022
                 {
                     for (int knot = 1; knot < Knots.Count; knot++)
                     {
-                        if (Math.Abs(Knots[knot - 1].X - Knots[knot].X) > 1 || Math.Abs(Knots[knot - 1].Y - Knots[knot].Y) > 1)
+                        if (Knots[knot - 1].ManhattanDistance(Knots[knot])>1)
                         {
-                            Coord2D move = new Coord2D();
+                            Vector2D move = new Vector2D();
                             if (Knots[knot - 1].X - Knots[knot].X > 0)
                             {
                                 move += Directions.GetDirection(Directions.Right);
@@ -120,11 +122,11 @@ namespace AdventOfCode2022
                 }
                 if (!visits.ContainsKey($"{Knots.Last().X},{Knots.Last().Y}"))
                 {
-                    visits.Add($"{Knots.Last().X},{Knots.Last().Y}", 1);
+                    visits.Add(Knots.Last().ToString(), 1);
                 }
                 else
                 {
-                    visits[$"{Knots.Last().X},{Knots.Last().Y}"]++;
+                    visits[Knots.Last().ToString()]++;
                 }
             }
         }      

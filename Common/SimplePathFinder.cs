@@ -32,7 +32,7 @@ namespace Common
                     {
                         if (DistanceMap[x, y] == distance)
                         {
-                            List<Coord2D> neighbors = DistanceMap.GetNeighbors(x, y);
+                            List<Vector2D> neighbors = DistanceMap.GetNeighbors(x, y);
                             foreach (var neighbor in neighbors)
                             {
                                 if (DistanceMap[neighbor.X, neighbor.Y] == null && Map[x, y].Traversable)
@@ -48,20 +48,20 @@ namespace Common
             }
         }
 
-        public List<Coord2D> GetPath(int fromX, int fromY, int toX, int toY)
+        public List<Vector2D> GetPath(int fromX, int fromY, int toX, int toY)
         {
             CalcDistances(fromX, fromY);
-            List<Coord2D> path = new List<Coord2D>();
+            List<Vector2D> path = new List<Vector2D>();
 
             int? distance = DistanceMap[toX, toY];
             if (distance == null)
                 return null;
             
-            Coord2D currentPos= new Coord2D { X= toX ,Y = toY };
+            Vector2D currentPos= new Vector2D { X= toX ,Y = toY };
 
             while (distance>0)
             {
-                List<Coord2D> neighbors = DistanceMap.GetNeighbors(currentPos.X, currentPos.Y);
+                List<Vector2D> neighbors = DistanceMap.GetNeighbors(currentPos.X, currentPos.Y);
                 foreach (var neighbor in neighbors)
                 {
                     if (DistanceMap[neighbor.X,neighbor.Y]== distance-1)
