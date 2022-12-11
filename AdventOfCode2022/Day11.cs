@@ -97,10 +97,7 @@ namespace AdventOfCode2022
                     monkeys[monkey].Items.Clear();
                 }
             }
-
-            long[] top2 = monkeys.OrderByDescending(m => m.Inspections).Take(2).Select(m => m.Inspections).ToArray();
-
-            return top2[0] * top2[1];
+            return monkeys.OrderByDescending(m => m.Inspections).Take(2).Select(m => m.Inspections).Product();
         }
 
         public void Parse(string[][] monkeydata)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public class SimplePathFinder
+    public class SimpleMath2DPathFinder
     {
         public Map2D<IPathFinderAttributes> Map { get; set; }
         public Map2D<int?> DistanceMap { get; set; }
