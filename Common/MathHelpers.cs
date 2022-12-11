@@ -61,7 +61,7 @@ namespace Common
             return a < b ? a : b;
         }
 
-        public static int Higest(int a, int b)
+        public static int Highest(int a, int b)
         {
             return a > b ? a : b;
         }
