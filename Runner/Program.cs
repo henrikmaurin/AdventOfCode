@@ -1,8 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 
+using AdventOfCode;
 using Common;
 using Runner;
+
 
 string lastrunfile = "lastrun.txt";
 string lastrun = string.Empty;
@@ -21,6 +23,24 @@ if (File.Exists(lastrunfile))
     }
 
 }
+
+/*
+VisualAoC visualAoC = new VisualAoC(120, 50);
+visualAoC.ProjectName = "Year2022Day01.aoc";
+
+visualAoC.Data = @"Rad1
+Rad 2
+Rad3
+Rad1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111".SplitOnNewlineArray();
+visualAoC.CurrentDataLine = 1;
+visualAoC.Variables.Add("bananer", "4");
+visualAoC.Variables.Add("sopor", "100000000000000000000000000");
+
+
+visualAoC.DrawInterface();
+visualAoC.PrintAtDrawArea(1, 1, "Hej!");
+visualAoC.Display();
+*/
 
 
 
