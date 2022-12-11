@@ -56,5 +56,53 @@ namespace Common
             return (a / GreatesCommonFactor(a, b)) * b;
         }
 
+        public static int Lowest(int a, int b)
+        {
+            return a < b ? a : b;
+        }
+
+        public static int Higest(int a, int b)
+        {
+            return a > b ? a : b;
+        }
+
+        public static long Lowest(long a, long b)
+        {
+            return a < b ? a : b;
+        }
+
+        public static long Higest(long a, long b)
+        {
+            return a > b ? a : b;
+        }
+
+        public static IEnumerable<int> GetFactors(int x)
+        {
+            int max = (int)Math.Ceiling(Math.Sqrt(x));
+            for (int factor = 1; factor < max; factor++)
+            {
+                if (x % factor == 0)
+                {
+                    yield return factor;
+                    if (factor != max)
+                        yield return x / factor;
+                }
+            }
+        }
+
+        public static IEnumerable<long> GetFactors(long x)
+        {
+            long max = (long)Math.Ceiling(Math.Sqrt(x));
+            for (long factor = 1; factor < max; factor++)
+            {
+                if (x % factor == 0)
+                {
+                    yield return factor;
+                    if (factor != max)
+                        yield return x / factor;
+                }
+            }
+        }
+
     }
 }

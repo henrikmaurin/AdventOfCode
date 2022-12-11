@@ -22,35 +22,50 @@ namespace AdventOfCode2015
         }
         public int Problem1()
         {
-            return Formula(data);
+            return Formula1(data);
         }
         public int Problem2()
-        {
-            string data = input.GetDataCached();
-
-            return 0;
+        {      
+            return Formula2(data);
         }
 
         public void Run()
         {
             int finalFloor = Problem1();
-            Console.WriteLine($"P1: Santa ends up on floor: {finalFloor}");
+            Console.WriteLine($"P1: Lowest house number: {finalFloor}");
 
             int position = Problem2();
-            Console.WriteLine($"P2: Santa ends up in basemant at position: {position}");
+            Console.WriteLine($"P2: Lowest house number with new rules: {position}");
         }
 
-        public int Formula(int target)
+        public int Formula1(int target)
         {
-            int number = 1;
-            int counter = 1;
-            while (number<target/10)
+            int housenumber = 1;
+            while ( housenumber < target/10 )
             {
-                number *= counter++;
+                var factors = MathHelpers.GetFactors(housenumber );
+                int sum = factors.Sum();
+                if (sum*10>target)
+                    return housenumber;
+                housenumber++;
             }
-            return counter;            
+            return 0;
         }
 
-       
+        public int Formula2(int target)
+        {
+            int housenumber = 1;
+            while (housenumber < target / 10)
+            {
+                var factors = MathHelpers.GetFactors(housenumber);
+                int sum = factors.Where(f=>f*50>=housenumber).Sum();
+                if (sum*11 > target)
+                    return housenumber;
+                housenumber++;
+            }
+            return 0;
+        }
+
+
     }
 }
