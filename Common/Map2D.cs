@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Common
+﻿namespace Common
 {
     public class Map2D<T>
     {
@@ -130,7 +123,7 @@ namespace Common
 
         public List<Vector2D> GetSurrounding(int xPos, int yPos)
         {
-            return Directions.GetSurroundingCoordsFor(xPos, yPos).Where(coord=>IsValidCoord(coord)).ToList();           
+            return Directions.GetSurroundingCoordsFor(xPos, yPos).Where(coord => IsValidCoord(coord)).ToList();
         }
 
         public List<Vector2D> GetSurrounding(Vector2D coord)
@@ -140,7 +133,7 @@ namespace Common
 
         public List<Vector2D> GetNeighbors(int xPos, int yPos)
         {
-            return Directions.GetNeighboringCoordsFor(xPos, yPos).Where(coord => IsValidCoord(coord)).ToList();          
+            return Directions.GetNeighboringCoordsFor(xPos, yPos).Where(coord => IsValidCoord(coord)).ToList();
         }
 
         public List<Vector2D> GetNeighbors(Vector2D coord)
@@ -220,7 +213,7 @@ namespace Common
                 retVal[counter++] = new Vector2D { X = xPos + c.X, Y = yPos + c.Y };
             }
 
-            return _directions[GetNeighbors().First()..GetNeighbors().Last()];
+            return retVal;
         }
 
         public static Vector2D[] GetSurroundingCoordsFor(int xPos, int yPos)
@@ -243,7 +236,7 @@ namespace Common
 
         public static int ManhattanDistance(this Vector2D me, Vector2D other)
         {
-            return (new int[] { Math.Abs( me.X - other.X), Math.Abs( me.Y-other.Y) }).Max() ;
+            return (new int[] { Math.Abs(me.X - other.X), Math.Abs(me.Y - other.Y) }).Max();
         }
     }
 

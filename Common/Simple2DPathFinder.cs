@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-namespace Common
+﻿namespace Common
 {
-    public class SimpleMath2DPathFinder
+    public class Simple2DPathFinder
     {
         public Map2D<IPathFinderAttributes> Map { get; set; }
         public Map2D<int?> DistanceMap { get; set; }
@@ -26,20 +19,19 @@ namespace Common
             while (changed)
             {
                 changed = false;
-                 for (int y = 0; y < Map.SizeY; y++)
+                foreach (Vector2D coordinate in Map.Enumerate())
                 {
-                    for (int x = 0; x < Map.SizeX; x++)
+
+                    if (DistanceMap[coordinate] == distance)
                     {
-                        if (DistanceMap[x, y] == distance)
+                        List<Vector2D> neighbors = DistanceMap.GetNeighbors(coordinate);
+                        foreach (var neighbor in neighbors)
                         {
-                            List<Vector2D> neighbors = DistanceMap.GetNeighbors(x, y);
-                            foreach (var neighbor in neighbors)
+                            if (DistanceMap[neighbor] == null && Map[neighbor].TraversableFrom(coordinate))
                             {
-                                if (DistanceMap[neighbor.X, neighbor.Y] == null && Map[x, y].Traversable)
-                                {
-                                    DistanceMap[neighbor.X, neighbor.Y] = distance + 1;
-                                    changed = true;
-                                }
+                                DistanceMap[neighbor] = distance + 1;
+                                changed = true;
+
                             }
                         }
                     }
@@ -56,23 +48,23 @@ namespace Common
             int? distance = DistanceMap[toX, toY];
             if (distance == null)
                 return null;
-            
-            Vector2D currentPos= new Vector2D { X= toX ,Y = toY };
 
-            while (distance>0)
+            Vector2D currentPos = new Vector2D { X = toX, Y = toY };
+
+            while (distance > 0)
             {
                 List<Vector2D> neighbors = DistanceMap.GetNeighbors(currentPos.X, currentPos.Y);
                 foreach (var neighbor in neighbors)
                 {
-                    if (DistanceMap[neighbor.X,neighbor.Y]== distance-1)
+                    if (DistanceMap[neighbor.X, neighbor.Y] == distance - 1)
                     {
-                        path.Add(neighbor); 
+                        path.Add(neighbor);
                         break;
                     }
                 }
                 distance--;
             }
-            
+
             return path;
         }
 
@@ -81,7 +73,7 @@ namespace Common
 
     public interface IPathFinderAttributes
     {
-        public bool Traversable { get; set; }
+        public bool TraversableFrom(Vector2D from);
     }
 
 }
