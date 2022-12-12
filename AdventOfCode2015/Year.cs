@@ -54,6 +54,8 @@ namespace AdventOfCode2015
                     return new Day20();
                 case 21:
                     return new Day21();
+                case 22:
+                    return new Day22();
 
             }
             return null;
