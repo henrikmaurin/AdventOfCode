@@ -1,4 +1,6 @@
 ﻿using Common;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace AdventOfCode2022
 {
@@ -25,12 +27,65 @@ namespace AdventOfCode2022
             Console.WriteLine($"P2: Result: {result2}");
         }
         public int Problem1()
-        {
+        {         
             return CalcRightOrder();
         }
         public int Problem2()
         {
-            return 0;
+            return GetDividerValues();
+        }
+
+        public int GetDividerValues()
+        {
+            List<JsonNode> allPackets = new List<JsonNode>();
+            JsonNode divider1 = JsonNode.Parse("[[2]]");
+            JsonNode divider2 = JsonNode.Parse("[[6]]");
+            allPackets.Add(divider1);
+            allPackets.Add(divider2);
+
+            foreach (string[] d1 in data)
+            {
+                foreach (string d2 in d1)
+                {
+                    allPackets.Add(JsonNode.Parse(d2));
+                }
+            }
+
+            allPackets.Sort((left, right) => Compare(left, right));
+
+            int pos1 = allPackets.IndexOf(divider1) + 1;
+            int pos2 = allPackets.IndexOf(divider2) + 1;
+
+            int retVal = pos1 * pos2;
+            return retVal;
+
+
+        }
+
+        public int Compare(string[] toCompare)
+        {
+            return Compare(toCompare[0], toCompare[1]);
+        }
+
+        public int Compare(string left, string right)
+        {
+            return Compare(JsonNode.Parse(left), JsonNode.Parse(right));
+        }
+
+       public int Compare(JsonNode left, JsonNode right)
+        {
+            if (left is JsonValue && right is JsonValue)
+            {
+                return (int)left - (int)right;
+            }
+            else
+            {
+                var arrayleft = left as JsonArray ?? new JsonArray((int)left);
+                var arrayRight = right as JsonArray ?? new JsonArray((int)right);
+                return Enumerable.Zip(arrayleft, arrayRight)
+                    .Select(p => Compare(p.First, p.Second))
+                    .FirstOrDefault(c => c != 0, arrayleft.Count - arrayRight.Count);
+            }
         }
 
         public int CalcRightOrder()
@@ -38,118 +93,13 @@ namespace AdventOfCode2022
             int sum = 0;
             for (int i = 0; i < data.Length; i++)
             {
-                if (Compare2(data[i]))
+                if (Compare(data[i]) < 0)
                     sum += 1 + i;
             }
             return sum;
 
         }
 
-
-        public bool Compare2(string[] lines)
-        {
-            if (lines[0].Length == 0)
-                return true;
-            if (lines[1].Length == 0)
-                return false;
-
-            if (lines[0].StartsWith("["))
-            {
-                int leftEnd = FindEnd(lines[0].Substring(1));
-
-                lines[0] = lines[0].Substring(1, leftEnd - 1);
-
-
-                if (!lines[1].StartsWith("["))
-                    lines[1] = $"[{lines[1]}]";
-
-                int rightEnd = FindEnd(lines[1].Substring(1));
-
-                lines[1] = lines[1].Substring(1, rightEnd - 1);
-
-                return Compare2(lines);
-            }
-
-            if (lines[1].StartsWith("["))
-            {
-                lines[0] = $"[{lines[0]}]";
-                return Compare2(lines);
-            }
-
-            string[] leftSplit = lines[0].Split(",");
-            string[] rightSplit = lines[1].Split(",");
-            if (rightSplit.Count() < leftSplit.Count())
-                return false;
-
-            for (int i = 0; i < leftSplit.Length; i++)
-            {
-                if (int.TryParse(leftSplit[i].Replace("]", ""), out int leftNumber))
-                {
-
-                    if (int.TryParse(rightSplit[i].Replace("]", ""), out int rightNumber))
-                    {
-                        if (leftNumber < rightNumber)
-                            return true;
-
-                        if (rightNumber < leftNumber)
-                            return false;
-                    }
-                    else
-                    {
-                        string left = string.Join(',', leftSplit[i..]);
-                        string right = string.Join(',', rightSplit[i..]);
-
-                        if (left == "")
-                            return true;
-
-
-                        string[] newCompare = new string[2];
-                        newCompare[0] = left.Substring(1);
-                        newCompare[1] = right.Substring(1);
-
-                        return Compare2(newCompare);
-                    }
-                }
-                else
-                {
-                    string left = string.Join(',', leftSplit[i..]);
-                    string right = string.Join(',', rightSplit[i..]);
-
-                    if (left == "")
-                        return true;
-
-
-                    string[] newCompare = new string[2];
-                    newCompare[0] = left.Substring(1);
-                    newCompare[1] = right.Substring(1);
-
-                    return Compare2(newCompare);
-                }
-
-            }
-
-
-
-
-
-            return true;
-        }
-
-
-        public int FindEnd(string toFindIn)
-        {
-            int depth = 1;
-            int i = 0;
-            while (depth != 0)
-            {
-                if (toFindIn[i] == '[')
-                    depth++;
-                if (toFindIn[i] == ']')
-                { depth--; }
-                i++;
-            }
-            return i;
-        }
 
     }
 
