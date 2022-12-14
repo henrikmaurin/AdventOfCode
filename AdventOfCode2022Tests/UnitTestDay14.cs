@@ -1,15 +1,23 @@
 using AdventOfCode2022;
+using Common;
 
 namespace AdventOfCode2022Tests
 {
 	[TestClass]
 	public class UnitTestDay14
 	{
-		private Day01 day;
+		private Day14 day;
+		private string data;
+		private List<string> testdata;
+
 		[TestInitialize]
 		public void Init()
 		{
-			day = new Day01(true);
+			data = @"498,4 -> 498,6 -> 496,6
+503,4 -> 502,4 -> 502,9 -> 494,9";
+
+			testdata = data.SplitOnNewline();
+			day = new Day14(data);
 		}
 
 
@@ -17,16 +25,17 @@ namespace AdventOfCode2022Tests
 		[TestCategory("Example data")]
 		public void Part1()
 		{
+			day.Init();
 
-			Assert.AreEqual(1, 1);
+			Assert.AreEqual(24, day.Fill(500,0));
 		}
 
 		[TestMethod("Day 14, Part 2")]
 		[TestCategory("Example data")]
 		public void Part2()
 		{
-
-			Assert.AreEqual(2, 2);
+			day.Init(true);
+			Assert.AreEqual(93, day.Fill(500,0));
 		}
 	}
 }

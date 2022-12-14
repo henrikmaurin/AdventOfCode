@@ -150,6 +150,27 @@
 
             return coords;
         }
+
+        public string Draw(int x1, int y1, int x2, int y2, int? objX = null, int? objY = null, char? sprite = null )
+        {
+            for (int y = y1; y < y2; y++)
+            {
+                for (int x = x1; x < x2; x++)
+                {
+                    if (x==objX && y== objY)
+                    {
+                        Console.Write(sprite);
+                    }
+                    else
+                    Console.Write(this[x, y].ToString());
+                }
+                Console.WriteLine();
+            }
+
+
+
+            return "";
+        }
     }
 
     public static class Directions
@@ -169,7 +190,7 @@
         public const int UpLeft = 5;
         public const int DownLeft = 7;
         public const int UpRight = 6;
-        public const int DownRight = 9;
+        public const int DownRight = 8;
 
         private static Vector2D[] _directions = {
             new Vector2D{X=0,Y=0},
@@ -238,6 +259,21 @@
         {
             return (new int[] { Math.Abs(me.X - other.X), Math.Abs(me.Y - other.Y) }).Max();
         }
+
+        public static Vector2D GetDirectionFrom(Vector2D from, Vector2D to)
+        {
+            if (from.X == to.X && from.Y < to.Y)
+                return GetDirection(Down);
+            else if (from.X == to.X && from.Y > to.Y)
+                return GetDirection(Up);
+            else if (from.X > to.X && from.Y == to.Y)
+                return GetDirection(Left);
+            else if(from.X < to.X && from.Y == to.Y)
+                return GetDirection(Right);
+            return GetDirection(None);
+        }
+
+       
     }
 
     public class Vector2D
