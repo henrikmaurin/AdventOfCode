@@ -96,7 +96,7 @@ namespace AdventOfCode2022
                 {
                     for (int knot = 1; knot < Knots.Count; knot++)
                     {
-                        if (Knots[knot - 1].ManhattanDistance(Knots[knot])>1)
+                        if (Knots[knot - 1].SquareRadius(Knots[knot])>1)
                         {
                             Vector2D move = new Vector2D();
                             if (Knots[knot - 1].X - Knots[knot].X > 0)

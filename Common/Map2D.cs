@@ -255,11 +255,17 @@
             return _directions[GetSurrounding().First()..GetSurrounding().Last()];
         }
 
-        public static int ManhattanDistance(this Vector2D me, Vector2D other)
+       public static int SquareRadius(this Vector2D me, Vector2D other)
         {
             return (new int[] { Math.Abs(me.X - other.X), Math.Abs(me.Y - other.Y) }).Max();
         }
+ 
+       public static int ManhattanDistance(this Vector2D me, Vector2D other)
+        {
+            return( Math.Abs(me.X - other.X) + Math.Abs(me.Y - other.Y));
+        }
 
+        
         public static Vector2D GetDirectionFrom(Vector2D from, Vector2D to)
         {
             if (from.X == to.X && from.Y < to.Y)
