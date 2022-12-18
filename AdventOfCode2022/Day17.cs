@@ -5,29 +5,197 @@ namespace AdventOfCode2022
     public class Day17 : DayBase, IDay
     {
         private const int day = 17;
-        List<string> data;
-        public Day17(bool runtests = false) : base(Global.Year, day, runtests)
-        {
-            if (runtests)
-                return;
+        string data;
+        private Map2D<char> map;
+        private List<Map2D<char>> rocks;
 
-            data = input.GetDataCached().SplitOnNewline();
+        public Day17(string testdata = null) : base(Global.Year, day, testdata != null)
+        {
+            if (testdata != null)
+            {
+                data = testdata;
+                return;
+            }
+
+            data = input.GetDataCached().IsSingleLine();
+            // data = ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>";
         }
         public void Run()
         {
-            int result1 = Problem1();
+            long result1 = Problem1();
             Console.WriteLine($"P1: Result: {result1}");
 
-            int result2 = Problem2();
+            long result2 = Problem2();
             Console.WriteLine($"P2: Result: {result2}");
         }
-        public int Problem1()
+        public long Problem1()
         {
-            return 0;
+            Setup();
+
+
+            return Simulate();
         }
-        public int Problem2()
+        public long Problem2()
         {
-            return 0;
+            Setup();
+            return Simulate(1000000000000);
+        }
+
+        public long Simulate(long rockCount = 2022)
+        {
+            bool isFalling = false;
+            Vector2D rockPosition = new Vector2D();
+            int gasCounter = 0;
+            long repeatedHeights = 0;
+            long increase = 0;
+            int repeatremove = 0;
+            int lastHeight = 0;
+            long lastRock = 0;
+            int rockType = 0;
+
+            for (long rockNo = 0; rockNo < rockCount; rockNo++)
+            {
+                if (isFalling == false)
+                {
+                    //Spawn rock
+                    rockType = (int)(rockNo %(long) rocks.Count);
+                    rockPosition = GetSpawnPos(rocks[rockType]);
+                    isFalling = true;
+                }
+             
+                while (isFalling)
+                {
+                    Vector2D newPos = rockPosition + Directions.GetDirection(data[gasCounter % data.Length] == '<' ? Directions.Left : Directions.Right);
+                    if (Fits(rocks[rockType], newPos))
+                        rockPosition = newPos;
+
+                    newPos = rockPosition + Directions.GetDirection(Directions.Down);
+                    if (Fits(rocks[rockType], newPos))
+                        rockPosition = newPos;
+                    else
+                        isFalling = false;
+
+                    gasCounter++;
+
+
+                }
+
+                RestRock(rocks[rockType], rockPosition);
+                if (gasCounter % data.Length == 0)
+                {
+                    long newincrease = map.SizeY - GetCurrentHighPos() - 1 - lastHeight;
+
+                    if (increase == newincrease)
+                    {
+                        repeatremove++;
+                        long rocksEachRound = rockNo - lastRock;
+                        long repeats = rockCount / rocksEachRound;                        
+                        repeats -= repeatremove;
+                        rockNo += repeats * rocksEachRound;
+
+                        repeatedHeights = repeats * newincrease;
+
+                    }
+                    else
+                    {
+                        lastHeight = map.SizeY - GetCurrentHighPos() - 1;
+                        increase = newincrease;
+                        repeatremove++;
+                        lastRock = rockNo;
+                    }
+                }
+            }
+
+
+            return map.SizeY - GetCurrentHighPos() - 1+repeatedHeights;
+        }
+
+        public void RestRock(Map2D<char> rock, Vector2D pos)
+        {
+            for (int y = 0; y < rock.SizeY; y++)
+            {
+                for (int x = 0; x < rock.SizeX; x++)
+                {
+                    if (rock[x, y] == '#')
+                        map[pos.X + x, pos.Y + y] = '#';
+                }
+            }
+        }
+
+        public bool Fits(Map2D<char> rock, Vector2D pos)
+        {
+            // Stay on map
+            if (pos.X < 0)
+                return false;
+            if (pos.X + rock.SizeX > map.SizeX)
+                return false;
+            if (pos.Y + rock.SizeY > map.SizeY)
+                return false;
+
+            for (int y = 0; y < rock.SizeY; y++)
+            {
+                for (int x = 0; x < rock.SizeX; x++)
+                {
+                    if (rock[x, y] == '#' && map[pos.X + x, pos.Y + y] == '#')
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
+        public Vector2D GetSpawnPos(Map2D<char> rock)
+        {
+            int y = GetCurrentHighPos();
+
+            y -= 3;
+            y -= rock.SizeY - 1;
+            int x = 2;
+            return new Vector2D { X = x, Y = y };
+        }
+
+
+
+        public int GetCurrentHighPos()
+        {
+            int y = map.SizeY - 1;
+            while (map.CountInRow(y, '#') > 0)
+                y--;
+            return y;
+        }
+
+        public void Setup(int rocksCount = 2022)
+        {
+            map = new Map2D<char>();
+            map.Init(7, rocksCount * (1 + 3 + 3 + 4 + 2), '.');
+
+            rocks = new List<Map2D<char>>();
+            Map2D<char> rock = new Map2D<char>();
+            rock.Init(4, 1, '#');
+            rocks.Add(rock);
+            rock = new Map2D<char>();
+            rock.Init(3, 3, '.');
+            rock[1, 0] = '#';
+            rock[0, 1] = '#';
+            rock[1, 1] = '#';
+            rock[2, 1] = '#';
+            rock[1, 2] = '#';
+            rocks.Add(rock);
+            rock = new Map2D<char>();
+            rock.Init(3, 3, '.');
+            rock[2, 0] = '#';
+            rock[2, 1] = '#';
+            rock[0, 2] = '#';
+            rock[1, 2] = '#';
+            rock[2, 2] = '#';
+            rocks.Add(rock);
+            rock = new Map2D<char>();
+            rock.Init(1, 4, '#');
+            rocks.Add(rock);
+            rock = new Map2D<char>();
+            rock.Init(2, 2, '#');
+            rocks.Add(rock);
+
         }
     }
 }

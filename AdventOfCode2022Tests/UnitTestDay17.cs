@@ -6,10 +6,12 @@ namespace AdventOfCode2022Tests
 	public class UnitTestDay17
 	{
 		private Day17 day;
+		private string data;
 		[TestInitialize]
 		public void Init()
 		{
-			day = new Day17(true);
+			data = ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>";
+            day = new Day17(data);
 		}
 
 
@@ -17,16 +19,18 @@ namespace AdventOfCode2022Tests
 		[TestCategory("Example data")]
 		public void Part1()
 		{
-
-			Assert.AreEqual(1, 1);
+			day.Setup();
+			Assert.AreEqual(17, day.Simulate(10));
 		}
 
+		/*
 		[TestMethod("Day 17, Part 2")]
 		[TestCategory("Example data")]
 		public void Part2()
 		{
-
-			Assert.AreEqual(2, 2);
+            day.Setup();
+            Assert.AreEqual(1514285714288, day.Simulate(1000000000000));
 		}
+		*/
 	}
 }

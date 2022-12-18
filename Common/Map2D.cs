@@ -171,6 +171,17 @@
 
             return "";
         }
+
+        public int CountInRow(int row, T searchFor)
+        {
+            int counter=0;
+            for (int x=0; x<SizeX;x++)
+            {
+                if (this[x,row].Equals(searchFor))
+                    counter++;
+            }
+            return counter;
+        }
     }
 
     public static class Directions
