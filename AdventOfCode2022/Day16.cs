@@ -13,7 +13,9 @@ namespace AdventOfCode2022
         List<string> data;
 
         private Dictionary<uint, Valve> valves;
+        private Dictionary<string, uint> valvesByName;
         private Graph graph;
+        private Dictionary<string, int> TravelCache = new Dictionary<string, int>();
 
         private int bestScore = 0;
 
@@ -50,12 +52,13 @@ namespace AdventOfCode2022
         {
             string[] valvesWithPreassure = HasPressure();
             int best = 0;
-              
 
-            for (int meCount = 1; meCount <= valves.Count/2; meCount++)
-            {
+            for (int meCount = 1; meCount <= valvesWithPreassure.Count() / 2; meCount++)
+            {            
                 Combinations<string> combinations = new Combinations<string>(valvesWithPreassure, meCount);
-               
+                Console.WriteLine($"Visiting {meCount} valves with {combinations.Count} combinations");
+
+
                 foreach (var combination in combinations)
                 {
                     string[] elephantValves = valvesWithPreassure.Where(v => !v.In(combination.ToArray())).ToArray();
@@ -64,7 +67,7 @@ namespace AdventOfCode2022
                     bestScore = 0;
                     int elephantscore = Travel("AA", elephantValves, new KeepScore { Score = 0, TicksLeft = 26 });
                     int score = mescore + elephantscore;
-                    if(score>best) best = score;
+                    if (score > best) best = score;
                 }
             }
             return best;
@@ -73,27 +76,39 @@ namespace AdventOfCode2022
 
         public int Travel(string from, string[] leftToVisit, KeepScore score)
         {
-            foreach (string visit in leftToVisit)
+            if (TravelCache.ContainsKey($"{from}, {string.Join(",", leftToVisit)}, {score.TicksLeft}:{score.Score}"))
             {
-                KeepScore scoreForThis = CalcGoTo(from, visit, score);
-                string[] elephantLeftToVisit = leftToVisit.Where(v => v != visit).ToArray();
+                int lscore = TravelCache[$"{from}, {string.Join(",", leftToVisit)}, {score.TicksLeft}:{score.Score}"];
 
+                if (lscore > bestScore)
+                    bestScore = lscore;
 
-                if (scoreForThis.TicksLeft >= 0)
+            }
+            else
+            {
+                foreach (string visit in leftToVisit)
                 {
-                    if (scoreForThis.Score > bestScore)
-                    {
-                        bestScore = scoreForThis.Score;
-                    }
+                    KeepScore scoreForThis = CalcGoTo(from, visit, score);
+                    string[] elephantLeftToVisit = leftToVisit.Where(v => v != visit).ToArray();
 
-                    if (leftToVisit.Count() > 1)
-                    {
-                        string[] visitList = leftToVisit.Where(v => v != visit).ToArray();
-                        Travel(visit, visitList, scoreForThis);
-                    }
 
+                    if (scoreForThis.TicksLeft >= 0)
+                    {
+                        if (scoreForThis.Score > bestScore)
+                        {
+                            bestScore = scoreForThis.Score;
+                        }
+
+                        if (leftToVisit.Count() > 1)
+                        {
+                            string[] visitList = leftToVisit.Where(v => v != visit).ToArray();
+                            Travel(visit, visitList, scoreForThis);
+                        }
+
+                    }
                 }
             }
+
             return bestScore;
         }
 
@@ -101,8 +116,8 @@ namespace AdventOfCode2022
 
         public KeepScore CalcGoTo(string from, string to, KeepScore score)
         {
-            uint fromIndex = valves.Where(v => v.Value.Name == from).Single().Key;
-            uint toIndex = valves.Where(v => v.Value.Name == to).Single().Key;
+            uint fromIndex = valvesByName[from];
+            uint toIndex = valvesByName[to];
 
             int distance = 0;
 
@@ -135,9 +150,11 @@ namespace AdventOfCode2022
         {
             bestScore = 0;
             valves = new Dictionary<uint, Valve>();
+            valvesByName = new Dictionary<string, uint>();
             uint index = 0;
             graph = new Graph();
             Distances = new Dictionary<(uint, uint), int>();
+            TravelCache = new Dictionary<string, int>();
             foreach (string valve in valvedata)
             {
                 string[] split = valve.Replace(";", "").Replace(",", "").Replace("=", " ").Split(" ");
@@ -149,6 +166,7 @@ namespace AdventOfCode2022
                 };
                 index = graph.AddNode();
                 valves.Add(index, newValve);
+                valvesByName.Add(newValve.Name, index);
             }
 
             foreach (uint from in valves.Keys)
