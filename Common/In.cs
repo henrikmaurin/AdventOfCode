@@ -19,6 +19,17 @@ namespace Common
             return false;
         }
 
+        public static bool In<T>(this T me, List<T> values)
+        {
+            if (values == null)
+                return false;
+
+            if (values.Contains(me))
+                return true;
+
+            return false;
+        }
+
         public static bool In<T>(this T me, T val1, T val2)
         {
             return me.In(new T[] { val1, val2 });
