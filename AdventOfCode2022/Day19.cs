@@ -115,47 +115,61 @@ namespace AdventOfCode2022
             int obsidianInProduction = obsidianRobots;
             int geodeInProduction = geodeRobots;
 
-            switch (order)
+            bool didBuild = false;
+
+            while (!didBuild)
             {
-                case "ore":
-                    if (ore >= blueprint.Ore.OreCost)
-                    {
-                        ore -= blueprint.Ore.OreCost;
-                        oreRobots++;
-                    }
-                    break;
-                case "clay":
-                    if (ore >= blueprint.Clay.OreCost)
-                    {
-                        ore -= blueprint.Clay.OreCost;
-                        clayRobots++;
-                    }
-                    break;
-                case "obsidian":
-                    if (ore >= blueprint.Obsidian.OreCost && clay >= blueprint.Obsidian.ClayCost)
-                    {
-                        ore -= blueprint.Obsidian.OreCost;
-                        clay -= blueprint.Obsidian.ClayCost;
-                        obsidianRobots++;
-                    }
-                    break;
-                case "geode":
-                    if (ore >= blueprint.Geode.OreCost && obsidian >= blueprint.Geode.ObsidianCost)
-                    {
-                        ore -= blueprint.Geode.OreCost;
-                        obsidian -= blueprint.Geode.ObsidianCost;
-                        geodeRobots++;
-                    }
-                    break;
+                switch (order)
+                {
+                    case "ore":
+                        if (ore >= blueprint.Ore.OreCost)
+                        {
+                            ore -= blueprint.Ore.OreCost;
+                            oreRobots++;
+                            didBuild = true;
+                        }
+                        break;
+                    case "clay":
+                        if (ore >= blueprint.Clay.OreCost)
+                        {
+                            ore -= blueprint.Clay.OreCost;
+                            clayRobots++;
+                            didBuild = true;
+                        }
+                        break;
+                    case "obsidian":
+                        if (ore >= blueprint.Obsidian.OreCost && clay >= blueprint.Obsidian.ClayCost)
+                        {
+                            ore -= blueprint.Obsidian.OreCost;
+                            clay -= blueprint.Obsidian.ClayCost;
+                            obsidianRobots++;
+                            didBuild = true;
+                        }
+                        break;
+                    case "geode":
+                        if (ore >= blueprint.Geode.OreCost && obsidian >= blueprint.Geode.ObsidianCost)
+                        {
+                            ore -= blueprint.Geode.OreCost;
+                            obsidian -= blueprint.Geode.ObsidianCost;
+                            geodeRobots++;
+                            didBuild = true;
+                        }
+                        break;
+                    case "":
+                        didBuild = true;
+                        break;
+
+                }
+                clay += clayInProduction;
+                ore += oreInProduction;
+                obsidian += obsidianInProduction;
+                geode += geodeInProduction;
+
+                if (minute >= maxMinutes)
+                    return geode;
+
+                minute++;
             }
-            clay += clayInProduction;
-            ore += oreInProduction;
-            obsidian += obsidianInProduction;
-            geode += geodeInProduction;
-
-            if (minute == maxMinutes)
-                return geode;
-
             int bestOutcome = 0;
             bool canBuildgeode = false;
             // Shortcut, works for input
@@ -163,16 +177,16 @@ namespace AdventOfCode2022
                 canBuildgeode = true;
 
 
-            int outcome = ProduceOrder(blueprint, "geode", maxMinutes, minute + 1, ore, clay, obsidian, geode, clayRobots, oreRobots, obsidianRobots, geodeRobots, maxOreNeed);
+            int outcome = ProduceOrder(blueprint, "geode", maxMinutes, minute, ore, clay, obsidian, geode, clayRobots, oreRobots, obsidianRobots, geodeRobots, maxOreNeed);
             if (outcome > bestOutcome)
                 bestOutcome = outcome;
-            outcome = !canBuildgeode && obsidianRobots < blueprint.Geode.ObsidianCost ? ProduceOrder(blueprint, "obsidian", maxMinutes, minute + 1, ore, clay, obsidian, geode, clayRobots, oreRobots, obsidianRobots, geodeRobots, maxOreNeed) : 0;
+            outcome = !canBuildgeode && obsidianRobots < blueprint.Geode.ObsidianCost ? ProduceOrder(blueprint, "obsidian", maxMinutes, minute , ore, clay, obsidian, geode, clayRobots, oreRobots, obsidianRobots, geodeRobots, maxOreNeed) : 0;
             if (outcome > bestOutcome)
                 bestOutcome = outcome;
-            outcome = !canBuildgeode && clayRobots < blueprint.Obsidian.ClayCost ? ProduceOrder(blueprint, "clay", maxMinutes, minute + 1, ore, clay, obsidian, geode, clayRobots, oreRobots, obsidianRobots, geodeRobots, maxOreNeed) : 0;
+            outcome = !canBuildgeode && clayRobots < blueprint.Obsidian.ClayCost ? ProduceOrder(blueprint, "clay", maxMinutes, minute, ore, clay, obsidian, geode, clayRobots, oreRobots, obsidianRobots, geodeRobots, maxOreNeed) : 0;
             if (outcome > bestOutcome)
                 bestOutcome = outcome;
-            outcome = !canBuildgeode && oreRobots < maxOreNeed ? ProduceOrder(blueprint, "ore", maxMinutes, minute + 1, ore, clay, obsidian, geode, clayRobots, oreRobots, obsidianRobots, geodeRobots, maxOreNeed) : 0;
+            outcome = !canBuildgeode && oreRobots < maxOreNeed ? ProduceOrder(blueprint, "ore", maxMinutes, minute, ore, clay, obsidian, geode, clayRobots, oreRobots, obsidianRobots, geodeRobots, maxOreNeed) : 0;
             if (outcome > bestOutcome)
                 bestOutcome = outcome;
 

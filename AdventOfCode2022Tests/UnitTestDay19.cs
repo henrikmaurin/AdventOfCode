@@ -23,7 +23,7 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
 
 		[TestMethod("Day 19, Part 1")]
 		[TestCategory("Example data")]
-		[Ignore]
+		//[Ignore]
 		public void Part1()
 		{
 			day.Parse(testdata);			
@@ -32,7 +32,7 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
 
 		[TestMethod("Day 19, Part 2")]
 		[TestCategory("Example data")]
-		[Ignore]
+		//[Ignore]
 		public void Part2_1()
 		{
             day.Parse(testdata);
@@ -41,7 +41,7 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
 
         [TestMethod("Day 19, Part 2")]
         [TestCategory("Example data")]
-		[Ignore]
+		//[Ignore]
         public void Part2_2()
         {
             day.Parse(testdata);
