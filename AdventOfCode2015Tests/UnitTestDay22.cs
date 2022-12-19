@@ -6,7 +6,7 @@ namespace AdventOfCode2015Tests
     [TestClass]
     public class UnitTestDay22
     {
-        private Day22 day;
+     /*   private Day22 day;
 
         [TestInitialize]
         public void Init()
@@ -30,6 +30,6 @@ namespace AdventOfCode2015Tests
             Assert.AreEqual(219, result);
         }
 
-
+*/
     }
 }
