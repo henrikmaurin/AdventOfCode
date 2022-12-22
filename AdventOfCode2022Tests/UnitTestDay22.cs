@@ -40,12 +40,13 @@ namespace AdventOfCode2022Tests
             Assert.AreEqual(6032, day.Navigate(testdata[1][0]));
         }
 
-        [TestMethod("Day 22, Part 2")]
+/*        [TestMethod("Day 22, Part 2")]
         [TestCategory("Example data")]
         public void Part2()
         {
             day.Parse(testdata[0]);
             Assert.AreEqual(5031, day.Navigate(testdata[1][0], true));
         }
+*/
     }
 }

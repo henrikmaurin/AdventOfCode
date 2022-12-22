@@ -237,50 +237,50 @@ namespace AdventOfCode2022
 
         }
 
+
+
         public int Navigate(string instructions, bool isCube = false)
         {
             List<string> parsedinstructions = GetInstructions(instructions);
-            int lastDirection = 0;
-            int i = 0;
+   
             foreach (string instruction in parsedinstructions)
             {
-                if (i == 4000)
-                    i = i;
-                i++;
-
-                if (instruction == "R")
+                    if (instruction == "R")
                 {
-                    direction = Directions.TurnRight(direction);
-                    globaldirection = Directions.TurnRight(globaldirection);
+                    direction = Directions.TurnRight(direction);                   
                 }
                 else if (instruction == "L")
                 {
-                    direction = Directions.TurnLeft(direction);
-                    globaldirection = Directions.TurnRight(globaldirection);
+                    direction = Directions.TurnLeft(direction);                  
                 }
                 else
                 {
                     for (int step = 0; step < instruction.ToInt(); step++)
                     {
-                        Vector2D nextStep = map.SizeX > 50 ? HandleWrapping(position + Directions.GetDirection(direction), isCube) : HandleWrappingForTest(position + Directions.GetDirection(direction), isCube); ;
+                        if (position.X == 17 && position.Y == 105)
+                        {
+                            int a = 1;
+                        }
+
+                        Vector2D nextStep = map.SizeX>50? HandleWrapping(position + Directions.GetDirection(direction), isCube): HandleWrappingForTest(position + Directions.GetDirection(direction), isCube); ;
 
                         while (map[nextStep] == ' ')
                         {
                             nextStep += Directions.GetDirection(direction);
-                            nextStep = map.SizeX > 50 ? HandleWrapping(nextStep, isCube) : HandleWrappingForTest(position + Directions.GetDirection(direction), isCube); ; ;
+                            nextStep = map.SizeX > 50 ? HandleWrapping(nextStep, isCube): HandleWrappingForTest(nextStep, isCube);
+
                         }
                         if (map[nextStep] == '#')
                         {
                             break;
                         }
-                        position = nextStep;
-                        lastDirection = direction;
+                        position = nextStep;                     
                     }
                 }
-                //                Console.WriteLine($"{instruction} - {position.X},{position.Y} - {DirectionToText(direction)}");
+               // Console.WriteLine($"{instruction} - {position.X},{position.Y} - {DirectionToText(direction)}");
             }
 
-            return (position.X + 1) * 4 + (position.Y + 1) * 1000 + GetDirectionNumber(lastDirection);
+            return (position.X + 1) * 4 + (position.Y + 1) * 1000 + GetDirectionNumber(direction);
         }
 
         public string DirectionToText(int direction)
@@ -299,22 +299,22 @@ namespace AdventOfCode2022
 
         public Vector2D HandleWrappingForTest(Vector2D nextStep, bool isCube = false)
         {
-
-            nextStep.X %= map.SizeX;
-            nextStep.Y %= map.SizeY;
-            if (nextStep.X < 0)
-                nextStep.X = map.SizeX - 1;
-            if (nextStep.Y < 0)
-                nextStep.Y = map.SizeY - 1;
-
+            {
+                nextStep.X %= map.SizeX;
+                nextStep.Y %= map.SizeY;
+                if (nextStep.X < 0)
+                    nextStep.X = map.SizeX - 1;
+                if (nextStep.Y < 0)
+                    nextStep.Y = map.SizeY - 1;
+            }
             if (!isCube || IsSameArea(nextStep))
                 return nextStep;
 
-            Vector2D undoPos = nextStep;
-            int undoDirection = direction;
-
             int x = position.X;
             int y = position.Y;
+
+            Vector2D undoPos = nextStep;
+            int undoDirection = direction;
 
             if (GetArea(position) == 1)
             {
@@ -452,12 +452,12 @@ namespace AdventOfCode2022
                     direction = Directions.Right;
                 }
             }
+
             if (map[nextStep] == '#')
             {
                 direction = undoDirection;
                 return undoPos;
             }
-
             return nextStep;
 
         }
@@ -474,7 +474,7 @@ namespace AdventOfCode2022
             if (!isCube || IsSameArea(nextStep))
                 return nextStep;
 
-            Vector2D undoPos = nextStep;
+            Vector2D undoPos= nextStep;
             int undoDirection = direction;
 
             int x = position.X;
@@ -486,7 +486,7 @@ namespace AdventOfCode2022
                 {
                     nextStep.Y = sidesize * 3 - 1 - y;
                     nextStep.X = 0;
-
+                   
                     direction = Directions.Right;
                 }
                 else if (direction == Directions.Right)
@@ -656,6 +656,7 @@ namespace AdventOfCode2022
             return 0;
         }
 
+
         public int GetDirectionNumber(int d)
         {
             switch (d)
@@ -689,9 +690,11 @@ namespace AdventOfCode2022
             return result;
         }
 
+
         public void Parse(string[] input)
         {
             map = new Map2D<char>();
+            position = null;
             map.Init(input.Select(i => i.Length).Max(), input.Length, ' ');
             sidesize = map.SizeX / 3;
             for (int y = 0; y < input.Length; y++)
