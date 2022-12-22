@@ -276,7 +276,31 @@
             return( Math.Abs(me.X - other.X) + Math.Abs(me.Y - other.Y));
         }
 
-        
+        public static int TurnRight(int direction)
+        {
+            switch (direction)
+            {
+                case Up: return Right;
+                case Right:return Down;
+                case Down: return Left;
+                    case Left:return Up;
+            }
+            return 0;
+        }
+        public static int TurnLeft(int direction)
+        {
+            switch (direction)
+            {
+                case Up: return Left;
+                case Right: return Up;
+                case Down: return Right;
+                case Left: return Down;
+            }
+            return 0;
+        }
+
+
+
         public static Vector2D GetDirectionFrom(Vector2D from, Vector2D to)
         {
             if (from.X == to.X && from.Y < to.Y)

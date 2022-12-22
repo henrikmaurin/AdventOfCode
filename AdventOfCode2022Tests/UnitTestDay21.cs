@@ -45,7 +45,7 @@ hmdt: 32";
 		public void Part2()
 		{
 
-			Assert.AreEqual(2, 2);
+			Assert.AreEqual(301, day.Problem2());
 		}
 	}
 }
