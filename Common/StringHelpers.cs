@@ -15,7 +15,6 @@ namespace Common
 			return s.Select(st => st.FromBinary()).ToArray();
 		}
 
-
 		public static int ToInt(this string s)
 		{
 			int.TryParse(s, out int outVal);

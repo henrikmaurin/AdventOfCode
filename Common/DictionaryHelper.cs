@@ -8,7 +8,7 @@ namespace Common
 {
     public static class DictionaryHelper
     {
-        public static void AddOrUpdate<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value)
+        public static void AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
         {
             if (dict.ContainsKey(key))
                 dict[key] = value;
