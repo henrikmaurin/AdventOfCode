@@ -27,84 +27,58 @@ namespace AdventOfCode2018
 
             int result2 = Problem2();
             Console.WriteLine($"P2: Resuling units: {result2}");
-        }
- 
+        }      
+
         public int Problem1()
         {
-            List<char> result = new List<char>();
-
-            foreach (char c in data.ToCharArray())
-            {
-
-                if (result.Count > 0)
-                {
-                    if (char.ToLower(c) == char.ToLower(result.Last()))
-                    {
-                        if ((char.IsUpper(c) && char.IsLower(result.Last())) || (char.IsLower(c) && char.IsUpper(result.Last())))
-                        {
-                            result.RemoveAt(result.Count - 1);
-                        }
-                        else
-                        {
-                            result.Add(c);
-                        }
-                    }
-                    else
-                    {
-                        result.Add(c);
-                    }
-                }
-                else
-                {
-                    result.Add(c);
-                }
-            }
-
-            return result.Count;
+            return Reduce(data);
+        }
+        public int Problem2()
+        {
+            return TryAllReducers(data);
         }
 
-        public int Problem2()
+
+        public int TryAllReducers(string polymer)
         {
             int shortest = int.MaxValue;
 
             for (char eliminator = 'a'; eliminator <= 'z'; eliminator++)
             {
-                List<char> result = new List<char>();
-                foreach (char c in data.ToCharArray())
-                {
-                    if (!(char.ToLower(c) == eliminator))
-                    {
-                        if (result.Count > 0)
-                        {
-                            if (char.ToLower(c) == char.ToLower(result.Last()))
-                            {
-                                if ((char.IsUpper(c) && char.IsLower(result.Last())) || (char.IsLower(c) && char.IsUpper(result.Last())))
-                                {
-                                    result.RemoveAt(result.Count - 1);
-                                }
-                                else
-                                {
-                                    result.Add(c);
-                                }
-                            }
-                            else
-                            {
-                                result.Add(c);
-                            }
+                int result = Reduce(polymer.Replace($"{eliminator}", "").Replace($"{eliminator.ToUpper()}", ""));
 
-                        }
-                        else
-                        {
-                            result.Add(c);
-                        }
-                    }
-
-                }
-                if (result.Count < shortest)
-                    shortest = result.Count;
+                if (result < shortest)
+                    shortest = result;
             }
 
             return shortest;
+        }
+
+        public int Reduce(string polymer)
+        {
+            Stack<char> result = new Stack<char>();
+
+            foreach (char c in polymer.ToCharArray())
+            {
+                if (result.Count == 0)
+                {
+                    result.Push(c);
+                    continue;
+                }
+                if (c.ToLower() != result.Peek().ToLower())
+                {
+                    result.Push(c);
+                    continue;
+                }
+                if ((c.IsUpper() && result.Peek().IsUpper()) || (c.IsLower() && result.Peek().IsLower()))
+                {
+                    result.Push(c);
+                    continue;
+                }
+
+                result.Pop();
+            }
+            return result.Count;
         }
     }
 }
