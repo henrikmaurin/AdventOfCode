@@ -83,25 +83,6 @@ namespace AdventOfCode2022
             return retString;
         }       
 
-        public char ToSnafuDigt(int number)
-        {
-            switch (number)
-            {
-                case 2:
-                    return '2';
-                case 1:
-                    return '1';
-                case 0:
-                    return '0';
-                case -1:
-                    return '-';
-                case -2:
-                    return '=';
-            }
-            return 'a';
-
-        }
-
         public int SnafuDigit(char digit)
         {
             switch (digit)
