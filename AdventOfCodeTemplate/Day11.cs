@@ -6,10 +6,13 @@ namespace AdventOfCodeTemplate
     {
         private const int day = 11;
         List<string> data;
-        public Day11(bool runtests = false) : base(Global.Year, day, runtests)
+        public Day11(string testdata = null) : base(Global.Year, day, testdata != null)
         {
-            if (runtests)
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewline();
                 return;
+            }
 
             data = input.GetDataCached().SplitOnNewline();
         }

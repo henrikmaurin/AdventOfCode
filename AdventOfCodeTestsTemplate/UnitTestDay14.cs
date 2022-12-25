@@ -1,15 +1,22 @@
 using AdventOfCodeTemplate;
+using Common;
 
 namespace Tests
 {
 	[TestClass]
 	public class UnitTestDay14
 	{
-		private Day01 day;
-		[TestInitialize]
-		public void Init()
-		{
-			day = new Day01(true);
+		private Day14 day;
+        private string data;
+        private string[] testdata;
+
+        [TestInitialize]
+        public void Init()
+        {
+            data = @"";
+            testdata = data.SplitOnNewlineArray(false);
+
+            day = new Day14(data);
 		}
 
 
