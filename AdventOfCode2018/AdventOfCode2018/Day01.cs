@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,19 @@ namespace AdventOfCode2018
 {
     public class Day01 : DayBase, IDay
     {
-        public string[] deviations { get; }
-        public Day01() : base(2018, 1)
+        private const int day = 1;
+        private string[] data;
+        private int[] deviations;
+        public Day01(string testdata = null) : base(Global.Year, day, testdata != null)
         {
-            deviations = input.GetDataCached().SplitOnNewlineArray();
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
+
+            data = input.GetDataCached().SplitOnNewlineArray();
+            Parse(data);
         }
         public void Run()
         {
@@ -22,15 +32,28 @@ namespace AdventOfCode2018
             Console.WriteLine($"P2: First double: {result2}");
         }
 
-        public int Problem1()
+        public void Parse(string[] input)
         {
-            return deviations.Select(d => int.Parse(d)).Sum();
+            deviations = input.Select(d => d.ToInt()).ToArray();
+        }
+
+        public int Problem1()
+        {            
+            return GetFinalFrequecy(deviations);
         }
 
         public int Problem2()
         {
+            return FindReapeatingFrequency(deviations);          
+        }
 
-            List<int> frequensies = new List<int>();
+        public int GetFinalFrequecy(int[] deviations)
+        {
+            return deviations.Sum();
+        }
+        public int FindReapeatingFrequency(int[] deviations)
+        {
+            HashSet<int> frequensies = new HashSet<int>();
             int currentFreq = 0;
 
             frequensies.Add(currentFreq);
@@ -38,8 +61,7 @@ namespace AdventOfCode2018
             int i = 0;
             while (!found)
             {
-                currentFreq += int.Parse(deviations[i]);
-                //Console.WriteLine(currentFreq);
+                currentFreq += deviations[i];
                 if (frequensies.Contains(currentFreq))
                 {
                     found = true;
@@ -55,7 +77,6 @@ namespace AdventOfCode2018
 
             return currentFreq;
         }
-
 
     }
 }
