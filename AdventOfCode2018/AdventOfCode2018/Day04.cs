@@ -1,17 +1,25 @@
-﻿using Common;
-using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Common;
 
 namespace AdventOfCode2018
 {
     public class Day04 : DayBase, IDay
     {
-        public Day04() : base(2018, 4)
+        private const int day = 4;
+        private string[] data;
+
+        public Day04(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             log = new List<Log>();
-            string[] data = input.GetDataCached().SplitOnNewlineArray();
+            data = input.GetDataCached().SplitOnNewlineArray();
             int currentGuard = 0;
             foreach (string line in data.OrderBy(d => d.Substring(0, 18)))
             {

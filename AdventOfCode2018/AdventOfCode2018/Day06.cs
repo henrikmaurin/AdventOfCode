@@ -8,8 +8,15 @@ namespace AdventOfCode2018
 {
     public class Day06 : DayBase, IDay
     {
-        public Day06() : base(2018, 6)
+        private const int day = 6;
+        private string[] data;
+        public Day06(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             data = input.GetDataCached().SplitOnNewlineArray();
         }
         public void Run()
@@ -26,9 +33,7 @@ namespace AdventOfCode2018
             public int X { get; set; }
             public int Y { get; set; }
         }
-
-        public string[] data { get; private set; }
-
+  
         public int Problem1()
         {
             List<Coordinate> coordinates = new List<Coordinate>();

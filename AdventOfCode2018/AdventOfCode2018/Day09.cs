@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,16 @@ namespace AdventOfCode2018
 {
     public class Day09 : DayBase, IDay
     {
-        public Day09() : base(2018, 9)
+        private const int day = 9;
+        private string[] data;
+        public Day09(string testdata = null) : base(Global.Year, day, testdata != null)
         {
-            string[] data = input.GetDataCached().IsSingleLine().Split(" ");
+            if (testdata != null)
+            {
+                data = testdata.IsSingleLine().Split(" ");
+                return;
+            }
+            data = input.GetDataCached().IsSingleLine().Split(" ");
 
             players = data[0].ToInt();
             goalscore = data[6].ToInt();

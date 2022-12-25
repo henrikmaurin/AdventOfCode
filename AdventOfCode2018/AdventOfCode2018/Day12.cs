@@ -8,6 +8,8 @@ namespace AdventOfCode2018
 {
     public class Day12 : DayBase, IDay
     {
+        private const int day = 12;
+        private string[] data;
         //  public char[,] Pots { get; set; }
         public char[] Pots { get; set; }
         public Dictionary<string, char> Rules { get; set; }
@@ -18,8 +20,13 @@ namespace AdventOfCode2018
         private int startingpoint = 5;
         private string[] lines;
 
-        public Day12() : base(2018, 12)
+        public Day12(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             lines = input.GetDataCached().SplitOnNewlineArray();
         }
 

@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,19 @@ namespace AdventOfCode2018
 {
     public class Day25 : DayBase, IDay
     {
+        private const int day = 25;
+        private string[] data;
         public List<Constellation> Constellations { get; set; }
         public List<Point4D> Points { get; set; }
-        public Day25() : base(2018, 1)
+        public Day25(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             Constellations = new List<Constellation>();
-            string[] data = input.GetDataCached().SplitOnNewlineArray();
+            data = input.GetDataCached().SplitOnNewlineArray();
 
             Points = new List<Point4D>();
             int counter = 1;

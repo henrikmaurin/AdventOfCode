@@ -8,10 +8,17 @@ namespace AdventOfCode2018
 {
     public class Day20 : DayBase, IDay
     {
+        private const int day = 20;
+        private string[] data;
         public string Instructions { get; set; }
         public List<Room> Map { get; set; }
-        public Day20() : base(2018, 20)
+        public Day20(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             Instructions = input.GetDataCached().IsSingleLine();
             Map = new List<Room>();
 

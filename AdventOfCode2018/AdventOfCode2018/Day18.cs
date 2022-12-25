@@ -8,11 +8,18 @@ namespace AdventOfCode2018
 {
     public class Day18 : DayBase, IDay
     {
+        private const int day = 18;
+        private string[] data;
         public List<char[]> Maps { get; set; }
         public int DimX { get; set; }
         public int DimY { get; set; }
-        public Day18() : base(2018, 18)
+        public Day18(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
 
         }
 

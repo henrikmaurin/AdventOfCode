@@ -8,14 +8,21 @@ namespace AdventOfCode2018
 {
     public class Day17 : DayBase, IDay
     {
+        private const int day = 17;
+        private string[] data;
         public char[,] Map { get; set; }
         public int xmin { get; }
         public int xmax { get; }
         public int ymin { get; }
         public int ymax { get; }
 
-        public Day17() : base(2018, 17)
+        public Day17(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             List<Filler> fillers = new List<Filler>();
             foreach (string line in input.GetDataCached().SplitOnNewlineArray())
             {

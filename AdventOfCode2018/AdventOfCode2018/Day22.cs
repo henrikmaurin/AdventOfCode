@@ -9,6 +9,8 @@ namespace AdventOfCode2018
 {
     public class Day22 : DayBase, IDay
     {
+        private const int day = 22;
+        private List<string> data;
         public ulong[] Map { get; set; }
         public int[] SimpleMap { get; set; }
         public Mapdata[] CostMap { get; set; }
@@ -20,9 +22,14 @@ namespace AdventOfCode2018
         private int targetY;
 
 
-        public Day22() : base(2018, 22)
+        public Day22(string testdata = null) : base(Global.Year, day, testdata != null)
         {
-            List<string> data = input.GetDataCached().SplitOnNewline();
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewline();
+                return;
+            }
+            data = input.GetDataCached().SplitOnNewline();
             depth = data[0].Replace("depth: ", "").Trim().ToInt();
             targetX = data[1].Replace("target: ", "").Trim().Split(",").First().ToInt();
             targetY = data[1].Replace("target: ", "").Trim().Split(",").Last().ToInt();

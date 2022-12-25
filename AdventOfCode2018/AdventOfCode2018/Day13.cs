@@ -8,13 +8,20 @@ namespace AdventOfCode2018
 {
     public class Day13 : DayBase, IDay
     {
+        private const int day = 13;
+        private string[] data;
         public MapTile[,] Map { get; set; }
         public List<Cart> Carts { get; set; }
         public int XDim { get; set; }
         public int YDim { get; set; }
         public string[] MapData { get; set; }
-        public Day13() : base(2018, 13)
+        public Day13(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             MapData = input.GetDataCached().SplitOnNewlineArray();
         }
 

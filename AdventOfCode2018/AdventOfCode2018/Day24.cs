@@ -9,10 +9,17 @@ namespace AdventOfCode2018
 
     public class Day24 : DayBase, IDay
     {
+        private const int day = 24;
+        private string[] data;
         public List<Combatant> Combatants { get; set; }
-        public Day24() : base(2018, 24)
+        public Day24(string testdata = null) : base(Global.Year, day, testdata != null)
         {
-            string[] data = input.GetDataCached().SplitOnNewlineArray();
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
+          data = input.GetDataCached().SplitOnNewlineArray();
             string currentType = string.Empty;
             Combatants = new List<Combatant>();
             int counter = 1;

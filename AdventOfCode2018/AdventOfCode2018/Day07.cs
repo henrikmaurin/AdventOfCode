@@ -8,9 +8,15 @@ namespace AdventOfCode2018
 {
     public class Day07 : DayBase, IDay
     {
-        public Day07() : base(2018, 7)
+        private const int day = 1;
+        private string[] data;
+        public Day07(string testdata = null) : base(Global.Year, day, testdata != null)
         {
-
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
         }
 
         public void InitInstructions()

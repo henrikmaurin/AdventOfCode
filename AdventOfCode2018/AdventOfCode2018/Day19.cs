@@ -6,13 +6,19 @@ using System.Linq;
 namespace AdventOfCode2018
 {
     public class Day19 : DayBase, IDay
-
     {
+        private const int day = 19;
+        private string[] data;
         public List<string> Instructions { get; set; }
         public ElfCode Computer { get; set; }
         public int Counter { get; set; }
-        public Day19() : base(2018, 19)
+        public Day19(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             Computer = new ElfCode();
             Computer.CreateMachine(6);
             string assemblyCode = input.GetDataCached();

@@ -1,5 +1,5 @@
 ﻿using Common;
-using Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +8,15 @@ namespace AdventOfCode2018
 {
     public class Day05 : DayBase, IDay
     {
-        public Day05() : base(2018, 5)
+        private const int day = 5;
+        private string data;
+        public Day05(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.IsSingleLine();
+                return;
+            }
             data = input.GetDataCached().IsSingleLine();
         }
 
@@ -21,9 +28,7 @@ namespace AdventOfCode2018
             int result2 = Problem2();
             Console.WriteLine($"P2: Resuling units: {result2}");
         }
-
-        public string data { get; private set; }
-
+ 
         public int Problem1()
         {
             List<char> result = new List<char>();

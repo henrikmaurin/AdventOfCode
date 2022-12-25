@@ -9,6 +9,8 @@ namespace AdventOfCode2018
 {
     public class Day15 : DayBase, IDay
     {
+        private const int day = 15;
+        private string[] data;
         public int[,] Map { get; set; }
         public int[,] WorkingMap { get; set; }
         public List<Combatant> Combatants { get; set; }
@@ -17,8 +19,13 @@ namespace AdventOfCode2018
         public List<Coord> targets { get; private set; }
         public string[] Data { get; set; }
 
-        public Day15() : base(2018, 15)
+        public Day15(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             Data = input.GetDataCached().SplitOnNewlineArray();
 
         }

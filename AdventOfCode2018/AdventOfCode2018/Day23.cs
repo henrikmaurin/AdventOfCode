@@ -8,9 +8,16 @@ namespace AdventOfCode2018
 {
     public class Day23 : DayBase, IDay
     {
+        private const int day = 23;
+        private string[] data;
         public List<Bot> Bots { get; set; }
-        public Day23() : base(2018, 23)
+        public Day23(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             List<string> botdata = input.GetDataCached().SplitOnNewline();
 
             Bots = new List<Bot>();

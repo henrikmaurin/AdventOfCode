@@ -8,6 +8,8 @@ namespace AdventOfCode2018
 {
     public class Day16 : DayBase, IDay
     {
+        private const int day = 16;
+        private string[] data;
         public int[] register { get; set; }
         public List<Observation> Observations { get; set; }
 
@@ -16,8 +18,13 @@ namespace AdventOfCode2018
         public ElfCode Computer { get; set; }
         public List<string> Instructions { get; set; }
 
-        public Day16() : base(2018, 16)
+        public Day16(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             register = new int[4];
             Observations = new List<Observation>();
             string[] lines = input.GetDataCached().SplitOnNewlineArray(false);

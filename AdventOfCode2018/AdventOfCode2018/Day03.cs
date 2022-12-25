@@ -9,8 +9,15 @@ namespace AdventOfCode2018
 {
     public class Day03 : DayBase, IDay
     {
-        public Day03() : base(2018, 3)
+        private const int day = 3;
+        private string[] data;
+        public Day03(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             claims = input.GetDataCached().SplitOnNewlineArray();
             fabricClaims = new List<FabricClaim>();
             foreach (string claim in claims)

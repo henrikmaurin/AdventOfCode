@@ -1,5 +1,4 @@
 ﻿using Common;
-using Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,16 @@ namespace AdventOfCode2018
 {
     public class Day08 : DayBase, IDay
     {
-        public Day08() : base(2018, 8)
+        private const int day = 1;
+        
+       public Queue<int> data { get; set; }
+         public Day08(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = new Queue<int>(testdata.IsSingleLine().Tokenize().Select(d => int.Parse(d)).ToList());
+                return;
+            }
             data = new Queue<int>(input.GetDataCached().IsSingleLine().Tokenize().Select(d => int.Parse(d)).ToList());
             Licenses = new List<LicenceData>();
             counter = 0;
@@ -37,7 +44,6 @@ namespace AdventOfCode2018
 
 
 
-        public Queue<int> data { get; set; }
         public List<LicenceData> Licenses { get; set; }
         public int counter { get; set; }
 

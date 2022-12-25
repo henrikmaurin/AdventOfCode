@@ -8,10 +8,17 @@ namespace AdventOfCode2018
 {
     public class Day14 : DayBase, IDay
     {
+        private const int day = 14;
+        private string[] data;
         public List<int> RecipieScores { get; set; }
         public int Rounds { get; set; }
-        public Day14() : base(2018, 14)
+        public Day14(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             Rounds = input.GetDataCached().IsSingleLine().ToInt();
 
         }

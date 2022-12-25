@@ -7,9 +7,16 @@ namespace AdventOfCode2018
 {
     public class Day02 : DayBase, IDay
     {
+        private const int day = 2;
+        private string[] data;
         private string[] boxes;
-        public Day02() : base(2018, 2)
+        public Day02(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             boxes = input.GetDataCached().SplitOnNewlineArray();
         }
 

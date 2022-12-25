@@ -6,10 +6,17 @@ namespace AdventOfCode2018
 {
     public class Day11 : DayBase, IDay
     {
+        private const int day = 11;
+        private string[] data;
         public int[,] Grid { get; set; }
 
-        public Day11() : base(2018, 11)
+        public Day11(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             Grid = new int[300, 300];
             int serialNo = input.GetDataCached().IsSingleLine().ToInt();
             //serialNo = 8;

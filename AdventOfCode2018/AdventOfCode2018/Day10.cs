@@ -8,8 +8,15 @@ namespace AdventOfCode2018
 {
     public class Day10 : DayBase, IDay
     {
-        public Day10() : base(2018, 10)
+        private const int day = 10;
+        private string[] data;
+        public Day10(string testdata = null) : base(Global.Year, day, testdata != null)
         {
+            if (testdata != null)
+            {
+                data = testdata.SplitOnNewlineArray();
+                return;
+            }
             data = input.GetDataCached().SplitOnNewlineArray();
             Lights = new List<Light>();
             foreach (string line in data)
@@ -31,7 +38,6 @@ namespace AdventOfCode2018
             //Console.WriteLine($"P2: {result2}");
         }
 
-        public string[] data { get; private set; }
         public List<Light> Lights { get; set; }
 
         public int Problem1()
