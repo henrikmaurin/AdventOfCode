@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common;
+
 using System;
 using System.Linq;
 
@@ -9,7 +10,7 @@ namespace AdventOfCode2018
     {
         private const int day = 2;
         private string[] data;
-        private string[] boxes;
+
         public Day02(string testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -17,7 +18,7 @@ namespace AdventOfCode2018
                 data = testdata.SplitOnNewlineArray();
                 return;
             }
-            boxes = input.GetDataCached().SplitOnNewlineArray();
+            data = input.GetDataCached().SplitOnNewlineArray();
         }
 
         public void Run()
@@ -30,26 +31,35 @@ namespace AdventOfCode2018
         }
         public int Problem1()
         {
-            int hasdouble = 0, hastriple = 0;
-
-            foreach (string box in boxes)
-            {
-                if (box.ToCharArray().GroupBy(c => c).Where(grp => grp.Count() == 2).Any())
-                {
-                    hasdouble++;
-                }
-
-                if (box.ToCharArray().GroupBy(c => c).Where(grp => grp.Count() == 3).Any())
-                {
-                    hastriple++;
-                }
-            }
-            return hasdouble * hastriple;
+            return CalcChecksum(data);
         }
 
         public string Problem2()
         {
-            string commonchars = string.Empty;
+            return FindPair(data);
+        }
+
+        public int CalcChecksum(string[] boxes)
+        {
+            int hasdouble = boxes.Where(b => HasDouble(b)).Count();
+            int hasTripple = boxes.Where(b => HasTripple(b)).Count();
+
+            return hasdouble * hasTripple;
+        }
+
+        public bool HasDouble(string box)
+        {
+            return box.ToCharArray().GroupBy(c => c).Where(grp => grp.Count() == 2).Any();
+        }
+
+        public bool HasTripple(string box)
+        {
+            return box.ToCharArray().GroupBy(c => c).Where(grp => grp.Count() == 3).Any();
+        }
+
+        public string FindPair(string[] boxes)
+        {
+            string commonchars;
             for (int box1 = 0; box1 < boxes.Count() - 1; box1++)
             {
                 for (int box2 = box1 + 1; box2 < boxes.Count(); box2++)
@@ -67,7 +77,10 @@ namespace AdventOfCode2018
                     }
                 }
             }
-            return String.Empty;
+            return string.Empty;
         }
+
+
+
     }
 }
