@@ -4,59 +4,63 @@ using System.Linq;
 
 using Common;
 
+using static Common.Parser;
+
 namespace AdventOfCode2018
 {
     public class Day04 : DayBase, IDay
     {
         private const int day = 4;
         private string[] data;
+        public List<Log> log { get; set; }
+        public List<Guard> guardList { get; set; }
 
         public Day04(string testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
                 data = testdata.SplitOnNewlineArray();
+                log = Parse(data);
+                guardList = RecreateSchedule(log);
                 return;
             }
-            log = new List<Log>();
+          
             data = input.GetDataCached().SplitOnNewlineArray();
+            log = Parse(data);
+            guardList = RecreateSchedule(log);
+            
+        }
+
+        public List<Log> Parse(string[] lines)
+        {
+            List<Log> logs = new List<Log>();
             int currentGuard = 0;
             foreach (string line in data.OrderBy(d => d.Substring(0, 18)))
             {
-                Log logLine = new Log();
-                logLine.Timestamp = DateTime.Parse(line.Substring(1, 16));
-                if (line.Contains("begins shift"))
-                {
-                    logLine.Action = Action.Shiftstart;
-                    currentGuard = int.Parse(line.Tokenize()[3].Replace("#", ""));
-                }
-                if (line.Contains("wakes up"))
-                {
-                    logLine.Action = Action.WakesUp;
-                }
-                if (line.Contains("falls asleep"))
-                {
-                    logLine.Action = Action.FallsAsleep;
-                }
-                logLine.GuardNo = currentGuard;
-                log.Add(logLine);
+                Log logLine = new Log();              
+                currentGuard = logLine.Parse(line, currentGuard);
+                logs.Add(logLine);
             }
 
+            return logs;
+        }
 
-            guards = new List<Guard>();
-            for (int i = 0; i < log.Count; i++)
+        public List<Guard> RecreateSchedule(List<Log> logs)
+        {
+            List<Guard> guards = new List<Guard>();
+            for (int i = 0; i < logs.Count; i++)
             {
-                if (log[i].Action == Action.FallsAsleep)
+                if (logs[i].Action == Action.FallsAsleep)
                 {
-                    if (!guards.Any(g => g.GuardNo == log[i].GuardNo))
+                    if (!guards.Any(g => g.GuardNo == logs[i].GuardNo))
                     {
                         Guard newGuard = new Guard();
-                        newGuard.GuardNo = log[i].GuardNo;
+                        newGuard.GuardNo = logs[i].GuardNo;
                         guards.Add(newGuard);
                     }
-                    int guardIndex = guards.FindIndex(g => g.GuardNo == log[i].GuardNo);
-                    int sleepminute = log[i].Timestamp.Minute;
-                    int awakeminute = log[i + 1].Timestamp.Minute;
+                    int guardIndex = guards.FindIndex(g => g.GuardNo == logs[i].GuardNo);
+                    int sleepminute = logs[i].Timestamp.Minute;
+                    int awakeminute = logs[i + 1].Timestamp.Minute;
 
                     for (int minute = sleepminute; minute < awakeminute; minute++)
                     {
@@ -64,7 +68,9 @@ namespace AdventOfCode2018
                     }
                 }
             }
+            return guards;
         }
+
         public void Run()
         {
             int result1 = Problem1();
@@ -74,12 +80,10 @@ namespace AdventOfCode2018
             Console.WriteLine($"P2: {result2}");
         }
 
-        public List<Log> log { get; set; }
-        public List<Guard> guards { get; set; }
 
         public int Problem1()
         {
-            Guard mostAsleepGuard = guards.OrderByDescending(g => g.AlseepMinutes.Sum()).First();
+            Guard mostAsleepGuard = guardList.OrderByDescending(g => g.AlseepMinutes.Sum()).First();
             int mostAsleepMinuteTimes = mostAsleepGuard.AlseepMinutes.OrderByDescending(m => m).First();
             int mostAsleepMinute = mostAsleepGuard.AlseepMinutes.FindIndex(m => m == mostAsleepMinuteTimes);
 
@@ -89,21 +93,49 @@ namespace AdventOfCode2018
 
         public int Problem2()
         {
-            var asleepGuard = guards.Select(g => new { g.GuardNo, maxminutes = g.AlseepMinutes.Max() }).OrderByDescending(g => g.maxminutes).First();
-            List<int> alseepMinutes = guards.Where(g => g.GuardNo == asleepGuard.GuardNo).Select(g => g.AlseepMinutes).First();
+            var asleepGuard = guardList.Select(g => new { g.GuardNo, maxminutes = g.AlseepMinutes.Max() }).OrderByDescending(g => g.maxminutes).First();
+            List<int> alseepMinutes = guardList.Where(g => g.GuardNo == asleepGuard.GuardNo).Select(g => g.AlseepMinutes).First();
             int mostAsleepMinute = alseepMinutes.FindIndex(m => m == asleepGuard.maxminutes);
 
             Console.WriteLine($"Id of guard: {asleepGuard.GuardNo}, Most asleep minute: {mostAsleepMinute}, Answer: {asleepGuard.GuardNo * mostAsleepMinute}");
             return asleepGuard.GuardNo * mostAsleepMinute;
         }
-
-
     }
-
-
 
     public class Log
     {
+        private class LogParser : IParsed
+        {
+            public string DataFormat => @"\[(.*)\] (.*)";
+
+            public string[] PropertyNames => new string[] { nameof(Timestamp),nameof(Action)};
+            public DateTime Timestamp { get; set; }
+            public string Action { get; set; }
+            public int GuardNumber { get; set; }
+
+        }
+
+        public int Parse(string line, int currentGuard)
+        {
+            LogParser p = new LogParser();
+            p.Parse(line);
+
+            GuardNo = currentGuard;
+            Timestamp= p.Timestamp;
+
+            if (p.Action.Contains("Guard"))
+            {
+                Action = Action.Shiftstart;
+                GuardNo = int.Parse(line.Tokenize()[3].Replace("#", ""));
+            }
+            else if (p.Action == "falls asleep")
+                Action = Action.FallsAsleep;
+            else if (p.Action == "wakes up")
+                Action = Action.WakesUp;
+
+            return GuardNo;
+
+        }
         public DateTime Timestamp { get; set; }
         public int GuardNo { get; set; }
         public Action Action { get; set; }
