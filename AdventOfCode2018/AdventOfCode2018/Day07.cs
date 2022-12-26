@@ -1,15 +1,19 @@
 ﻿using Common;
 using Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using static Common.Parser;
 
 namespace AdventOfCode2018
 {
     public class Day07 : DayBase, IDay
     {
-        private const int day = 1;
+        private const int day = 7;
         private string[] data;
+        public List<Instruction> Instructions { get; set; }
         public Day07(string testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -17,108 +21,70 @@ namespace AdventOfCode2018
                 data = testdata.SplitOnNewlineArray();
                 return;
             }
+
+            data = input.GetDataCached().SplitOnNewlineArray();
+            Init();
         }
 
-        public void InitInstructions()
+        public void Init()
         {
             Instructions = new List<Instruction>();
-            List<string> textInstructions = input.GetDataCached().SplitOnNewline();
-            foreach (string textInstruction in textInstructions)
+            foreach (string instruction in data)
             {
-                char step = textInstruction.Tokenize()[7].ToArray()[0];
-                char requires = textInstruction.Tokenize()[1].ToArray()[0];
-                if (!Instructions.Any(i => i.Step == step))
-                {
-                    Instruction instruction = new Instruction();
-                    instruction.Step = step;
-                    instruction.Requires = new List<char>();
-                    instruction.Requires.Add(requires);
-                    Instructions.Add(instruction);
-                    if (!Instructions.Any(i => i.Step == requires))
-                    {
-                        instruction = new Instruction();
-                        instruction.Step = requires;
-                        instruction.Requires = new List<char>();
-                        Instructions.Add(instruction);
-                    }
-                }
-                else
-                {
-                    Instructions.Single(i => i.Step == step).Requires.Add(requires);
-                }
+                Parse(instruction);
             }
         }
-
         public void Run()
         {
+            
             string result1 = Problem1();
             Console.WriteLine($"P1: Order to complete: {result1}");
 
+            Init();
             int result2 = Problem2();
             Console.WriteLine($"P2: Time to complete: {result2}");
         }
-        public List<Instruction> Instructions { get; set; }
 
         public string Problem1()
         {
-            InitInstructions();
-
-            string result = string.Empty;
-            while (Instructions.Any(i => i.Done == false))
-            {
-                List<Instruction> insts = Instructions.Where(i => i.Done == false).OrderBy(i => i.Step).ToList();
-
-                Instruction next = null;
-                int pos = 0;
-                while (next == null)
-                {
-                    List<char> requirements = insts[pos].Requires.ToList();
-                    if (!Instructions.Where(i => i.Done == false).Select(i => i.Step).ToList().Any(i => requirements.Contains(i)))
-                    {
-                        next = insts[pos];
-                        insts[pos].Done = true;
-                    }
-                    else
-                    {
-                        pos++;
-                    }
-                }
-                result += next.Step;
-            }
-
-            return result;
+            return GetOrder(new List<Instruction>(Instructions));
         }
 
         public int Problem2()
         {
-            InitInstructions();
+                 return WorkParallell(new List<Instruction>(Instructions));
+        }
 
+        public int WorkParallell(List<Instruction> instructions,int workers=5, int staticwait=60)
+        {
             int seconds = 0;
-            int workers = 5;
-            int staticwait = 60;
 
-            while (Instructions.Any(i => i.Done == false))
+            while (instructions.Any(i => i.Done == false))
             {
-                List<Instruction> insts = Instructions.Where(i => i.Done == false && i.Countdown == 0).OrderBy(i => i.Step).ToList();
-                int freeworkers = workers - Instructions.Where(i => i.Countdown > 0).Count();
-                foreach (Instruction ins in insts)
+                Queue<Instruction> queue = new Queue<Instruction>(instructions.Where(i => i.Done == false && i.Countdown == 0).OrderBy(i => i.Step));
+
+                int freeworkers = workers - instructions.Where(i => i.Countdown > 0).Count();
+                
+                while (freeworkers > 0 && queue.Count>0) 
                 {
-                    if (!Instructions.Where(i => i.Done == false).Select(i => i.Step).ToList().Any(i => ins.Requires.Contains(i)) && freeworkers > 0)
+                    Instruction ins = queue.Dequeue();
+
+                    if (!instructions.Where(i => i.Done == false).Select(i => i.Step).ToList().Any(i => ins.Requires.Contains(i)) && freeworkers > 0)
                     {
                         ins.Countdown = staticwait + ins.Step - 'A' + 1;
                         freeworkers--;
                     }
 
                 }
-                for (int i = 0; i < Instructions.Count(); i++)
+                for (int i = 0; i < instructions.Count(); i++)
                 {
-                    if (Instructions[i].Countdown == 1)
+                    if (instructions[i].Countdown == 1)
                     {
-                        Instructions[i].Done = true;
+                        instructions[i].Done = true;
                     }
-                    if (Instructions[i].Countdown > 0)
+                    if (instructions[i].Countdown > 0)
                     {
-                        Instructions[i].Countdown--;
+                        instructions[i].Countdown--;
                     }
                 }
                 seconds++;
@@ -127,15 +93,83 @@ namespace AdventOfCode2018
             return seconds;
         }
 
+        public string GetOrder( List<Instruction> instructions)
+        {
+            string result = string.Empty;
+            while (instructions.Any(i => i.Done == false))
+            {
+                Queue<Instruction> queue = new Queue<Instruction>(instructions.Where(i => i.Done == false).OrderBy(i => i.Step));
+
+                Instruction inst = null;
+                while (inst == null && queue.Count > 0)
+                {
+                    inst = queue.Dequeue();
+                    if (!instructions.Where(i => i.Done == false).Where(i => i.Step.In(inst.Requires)).Any())
+                    {
+                        inst.Done = true;
+                    }
+                    else
+                        inst = null;
+                }
+                result += inst.Step;
+            }
+
+            return result;
+        }
+
+
+
+        private class Parsed : IParsed
+        {
+
+            public char Name { get; set; }
+            public char Requires { get; set; }
+
+            public string DataFormat => @"Step ([A-Z]{1}) must be finished before step ([A-Z]{1}) can begin.";
+            public string[] PropertyNames => new string[] { nameof(Requires), nameof(Name) };
+        }
+
+        public void Parse(string toParse)
+        {
+            Parsed p = new Parsed();
+            p.Parse(toParse);
+
+            if (Instructions == null)
+            {
+                Instructions = new List<Instruction>();
+            }
+
+            Instruction instruction = Instructions.Where(i => i.Step == p.Name).SingleOrDefault();
+
+            if (instruction == null)
+            {
+                instruction = new Instruction();
+                instruction.Step = p.Name;
+                instruction.Requires = new List<char>();
+                Instructions.Add(instruction);
+                // Might not be in list
+                if (!Instructions.Any(i => i.Step == p.Requires))
+                {
+                    Instruction requiredInstruction = new Instruction();
+                    requiredInstruction.Step = p.Requires;
+                    requiredInstruction.Requires = new List<char>();
+                    Instructions.Add(requiredInstruction);
+                }
+            }
+
+            instruction.Requires.Add(p.Requires);
+
+        }
     }
-
-
-
     public class Instruction
     {
         public char Step { get; set; }
         public List<char> Requires { get; set; }
         public bool Done { get; set; }
         public int Countdown { get; set; }
+
     }
 }
+
+
+

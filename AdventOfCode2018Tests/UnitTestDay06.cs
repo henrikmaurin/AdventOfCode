@@ -4,10 +4,10 @@ using Common;
 
 namespace Tests
 {
-	[TestClass]
-	public class UnitTestDay06
-	{
-		private Day06 day;
+    [TestClass]
+    public class UnitTestDay06
+    {
+        private Day06 day;
         private string data;
         private string[] testdata;
 
@@ -23,23 +23,23 @@ namespace Tests
             testdata = data.SplitOnNewlineArray(false);
 
             day = new Day06(data);
-			day.Init();
-		}
+            day.Init();
+        }
 
 
-		[TestMethod("Day 6, Part 1")]
-		[TestCategory("Example data")]
-		public void Part1()
-		{
-			Assert.AreEqual(17,day.FindLargestNotInfinteArea());
-		}
+        [TestMethod("Day 6, Part 1")]
+        [TestCategory("Example data")]
+        public void Part1()
+        {
+            Assert.AreEqual(17,day.FindLargestNotInfinteArea());
+        }
 
-		[TestMethod("Day 6, Part 2")]
-		[TestCategory("Example data")]
-		public void Part2()
-		{
+        [TestMethod("Day 6, Part 2")]
+        [TestCategory("Example data")]
+        public void Part2()
+        {
 
-			Assert.AreEqual(16, day.GetPointsWithTotalDistanceLessThan(32));
-		}
-	}
+            Assert.AreEqual(16, day.GetPointsWithTotalDistanceLessThan(32));
+        }
+    }
 }
