@@ -169,5 +169,15 @@ namespace Common
 			return char.ToUpper(indata);
 		}
 
+		public static bool IsUpper(this char indata)
+		{
+			return char.IsUpper(indata);
+		}
+
+		public static bool IsLower(this char indata)
+		{
+			return char.IsLower(indata);
+		}
+
 	}
 }
