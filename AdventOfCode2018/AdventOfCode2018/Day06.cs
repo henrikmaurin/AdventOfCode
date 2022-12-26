@@ -1,8 +1,10 @@
 ﻿using Common;
-using Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using static Common.Parser;
 
 namespace AdventOfCode2018
 {
@@ -10,6 +12,8 @@ namespace AdventOfCode2018
     {
         private const int day = 6;
         private string[] data;
+        private Map2D<MapPoint> map2D;
+        private List<Coordinate> coordinates;
         public Day06(string testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -18,6 +22,7 @@ namespace AdventOfCode2018
                 return;
             }
             data = input.GetDataCached().SplitOnNewlineArray();
+            Init();
         }
         public void Run()
         {
@@ -27,142 +32,123 @@ namespace AdventOfCode2018
             int result2 = Problem2();
             Console.WriteLine($"P2: Total Area: {result2}");
         }
-        public class Coordinate
-        {
-            public int Id { get; set; }
-            public int X { get; set; }
-            public int Y { get; set; }
-        }
-  
+
         public int Problem1()
-        {
-            List<Coordinate> coordinates = new List<Coordinate>();
-            int[] counters = new int[51];
-
-            int maxsize = 500;
-
-            int[,] map = new int[maxsize * 2, maxsize * 2];
-
-            int place = 1;
-            foreach (string coords in data)
-            {
-                int x = int.Parse(coords.Split(", ")[0]);
-                int y = int.Parse(coords.Split(", ")[1]);
-
-                coordinates.Add(new Coordinate { Id = place, X = x, Y = y });
-
-                map[x + maxsize, y + maxsize] = place++;
-            }
-
-            for (int y = -maxsize; y < maxsize; y++)
-            {
-                for (int x = -maxsize; x < maxsize; x++)
-                {
-                    if (map[x + maxsize, y + maxsize] == 0)
-                    {
-                        var distance = coordinates.Select(c => new { c.Id, Dist = Math.Abs(c.X - x) + Math.Abs(c.Y - y) }).OrderBy(d => d.Dist).ToList();
-                        if (distance[0].Dist == distance[1].Dist)
-                        {
-                            map[x + maxsize, y + maxsize] = 99;
-                        }
-                        else
-                        {
-                            map[x + maxsize, y + maxsize] = distance[0].Id;
-                            counters[distance[0].Id]++;
-                        }
-                    }
-                }
-            }
-
-            List<int> exclude = new List<int>();
-
-            for (int i = 0; i < maxsize * 2; i++)
-            {
-                if (!exclude.Contains(map[i, 0]))
-                {
-                    exclude.Add(map[i, 0]);
-                }
-                if (!exclude.Contains(map[i, maxsize * 2 - 1]))
-                {
-                    exclude.Add(map[i, maxsize * 2 - 1]);
-                }
-                if (!exclude.Contains(map[0, i]))
-                {
-                    exclude.Add(map[0, i]);
-                }
-                if (!exclude.Contains(map[maxsize * 2 - 1, i]))
-                {
-                    exclude.Add(map[maxsize * 2 - 1, i]);
-                }
-            }
-
-            if (!exclude.Contains(99))
-            {
-                exclude.Add(99);
-            }
-
-            List<int> theRest = new List<int>();
-            for (int y = 0; y < maxsize * 2; y++)
-            {
-                for (int x = 0; x < maxsize * 2; x++)
-                {
-                    if (!exclude.Contains(map[x, y]))
-                    {
-                        theRest.Add(map[x, y]);
-                    }
-                }
-            }
-
-
-            var l = theRest.GroupBy(n => n).Select(n => new { n.Key, Count = n.Count() }).OrderByDescending(c => c.Count).ToList();
-            int largest = theRest.GroupBy(n => n).Select(n => new { n.Key, Count = n.Count() }).OrderByDescending(c => c.Count).Select(c => c.Count).First(); ;
-
-            return largest;
+        {           
+            return FindLargestNotInfinteArea();
         }
         public int Problem2()
         {
-            List<Coordinate> coordinates = new List<Coordinate>();
+            return GetPointsWithTotalDistanceLessThan(10000);
+        }
 
-            int maxsize = 500;
-
-            int[,] map = new int[maxsize * 2, maxsize * 2];
-
-            int place = 1;
+        public void Init()
+        {
+            coordinates = new List<Coordinate>();
+            
+            int id = 1;
             foreach (string coords in data)
             {
-                int x = int.Parse(coords.Split(", ")[0]);
-                int y = int.Parse(coords.Split(", ")[1]);
-
-                coordinates.Add(new Coordinate { Id = place, X = x, Y = y });
-
-                place++;
+                Coordinate coord = new Coordinate(id);
+                coord.Parse(coords);
+                coordinates.Add(coord);
+                id++;
             }
 
-            for (int y = -maxsize; y < maxsize; y++)
+            int maxX = coordinates.Select(c => c.X).Max();
+            int maxY = coordinates.Select(c => c.Y).Max();
+            int maxsize = maxX > maxY ? maxX : maxY;
+            maxsize++;
+
+            map2D = new Map2D<MapPoint>();
+            map2D.Init(maxsize, maxsize, new MapPoint());
+
+            foreach (var coord in coordinates)
+                map2D[coord] = new MapPoint { Id = coord.Id };
+
+            foreach (Vector2D coord in map2D.Enumerate())
             {
-                for (int x = -maxsize; x < maxsize; x++)
+                var distance = coordinates.Select(c => new { c.Id, Dist = c.ManhattanDistance(coord) }).OrderBy(d => d.Dist).ToList();
+                if (map2D[coord].Id == 0)
                 {
-                    if (map[x + maxsize, y + maxsize] == 0)
+                    if (distance[0].Dist == distance[1].Dist)
                     {
-                        var distance = coordinates.Select(c => new { c.Id, Dist = Math.Abs(c.X - x) + Math.Abs(c.Y - y) }).ToList();
-                        map[x + maxsize, y + maxsize] = distance.Sum(d => d.Dist);
+                        map2D[coord] = new MapPoint { Id = int.MaxValue };
                     }
+                    else
+                    {
+                        map2D[coord] = new MapPoint { Id = distance[0].Id };
+                    }
+
                 }
+                map2D[coord].TotalDistance = distance.Select(d => d.Dist).Sum();
             }
+        }
 
-
-            List<int> theRest = new List<int>();
-            for (int y = 0; y < maxsize * 2; y++)
+        public int FindLargestNotInfinteArea()
+        {
+            // Find coords that extend to infinity by traversing the outer border and add to exclude 
+            HashSet<int> exclude = new HashSet<int>();
+            for (int n = map2D.MinX; n < map2D.MaxX; n++)
             {
-                for (int x = 0; x < maxsize * 2; x++)
+                exclude.TryAdd(map2D[n, 0].Id);
+                exclude.TryAdd(map2D[n, map2D.MaxY - 1].Id);
+                exclude.TryAdd(map2D[0, n].Id);
+                exclude.TryAdd(map2D[map2D.MaxX - 1, n].Id);
+            }
+            exclude.TryAdd(int.MaxValue);
+
+            Dictionary<int, int> theRest = new Dictionary<int, int>();
+            foreach (Vector2D coord in map2D.Enumerate())
+                if (!exclude.Contains(map2D[coord].Id))
                 {
-                    theRest.Add(map[x, y]);
+                    if (theRest.ContainsKey(map2D[coord].Id))
+                        theRest[map2D[coord].Id]++;
+                    else
+                        theRest.Add(map2D[coord].Id, 1);
                 }
+
+            return theRest.Values.Max();
+        }
+
+        public int GetPointsWithTotalDistanceLessThan(int maxVal)
+        {
+            var i = map2D.Map.Where(m => m.TotalDistance == 0).ToList();
+
+            return map2D.Map.Where(m => m.TotalDistance < maxVal).Count();
+        }
+
+
+        public class MapPoint
+        {
+            public int Id { get; set; }
+            public int TotalDistance { get; set; }
+        }
+
+        public class Coordinate : Vector2D
+        {
+            public Coordinate(int id)
+            {
+                Id = id;
             }
 
-            int count = theRest.Where(r => r < 10000).Count();
+            public int Id { get; set; }
+            private class Parsed : IParsed
+            {
+                public string DataFormat => @"(\d+), (\d+)";
+                public string[] PropertyNames => new string[] { nameof(X), nameof(Y) };
+                public int X { get; set; }
+                public int Y { get; set; }
+            }
 
-            return count;
+            public void Parse(string input)
+            {
+                Parsed p = new Parsed();
+                p.Parse(input);
+                X = p.X;
+                Y = p.Y;
+            }
+
         }
     }
 }

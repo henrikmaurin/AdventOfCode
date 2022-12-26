@@ -13,12 +13,12 @@
         public int SizeY => MaxY - MinY;
 
 
-        public void Init(int sizeX, int sizeY, T? initialvalue = default(T?))  
+        public void Init(int sizeX, int sizeY, T? initialvalue = default(T?))
         {
             Init(0, 0, sizeX, sizeY, initialvalue);
         }
 
-        public void Init(int minX, int minY,int maxX, int maxY, T? initialvalue = default(T?))
+        public void Init(int minX, int minY, int maxX, int maxY, T? initialvalue = default(T?))
         {
             MaxX = maxX;
             MaxY = maxY;
@@ -37,7 +37,7 @@
 
             if (!yPos.IsBetween(MinY, MaxY - 1))
                 return false;
-            
+
             return true;
         }
 
@@ -46,10 +46,10 @@
             if (Map == null)
                 throw new NullReferenceException("Map not initialized");
 
-            if(!IsInRange(xPos,yPos))
+            if (!IsInRange(xPos, yPos))
                 throw new IndexOutOfRangeException();
-            
-            return Map[(xPos-MinX) + (yPos-MinY) * SizeX];
+
+            return Map[(xPos - MinX) + (yPos - MinY) * SizeX];
         }
 
         public virtual T Get(Vector2D coord)
@@ -78,7 +78,7 @@
             if (Map == null)
                 throw new NullReferenceException("Map not initialized");
 
-            if (!IsInRange(xPos,yPos))
+            if (!IsInRange(xPos, yPos))
                 throw new IndexOutOfRangeException();
 
             Map[(xPos - MinX) + (yPos - MinY) * SizeX] = value;
@@ -94,10 +94,10 @@
             if (Map == null)
                 return false;
 
-            if (!IsInRange(xPos,yPos))
+            if (!IsInRange(xPos, yPos))
                 return false;
 
-            Set(xPos, yPos, value);          
+            Set(xPos, yPos, value);
             return true;
         }
 
@@ -128,8 +128,8 @@
         }
 
         public bool IsValidCoord(int x, int y)
-        {          
-            return IsInRange(x,y);
+        {
+            return IsInRange(x, y);
         }
 
         public bool IsValidCoord(Vector2D coord)
@@ -162,7 +162,7 @@
             Vector2D[] coords = new Vector2D[SizeX * SizeY];
             for (int y = MinY; y < MaxY; y++)
                 for (int x = MinX; x < MaxX; x++)
-                    coords[(x-MinX) + (y-MinY) * SizeX] = new Vector2D { X = x, Y = y };
+                    coords[(x - MinX) + (y - MinY) * SizeX] = new Vector2D { X = x, Y = y };
 
             return coords;
         }
@@ -344,6 +344,14 @@
         public static Vector2D operator -(Vector2D me, Vector2D coord)
         {
             return new Vector2D { X = me.X - coord.X, Y = me.Y - coord.Y };
+        }
+        public static bool Equals(Vector2D a, Vector2D b)
+        {
+            return a.X == b.X && a.Y == b.Y;
+        }
+        public bool Equals(Vector2D b)
+        {
+            return X == b.X && Y == b.Y;
         }
         public string ToString()
         {
