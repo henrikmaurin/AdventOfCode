@@ -8,7 +8,7 @@
         public void CalcDistances(int startPointX, int startPointY)
         {
             DistanceMap = new Map2D<int?>();
-            DistanceMap.Init(Map.SizeX, Map.SizeY, null);
+            DistanceMap.Init(Map.MaxX, Map.MaxY, null);
             DistanceMap.SafeOperations = true;
 
             bool changed = true;

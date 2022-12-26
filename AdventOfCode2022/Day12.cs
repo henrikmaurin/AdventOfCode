@@ -42,9 +42,9 @@ namespace AdventOfCode2022
             int shortest = int.MaxValue;
             CalcDistances(end.X, end.Y);
 
-            for (int y = 0; y < Map.SizeY; y++)
+            for (int y = 0; y < Map.MaxY; y++)
             {
-                for (int x = 0; x < Map.SizeX; x++)
+                for (int x = 0; x < Map.MaxX; x++)
                 {
 
                     if (Map[x, y] == 'a')
@@ -77,9 +77,9 @@ namespace AdventOfCode2022
             Map.Init(mapdata[0].Length, mapdata.Count);
             Map.SafeOperations = true;
 
-            for (int y = 0; y < Map.SizeY; y++)
+            for (int y = 0; y < Map.MaxY; y++)
             {
-                for (int x = 0; x < Map.SizeX; x++)
+                for (int x = 0; x < Map.MaxX; x++)
                 {
                     if (mapdata[y][x] == 'S')
                     {
@@ -100,7 +100,7 @@ namespace AdventOfCode2022
         public void CalcDistances(int startPointX, int startPointY)
         {
             DistanceMap = new Map2D<int?>();
-            DistanceMap.Init(Map.SizeX, Map.SizeY, null);
+            DistanceMap.Init(Map.MaxX, Map.MaxY, null);
             DistanceMap.SafeOperations = true;
 
             bool changed = true;
@@ -111,9 +111,9 @@ namespace AdventOfCode2022
             while (changed)
             {
                 changed = false;
-                for (int y = 0; y < Map.SizeY; y++)
+                for (int y = 0; y < Map.MaxY; y++)
                 {
-                    for (int x = 0; x < Map.SizeX; x++)
+                    for (int x = 0; x < Map.MaxX; x++)
                     {
                         if (DistanceMap[x, y] == distance)
                         {

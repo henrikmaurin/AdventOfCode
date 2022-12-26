@@ -262,12 +262,12 @@ namespace AdventOfCode2022
                             int a = 1;
                         }
 
-                        Vector2D nextStep = map.SizeX>50? HandleWrapping(position + Directions.GetDirection(direction), isCube): HandleWrappingForTest(position + Directions.GetDirection(direction), isCube); ;
+                        Vector2D nextStep = map.MaxX>50? HandleWrapping(position + Directions.GetDirection(direction), isCube): HandleWrappingForTest(position + Directions.GetDirection(direction), isCube); ;
 
                         while (map[nextStep] == ' ')
                         {
                             nextStep += Directions.GetDirection(direction);
-                            nextStep = map.SizeX > 50 ? HandleWrapping(nextStep, isCube): HandleWrappingForTest(nextStep, isCube);
+                            nextStep = map.MaxX > 50 ? HandleWrapping(nextStep, isCube): HandleWrappingForTest(nextStep, isCube);
 
                         }
                         if (map[nextStep] == '#')
@@ -300,12 +300,12 @@ namespace AdventOfCode2022
         public Vector2D HandleWrappingForTest(Vector2D nextStep, bool isCube = false)
         {
             {
-                nextStep.X %= map.SizeX;
-                nextStep.Y %= map.SizeY;
+                nextStep.X %= map.MaxX;
+                nextStep.Y %= map.MaxY;
                 if (nextStep.X < 0)
-                    nextStep.X = map.SizeX - 1;
+                    nextStep.X = map.MaxX - 1;
                 if (nextStep.Y < 0)
-                    nextStep.Y = map.SizeY - 1;
+                    nextStep.Y = map.MaxY - 1;
             }
             if (!isCube || IsSameArea(nextStep))
                 return nextStep;
@@ -327,7 +327,7 @@ namespace AdventOfCode2022
                 else if (direction == Directions.Right)
                 {
                     nextStep.X = sidesize * 3 - 1;
-                    nextStep.Y = map.SizeY - 1 - y;
+                    nextStep.Y = map.MaxY - 1 - y;
                     direction = Directions.Left;
                 }
                 else if (direction == Directions.Up)
@@ -345,8 +345,8 @@ namespace AdventOfCode2022
             {
                 if (direction == Directions.Left)
                 {
-                    nextStep.Y = map.SizeY - 1;
-                    nextStep.X = map.SizeX - 1 - y + sidesize;
+                    nextStep.Y = map.MaxY - 1;
+                    nextStep.X = map.MaxX - 1 - y + sidesize;
                     direction = Directions.Down;
                 }
                 else if (direction == Directions.Right)
@@ -362,7 +362,7 @@ namespace AdventOfCode2022
                 else if (direction == Directions.Down)
                 {
                     nextStep.X = 149 - x;
-                    nextStep.Y = map.SizeY - 1;
+                    nextStep.Y = map.MaxY - 1;
                     direction = Directions.Up;
                 }
             }
@@ -383,7 +383,7 @@ namespace AdventOfCode2022
                 else if (direction == Directions.Down)
                 {
                     nextStep.X = sidesize * 2;
-                    nextStep.Y = map.SizeY - 1 - y + sidesize;
+                    nextStep.Y = map.MaxY - 1 - y + sidesize;
                     direction = Directions.Right;
                 }
             }
@@ -394,7 +394,7 @@ namespace AdventOfCode2022
                 }
                 else if (direction == Directions.Right)
                 {
-                    nextStep.X = map.SizeX - 1 - y + sidesize;
+                    nextStep.X = map.MaxX - 1 - y + sidesize;
                     nextStep.Y = sidesize * 2;
                     direction = Directions.Down;
                 }
@@ -464,12 +464,12 @@ namespace AdventOfCode2022
 
         public Vector2D HandleWrapping(Vector2D nextStep, bool isCube = false)
         {
-            nextStep.X %= map.SizeX;
-            nextStep.Y %= map.SizeY;
+            nextStep.X %= map.MaxX;
+            nextStep.Y %= map.MaxY;
             if (nextStep.X < 0)
-                nextStep.X = map.SizeX - 1;
+                nextStep.X = map.MaxX - 1;
             if (nextStep.Y < 0)
-                nextStep.Y = map.SizeY - 1;
+                nextStep.Y = map.MaxY - 1;
 
             if (!isCube || IsSameArea(nextStep))
                 return nextStep;
@@ -517,7 +517,7 @@ namespace AdventOfCode2022
                 else if (direction == Directions.Up)
                 {
                     nextStep.X = x - sidesize * 2;
-                    nextStep.Y = map.SizeY - 1;
+                    nextStep.Y = map.MaxY - 1;
                     direction = Directions.Up;
                 }
                 else if (direction == Directions.Down)
@@ -584,7 +584,7 @@ namespace AdventOfCode2022
                 }
                 else if (direction == Directions.Right)
                 {
-                    nextStep.X = map.SizeX - 1;
+                    nextStep.X = map.MaxX - 1;
                     nextStep.Y = sidesize - 1 - (y - sidesize * 2);
                     direction = Directions.Left;
                 }
@@ -696,7 +696,7 @@ namespace AdventOfCode2022
             map = new Map2D<char>();
             position = null;
             map.Init(input.Select(i => i.Length).Max(), input.Length, ' ');
-            sidesize = map.SizeX / 3;
+            sidesize = map.MaxX / 3;
             for (int y = 0; y < input.Length; y++)
             {
                 for (int x = 0; x < input[y].Length; x++)

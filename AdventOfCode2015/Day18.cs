@@ -51,9 +51,9 @@ namespace AdventOfCode2015
             public string ToString()
             {
                 StringBuilder stringBuilder = new StringBuilder();
-                for (int y = 0; y < SizeY; y++)
+                for (int y = 0; y < MaxY; y++)
                 {
-                    for (int x = 0; x < SizeX; x++)
+                    for (int x = 0; x < MaxX; x++)
                     {
                         stringBuilder.Append(this[x, y]);
                     }
@@ -90,9 +90,9 @@ namespace AdventOfCode2015
                     return;
 
                 this[0, 0] = '#';
-                this[SizeX - 1, 0] = '#';
-                this[0, SizeY - 1] = '#';
-                this[SizeX - 1, SizeY - 1] = '#';
+                this[MaxX - 1, 0] = '#';
+                this[0, MaxY - 1] = '#';
+                this[MaxX - 1, MaxY - 1] = '#';
             }
 
             public void Step()

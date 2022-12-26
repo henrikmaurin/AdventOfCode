@@ -51,8 +51,8 @@ namespace AdventOfCode2021
             Octopuses = new Map2D<int>();
             Octopuses.SafeOperations = true;
             Octopuses.Init(energyFieldData[0].Length, energyFieldData.Length);
-            for (int y = 0; y < Octopuses.SizeY; y++)
-                for (int x = 0; x < Octopuses.SizeX; x++)
+            for (int y = 0; y < Octopuses.MaxY; y++)
+                for (int x = 0; x < Octopuses.MaxX; x++)
                     Octopuses[x, y] = energyFieldData[y][x].ToInt();
 
           /*  sizeY = energyFieldData.Length;
@@ -67,7 +67,7 @@ namespace AdventOfCode2021
         {
             int i = 0;
             flashes = 0;
-            while (flashes != Octopuses.SizeX * Octopuses.SizeY)
+            while (flashes != Octopuses.MaxX * Octopuses.MaxY)
             {
                 i++;
                 flashes = 0;
@@ -81,8 +81,8 @@ namespace AdventOfCode2021
         {
             for (int i = 0; i < cycles; i++)
             {
-                for (int y = 0; y < Octopuses.SizeY; y++)
-                    for (int x = 0; x < Octopuses.SizeX; x++)
+                for (int y = 0; y < Octopuses.MaxY; y++)
+                    for (int x = 0; x < Octopuses.MaxX; x++)
                         Increase(x, y);
 
                 ResetFlashed();
@@ -94,18 +94,18 @@ namespace AdventOfCode2021
         public void ResetFlashed()
         {
 
-            for (int y = 0; y < Octopuses.SizeY; y++)
-                for (int x = 0; x < Octopuses.SizeX; x++)
+            for (int y = 0; y < Octopuses.MaxY; y++)
+                for (int x = 0; x < Octopuses.MaxX; x++)
                     if (Octopuses[x, y] > 9)
                         Octopuses[x, y] = 0;
         }
 
         public bool Increase(int x, int y)
         {
-            if (x < 0 || y < 0 || y >= Octopuses.SizeY)
+            if (x < 0 || y < 0 || y >= Octopuses.MaxY)
                 return false;
 
-            if (x >= Octopuses.SizeX)
+            if (x >= Octopuses.MaxX)
                 return false;
 
             if (Octopuses[x, y] > 9)
@@ -134,9 +134,9 @@ namespace AdventOfCode2021
         public string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            for (int y = 0; y < Octopuses.SizeY; y++)
+            for (int y = 0; y < Octopuses.MaxY; y++)
             {
-                for (int x = 0; x < Octopuses.SizeX; x++)
+                for (int x = 0; x < Octopuses.MaxX; x++)
                 {
                     sb.Append(Octopuses[x, y]);
                 }

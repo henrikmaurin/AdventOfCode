@@ -3,18 +3,42 @@
     public class Map2D<T>
     {
         public T[] Map { get; protected set; }
-        public int SizeX { get; protected set; }
-        public int SizeY { get; protected set; }
+        public int MaxX { get; protected set; }
+        public int MaxY { get; protected set; }
         public bool SafeOperations { get; set; }
+        public int MinX { get; set; }
+        public int MinY { get; set; }
+
+        public int SizeX => MaxX - MinX;
+        public int SizeY => MaxY - MinY;
 
 
-        public void Init(int sizeX, int sizeY, T? initialvalue = default(T?))
+        public void Init(int sizeX, int sizeY, T? initialvalue = default(T?))  
         {
-            SizeX = sizeX;
-            SizeY = sizeY;
+            Init(0, 0, sizeX, sizeY, initialvalue);
+        }
 
-            Map = new T[sizeX * sizeY];
+        public void Init(int minX, int minY,int maxX, int maxY, T? initialvalue = default(T?))
+        {
+            MaxX = maxX;
+            MaxY = maxY;
+
+            MinX = minX;
+            MinY = minY;
+
+            Map = new T[SizeX * SizeY];
             Array.Fill(Map, initialvalue);
+        }
+
+        public bool IsInRange(int xPos, int yPos)
+        {
+            if (!xPos.IsBetween(MinX, MaxX - 1))
+                return false;
+
+            if (!yPos.IsBetween(MinY, MaxY - 1))
+                return false;
+            
+            return true;
         }
 
         public virtual T Get(int xPos, int yPos)
@@ -22,10 +46,10 @@
             if (Map == null)
                 throw new NullReferenceException("Map not initialized");
 
-            if (!(xPos * yPos).IsBetween(0, SizeX * SizeY))
+            if(!IsInRange(xPos,yPos))
                 throw new IndexOutOfRangeException();
-
-            return Map[xPos + yPos * SizeX];
+            
+            return Map[(xPos-MinX) + (yPos-MinY) * SizeX];
         }
 
         public virtual T Get(Vector2D coord)
@@ -38,10 +62,7 @@
             if (Map == null)
                 return default;
 
-            if (!xPos.IsBetween(0, SizeX - 1))
-                return default;
-
-            if (!yPos.IsBetween(0, SizeY - 1))
+            if (!IsInRange(xPos, yPos))
                 return default;
 
             return Get(xPos, yPos);
@@ -57,10 +78,10 @@
             if (Map == null)
                 throw new NullReferenceException("Map not initialized");
 
-            if (!(xPos * yPos).IsBetween(0, SizeX * SizeY))
+            if (!IsInRange(xPos,yPos))
                 throw new IndexOutOfRangeException();
 
-            Map[xPos + yPos * SizeX] = value;
+            Map[(xPos - MinX) + (yPos - MinY) * SizeX] = value;
         }
 
         public virtual void Set(Vector2D coord, T value)
@@ -73,10 +94,10 @@
             if (Map == null)
                 return false;
 
-            if (!(xPos * yPos).IsBetween(0, SizeX * SizeY))
+            if (!IsInRange(xPos,yPos))
                 return false;
 
-            Map[xPos + yPos * SizeX] = value;
+            Set(xPos, yPos, value);          
             return true;
         }
 
@@ -101,19 +122,14 @@
         {
             Map2D<T> clone = new Map2D<T>();
             clone.SafeOperations = SafeOperations;
-            clone.Init(SizeX, SizeY);
+            clone.Init(MaxX, MaxY);
 
             return clone;
         }
 
         public bool IsValidCoord(int x, int y)
-        {
-            if (!x.IsBetween(0, SizeX - 1))
-                return false;
-
-            if (!y.IsBetween(0, SizeY - 1))
-                return false;
-            return true;
+        {          
+            return IsInRange(x,y);
         }
 
         public bool IsValidCoord(Vector2D coord)
@@ -144,25 +160,25 @@
         public Vector2D[] Enumerate()
         {
             Vector2D[] coords = new Vector2D[SizeX * SizeY];
-            for (int y = 0; y < SizeY; y++)
-                for (int x = 0; x < SizeX; x++)
-                    coords[x + y * SizeX] = new Vector2D { X = x, Y = y };
+            for (int y = MinY; y < MaxY; y++)
+                for (int x = MinX; x < MaxX; x++)
+                    coords[(x-MinX) + (y-MinY) * SizeX] = new Vector2D { X = x, Y = y };
 
             return coords;
         }
 
-        public string Draw(int x1, int y1, int x2, int y2, int? objX = null, int? objY = null, char? sprite = null )
+        public string Draw(int x1, int y1, int x2, int y2, int? objX = null, int? objY = null, char? sprite = null)
         {
             for (int y = y1; y < y2; y++)
             {
                 for (int x = x1; x < x2; x++)
                 {
-                    if (x==objX && y== objY)
+                    if (x == objX && y == objY)
                     {
                         Console.Write(sprite);
                     }
                     else
-                    Console.Write(this[x, y].ToString());
+                        Console.Write(this[x, y].ToString());
                 }
                 Console.WriteLine();
             }
@@ -174,10 +190,10 @@
 
         public int CountInRow(int row, T searchFor)
         {
-            int counter=0;
-            for (int x=0; x<SizeX;x++)
+            int counter = 0;
+            for (int x = MinX; x < MaxX; x++)
             {
-                if (this[x,row].Equals(searchFor))
+                if (this[x, row].Equals(searchFor))
                     counter++;
             }
             return counter;
@@ -266,14 +282,14 @@
             return _directions[GetSurrounding().First()..GetSurrounding().Last()];
         }
 
-       public static int SquareRadius(this Vector2D me, Vector2D other)
+        public static int SquareRadius(this Vector2D me, Vector2D other)
         {
             return (new int[] { Math.Abs(me.X - other.X), Math.Abs(me.Y - other.Y) }).Max();
         }
- 
-       public static int ManhattanDistance(this Vector2D me, Vector2D other)
+
+        public static int ManhattanDistance(this Vector2D me, Vector2D other)
         {
-            return( Math.Abs(me.X - other.X) + Math.Abs(me.Y - other.Y));
+            return (Math.Abs(me.X - other.X) + Math.Abs(me.Y - other.Y));
         }
 
         public static int TurnRight(int direction)
@@ -281,9 +297,9 @@
             switch (direction)
             {
                 case Up: return Right;
-                case Right:return Down;
+                case Right: return Down;
                 case Down: return Left;
-                    case Left:return Up;
+                case Left: return Up;
             }
             return 0;
         }
@@ -309,12 +325,12 @@
                 return GetDirection(Up);
             else if (from.X > to.X && from.Y == to.Y)
                 return GetDirection(Left);
-            else if(from.X < to.X && from.Y == to.Y)
+            else if (from.X < to.X && from.Y == to.Y)
                 return GetDirection(Right);
             return GetDirection(None);
         }
 
-       
+
     }
 
     public class Vector2D

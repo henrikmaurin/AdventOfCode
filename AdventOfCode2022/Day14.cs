@@ -87,7 +87,7 @@ namespace AdventOfCode2022
                 bool resting = false;
                 while (!resting)
                 {
-                    if (sand.Y >= cave.SizeY - 1)
+                    if (sand.Y >= cave.MaxY - 1)
                     {
                         filling = false;
                         break;

@@ -83,7 +83,7 @@ namespace AdventOfCode2022
                 RestRock(rocks[rockType], rockPosition);
                 if (gasCounter % data.Length == 0)
                 {
-                    long newincrease = map.SizeY - GetCurrentHighPos() - 1 - lastHeight;
+                    long newincrease = map.MaxY - GetCurrentHighPos() - 1 - lastHeight;
 
                     if (increase == newincrease)
                     {
@@ -98,7 +98,7 @@ namespace AdventOfCode2022
                     }
                     else
                     {
-                        lastHeight = map.SizeY - GetCurrentHighPos() - 1;
+                        lastHeight = map.MaxY - GetCurrentHighPos() - 1;
                         increase = newincrease;
                         repeatremove++;
                         lastRock = rockNo;
@@ -107,14 +107,14 @@ namespace AdventOfCode2022
             }
 
 
-            return map.SizeY - GetCurrentHighPos() - 1+repeatedHeights;
+            return map.MaxY - GetCurrentHighPos() - 1+repeatedHeights;
         }
 
         public void RestRock(Map2D<char> rock, Vector2D pos)
         {
-            for (int y = 0; y < rock.SizeY; y++)
+            for (int y = 0; y < rock.MaxY; y++)
             {
-                for (int x = 0; x < rock.SizeX; x++)
+                for (int x = 0; x < rock.MaxX; x++)
                 {
                     if (rock[x, y] == '#')
                         map[pos.X + x, pos.Y + y] = '#';
@@ -127,14 +127,14 @@ namespace AdventOfCode2022
             // Stay on map
             if (pos.X < 0)
                 return false;
-            if (pos.X + rock.SizeX > map.SizeX)
+            if (pos.X + rock.MaxX > map.MaxX)
                 return false;
-            if (pos.Y + rock.SizeY > map.SizeY)
+            if (pos.Y + rock.MaxY > map.MaxY)
                 return false;
 
-            for (int y = 0; y < rock.SizeY; y++)
+            for (int y = 0; y < rock.MaxY; y++)
             {
-                for (int x = 0; x < rock.SizeX; x++)
+                for (int x = 0; x < rock.MaxX; x++)
                 {
                     if (rock[x, y] == '#' && map[pos.X + x, pos.Y + y] == '#')
                         return false;
@@ -149,7 +149,7 @@ namespace AdventOfCode2022
             int y = GetCurrentHighPos();
 
             y -= 3;
-            y -= rock.SizeY - 1;
+            y -= rock.MaxY - 1;
             int x = 2;
             return new Vector2D { X = x, Y = y };
         }
@@ -158,7 +158,7 @@ namespace AdventOfCode2022
 
         public int GetCurrentHighPos()
         {
-            int y = map.SizeY - 1;
+            int y = map.MaxY - 1;
             while (map.CountInRow(y, '#') > 0)
                 y--;
             return y;

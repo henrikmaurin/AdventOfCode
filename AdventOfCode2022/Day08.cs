@@ -80,7 +80,7 @@ namespace AdventOfCode2022
                 if (Map[x, yPos].Height >= Map[xPos, yPos].Height)
                     canSeeLeft = false;
 
-            for (int x = xPos + 1; x < Map.SizeX; x++)
+            for (int x = xPos + 1; x < Map.MaxX; x++)
                 if (Map[x, yPos].Height >= Map[xPos, yPos].Height)
                     canSeeRight = false;
 
@@ -88,7 +88,7 @@ namespace AdventOfCode2022
                 if (Map[xPos, y].Height >= Map[xPos, yPos].Height)
                     canSeeUp = false;
 
-            for (int y = yPos + 1; y < Map.SizeY; y++)
+            for (int y = yPos + 1; y < Map.MaxY; y++)
                 if (Map[xPos, y].Height >= Map[xPos, yPos].Height)
                     canSeeDown = false;
 
@@ -114,7 +114,7 @@ namespace AdventOfCode2022
                     canSeeLeft++;
                     break;
                 }
-            for (int x = xPos + 1; x < Map.SizeX; x++)
+            for (int x = xPos + 1; x < Map.MaxX; x++)
                 if (Map[x, yPos].Height < Map[xPos, yPos].Height)
                     canSeeRight++;
                 else
@@ -130,7 +130,7 @@ namespace AdventOfCode2022
                     canSeeUp++;
                     break;
                 }
-            for (int y = yPos + 1; y < Map.SizeY; y++)
+            for (int y = yPos + 1; y < Map.MaxY; y++)
                 if (Map[xPos, y].Height < Map[xPos, yPos].Height)
                     canSeeDown++;
                 else
