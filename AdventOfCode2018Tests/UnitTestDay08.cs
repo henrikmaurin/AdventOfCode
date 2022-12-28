@@ -23,14 +23,14 @@ namespace Tests
         [TestMethod("Day 8, Part 1")]
         [TestCategory("Example data")]
         public void Part1()
-        {           
+        {
             Assert.AreEqual(138, day.Problem1());
         }
 
         [TestMethod("Day 8, Part 2")]
         [TestCategory("Example data")]
         public void Part2()
-        {          
+        {
             Assert.AreEqual(66, day.Problem2());
         }
     }
