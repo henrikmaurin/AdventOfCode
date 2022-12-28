@@ -1,4 +1,5 @@
 ﻿using Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,19 +8,21 @@ namespace AdventOfCode2018
 {
     public class Day08 : DayBase, IDay
     {
-        private const int day = 1;
-        
-       public Queue<int> data { get; set; }
-         public Day08(string testdata = null) : base(Global.Year, day, testdata != null)
+        private const int day = 8;
+        public Queue<int> data { get; set; }
+        public LicenceData TopData { get; private set; }
+
+        private int totalsum;
+
+        public Day08(string testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
                 data = new Queue<int>(testdata.IsSingleLine().Tokenize().Select(d => int.Parse(d)).ToList());
+                TopData = Parse(data);
                 return;
             }
             data = new Queue<int>(input.GetDataCached().IsSingleLine().Tokenize().Select(d => int.Parse(d)).ToList());
-            Licenses = new List<LicenceData>();
-            counter = 0;
             totalsum = 0;
             TopData = Parse(data);
         }
@@ -43,18 +46,9 @@ namespace AdventOfCode2018
         }
 
 
-
-        public List<LicenceData> Licenses { get; set; }
-        public int counter { get; set; }
-
-        private int totalsum;
-
-        public LicenceData TopData { get; private set; }
-
         public LicenceData Parse(Queue<int> Data)
-        {
+        {            
             LicenceData newData = new LicenceData();
-            newData.Id = counter++;
             newData.Metadata = new List<int>();
             newData.Data = new List<LicenceData>();
             int nodes = Data.Dequeue();
@@ -94,11 +88,8 @@ namespace AdventOfCode2018
 
     public class LicenceData
     {
-        public int Id { get; set; }
         public List<int> Metadata { get; set; }
         public List<LicenceData> Data { get; set; }
-
-
     }
 
 
