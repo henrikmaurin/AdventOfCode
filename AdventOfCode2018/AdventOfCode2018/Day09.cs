@@ -1,24 +1,34 @@
 ﻿using Common;
-using Common;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using static Common.Parser;
 
 namespace AdventOfCode2018
 {
     public class Day09 : DayBase, IDay
     {
         private const int day = 9;
-        private string[] data;
+        private string data;
+
+        public LinkedList<int> marbles { get; set; }
+        public ulong[] score { get; set; }
+        public int players { get; set; }
+        public int goalscore { get; set; }
+
         public Day09(string testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
-                data = testdata.IsSingleLine().Split(" ");
+                data = testdata.IsSingleLine();
                 return;
             }
-            data = input.GetDataCached().IsSingleLine().Split(" ");
+            data = input.GetDataCached().IsSingleLine();
+
+            Parsed parsed = new Parsed();
+            parsed.Parse(data);
 
             players = data[0].ToInt();
             goalscore = data[6].ToInt();
@@ -31,13 +41,20 @@ namespace AdventOfCode2018
             ulong result2 = Problem2();
             Console.WriteLine($"P2: {result2}");
         }
+        public ulong Problem1()
+        {
+            Parsed parsed = new Parsed();
+            parsed.Parse(data);
+            return Play(parsed.NumberOfPlayers,parsed.GoalValue);
+        }
+        public ulong Problem2()
+        {
+            Parsed parsed = new Parsed();
+            parsed.Parse(data);
+            return Play(parsed.NumberOfPlayers, parsed.GoalValue * 100);
+        }
 
-        public LinkedList<int> marbles { get; set; }
-        public ulong[] score { get; set; }
-        public int players { get; set; }
-        public int goalscore { get; set; }
-
-        public ulong Play(int targetValue)
+        public ulong Play(int players, int targetValue)
         {
             int currentmarble = 1;
             int currentelf = 0;
@@ -76,17 +93,13 @@ namespace AdventOfCode2018
             return score.Max();
         }
 
-        public ulong Problem1()
+        public class Parsed : IParsed
         {
-            return Play(goalscore);
-        }
-        public ulong Problem2()
-        {
-            return Play(goalscore * 100);
-        }
+            public string DataFormat => @"(\d+) players; last marble is worth (\d+) points";
+            public string[] PropertyNames => new string[] { nameof(NumberOfPlayers), nameof(GoalValue) };
+            public int NumberOfPlayers { get; set; }
+            public int GoalValue { get; set; }
 
-
+        }
     }
-
-
 }
