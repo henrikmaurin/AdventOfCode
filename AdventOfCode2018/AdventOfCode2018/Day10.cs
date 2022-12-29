@@ -1,8 +1,11 @@
 ﻿using Common;
 using Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using static Common.Parser;
 
 namespace AdventOfCode2018
 {
@@ -10,6 +13,8 @@ namespace AdventOfCode2018
     {
         private const int day = 10;
         private string[] data;
+        public List<Light> Lights { get; set; }
+        public int SecondsTaken { get; set; }
         public Day10(string testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -18,67 +23,81 @@ namespace AdventOfCode2018
                 return;
             }
             data = input.GetDataCached().SplitOnNewlineArray();
-            Lights = new List<Light>();
-            foreach (string line in data)
-            {
-                string replaced = line.Replace("position=<", "").Replace("> velocity=<", ",").Replace(">", "").Replace(",", " ").Trim().Replace("  ", " ").Replace("  ", " ");
-                string[] t = replaced.Tokenize();
-                int[] coords = t.Select(r => int.Parse(r)).ToArray();
-                Light newLight = new Light { X = coords[0], Y = coords[1], HVelocity = coords[2], VVelocity = coords[3] };
-                Lights.Add(newLight);
-            }
+            Init();
         }
 
         public void Run()
         {
-            int result1 = Problem1();
-            Console.WriteLine($"P1: Would have taken {result1} seconds");
+            string result1 = Problem1();
+            Console.Write($"P1:{Environment.NewLine}{result1}");
+            Console.WriteLine(MatrixToText.Convert(result1.SplitOnNewlineArray(), 8, '#', ' '));
 
-            //int result2 = Problem2();
-            //Console.WriteLine($"P2: {result2}");
+            int result2 = Problem2();
+            Console.WriteLine($"P2: Would have taken {result2} seconds");
         }
 
-        public List<Light> Lights { get; set; }
-
-        public int Problem1()
+        public List<Light> Init()
         {
-            int minY = int.MinValue;
+            Lights = new List<Light>();
+            foreach (string line in data)
+            {
+                Light newLight = Light.FromData(line);
+                Lights.Add(newLight);
+            }
+            return Lights;
+        }
 
+        public string Problem1()
+        {
+            MoveUntilText();
+            return ToString();
+        }
+
+        public int Problem2()
+        {
+            return SecondsTaken;
+        }
+
+        public int MoveUntilText()
+        {
+            int minY = int.MaxValue;
             int count = 0;
 
-            while (Lights.Max(l => l.Y) - Lights.Min(l => l.Y) != 9)
+            int max = Lights.Max(l => l.Position.Y);
+            int min = Lights.Min(l => l.Position.Y);
+
+            while (max - min < minY)
             {
+                minY = max - min;
                 foreach (Light light in Lights)
                 {
-                    light.X += light.HVelocity;
-                    light.Y += light.VVelocity;
+                    light.Position += light.Velocity;
                 }
 
                 count++;
+                max = Lights.Max(l => l.Position.Y);
+                min = Lights.Min(l => l.Position.Y);
             }
 
-            Print();
+            foreach (Light light in Lights)
+            {
+                light.Position -= light.Velocity;
+            }
+            count--;
 
+            SecondsTaken = count;
             return count;
-
         }
 
-        public void Problem2()
-        {
-
-
-
-        }
-
-        public void Print()
+        public string ToString()
         {
             string toPrint = string.Empty;
 
-            for (int y = Lights.Min(l => l.Y); y <= Lights.Max(l => l.Y); y++)
+            for (int y = Lights.Min(l => l.Position.Y); y <= Lights.Max(l => l.Position.Y); y++)
             {
-                for (int x = Lights.Min(l => l.X); x <= Lights.Max(l => l.X); x++)
+                for (int x = Lights.Min(l => l.Position.X); x <= Lights.Max(l => l.Position.X); x++)
                 {
-                    if (Lights.Any(l => l.X == x && l.Y == y))
+                    if (Lights.Any(l => l.Position.X == x && l.Position.Y == y))
                     {
                         toPrint += "#";
                     }
@@ -87,9 +106,10 @@ namespace AdventOfCode2018
                         toPrint += " ";
                     }
                 }
-                toPrint += "\n";
+                toPrint += $"{Environment.NewLine}";
             }
-            Console.WriteLine(toPrint);
+
+            return toPrint;
         }
     }
 
@@ -97,9 +117,33 @@ namespace AdventOfCode2018
 
     public class Light
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int HVelocity { get; set; }
-        public int VVelocity { get; set; }
+        public Vector2D Position { get; set; }
+        public Vector2D Velocity { get; set; }
+
+        private class Parsed : IParsed
+        {
+            public string DataFormat => @"position=<\s*(-?\d+),\s*(-?\d+)>\s*velocity=<\s*(-?\d+),\s*(-?\d+)>";
+            public string[] PropertyNames => new string[] { nameof(X), nameof(Y), nameof(DX), nameof(DY) };
+            public int X { get; set; }
+            public int Y { get; set; }
+            public int DX { get; set; }
+            public int DY { get; set; }
+        }
+
+        public void Parse(string data)
+        {
+            Parsed p = new Parsed();
+            p.Parse(data);
+            Position = new Vector2D { X = p.X, Y = p.Y };
+            Velocity = new Vector2D { X = p.DX, Y = p.DY };
+        }
+
+        public static Light FromData(string data)
+        {
+            Light light = new Light();
+            light.Parse(data);
+            return light;
+        }
+
     }
 }
