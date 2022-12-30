@@ -35,6 +35,7 @@ namespace Tests
             day = new Day12(data);
         }
 
+
         [TestMethod("Day 12, Part 1")]
         [TestCategory("Example data")]
         public void Part1()
