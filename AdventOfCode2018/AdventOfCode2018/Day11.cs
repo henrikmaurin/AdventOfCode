@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AdventOfCode2018
 {
@@ -35,7 +36,6 @@ namespace AdventOfCode2018
         {
             Vector2D bestCoord = FindMaxSquare(Grid);
 
-            Console.WriteLine($"Max coord: {((Vector2D)bestCoord).ToString()}");
             return $"Max coord: {((Vector2D)bestCoord).ToString()}";
         }
 
@@ -54,7 +54,6 @@ namespace AdventOfCode2018
 
             while (size < 300)
             {
-                Console.Write($"{size},");
                 RetVal bestPos = FindMaxSquare(grid, size);
 
                 if (bestPos.Value > retVal.Value)
@@ -101,13 +100,18 @@ namespace AdventOfCode2018
             }
             if (cache.TryGetValue((x - 1, y, size), out result))
             {
-                result += Grid[x + size, y + size].ColumnSum - (Grid[x + size, y-1]?.ColumnSum ?? 0);
+                // Add right column
+                result += Grid[x + size - 1, y + size - 1].ColumnSum - (Grid[x + size - 1, y - 1]?.ColumnSum ?? 0);
+                // Remove Left column from previous
+                result -= Grid[x - 1, y + size - 1].ColumnSum - (Grid[x - 1, y - 1]?.ColumnSum ?? 0);
             }
-  //          else if (cache.TryGetValue((x, y, size - 1), out result))
-   //         {
-  //             result += Grid[x + size, y + size - 1].ColumnSum - (Grid[x + size, y]?.ColumnSum ?? 0);
-   //            result += Grid[x + size-1, y + size].RowSum - (Grid[x , y + size]?.RowSum ?? 0);
-  //          }
+            else if (cache.TryGetValue((x, y, size - 1), out result))
+            {
+                // Add right column
+                result += Grid[x + size - 1, y + size - 1].ColumnSum - (Grid[x + size - 1, y - 1]?.ColumnSum ?? 0);
+                // Add bottom row
+                result += Grid[x + size - 2, y + size - 1].RowSum - (Grid[x - 1, y + size - 1]?.RowSum ?? 0);
+            }
             else
             {
                 for (int y1 = 0; y1 < size; y1++)
@@ -135,6 +139,7 @@ namespace AdventOfCode2018
             Grid = new Map2D<MapVal>();
             Grid.SafeOperations = true;
             Grid.Init(300, 300);
+            //Grid.Init(4, 4);
 
             foreach (Vector2D coord in Grid.EnumerateCoords())
             {
@@ -155,6 +160,7 @@ namespace AdventOfCode2018
                     RowSum = prevRowSum + val,
                 };
             }
+            //Console.WriteLine(string.Join(Environment.NewLine, Grid.Map.Select(m => m.ToString())));
             return Grid;
         }
 
@@ -163,6 +169,10 @@ namespace AdventOfCode2018
             public int Value { get; set; }
             public int ColumnSum { get; set; }
             public int RowSum { get; set; }
+            public string ToString()
+            {
+                return $"{Value} {ColumnSum} {RowSum}";
+            }
         }
 
         public class RetVal : Vector2D
