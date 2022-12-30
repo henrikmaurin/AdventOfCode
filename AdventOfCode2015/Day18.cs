@@ -68,7 +68,7 @@ namespace AdventOfCode2015
                 Init(data[0].Length, data.Length);
                 SafeOperations = true;
                
-                foreach (Vector2D coord in Enumerate())
+                foreach (Vector2D coord in EnumerateCoords())
                 {
                     this[coord] = data[coord.Y][coord.X];
                 }
@@ -100,7 +100,7 @@ namespace AdventOfCode2015
                 StuckCornersCheck();
                 Map2D<char> newMap = CloneEmpty();            
 
-                foreach (Vector2D coord in Enumerate())
+                foreach (Vector2D coord in EnumerateCoords())
                 {
                     int neighbors = CountNeighbors(coord.X, coord.Y);
                     if (neighbors == 3)

@@ -1,4 +1,6 @@
-﻿namespace Common
+﻿using System.Collections;
+
+namespace Common
 {
     public class Map2D<T>
     {
@@ -157,7 +159,7 @@
             return GetNeighbors(coord.X, coord.Y);
         }
 
-        public Vector2D[] Enumerate()
+        public Vector2D[] EnumerateCoords()
         {
             Vector2D[] coords = new Vector2D[SizeX * SizeY];
             for (int y = MinY; y < MaxY; y++)
@@ -353,7 +355,7 @@
         {
             return X == b.X && Y == b.Y;
         }
-        public string ToString()
+        public virtual string ToString()
         {
             return $"{X},{Y}";
         }

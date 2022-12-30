@@ -19,7 +19,7 @@
             while (changed)
             {
                 changed = false;
-                foreach (Vector2D coordinate in Map.Enumerate())
+                foreach (Vector2D coordinate in Map.EnumerateCoords())
                 {
 
                     if (DistanceMap[coordinate] == distance)

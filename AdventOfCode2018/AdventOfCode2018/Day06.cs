@@ -66,7 +66,7 @@ namespace AdventOfCode2018
             foreach (var coord in coordinates)
                 map2D[coord] = new MapPoint { Id = coord.Id };
 
-            foreach (Vector2D coord in map2D.Enumerate())
+            foreach (Vector2D coord in map2D.EnumerateCoords())
             {
                 var distance = coordinates.Select(c => new { c.Id, Dist = c.ManhattanDistance(coord) }).OrderBy(d => d.Dist).ToList();
                 if (map2D[coord].Id == 0)
@@ -99,7 +99,7 @@ namespace AdventOfCode2018
             exclude.TryAdd(int.MaxValue);
 
             Dictionary<int, int> theRest = new Dictionary<int, int>();
-            foreach (Vector2D coord in map2D.Enumerate())
+            foreach (Vector2D coord in map2D.EnumerateCoords())
                 if (!exclude.Contains(map2D[coord].Id))
                 {
                     if (theRest.ContainsKey(map2D[coord].Id))
