@@ -1,15 +1,17 @@
 ﻿using Common;
-using Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using static Common.Parser;
 
 namespace AdventOfCode2018
 {
     public class Day16 : DayBase, IDay
     {
         private const int day = 16;
-        private string[] data;
+        private string data;
         public int[] register { get; set; }
         public List<Observation> Observations { get; set; }
 
@@ -22,68 +24,12 @@ namespace AdventOfCode2018
         {
             if (testdata != null)
             {
-                data = testdata.SplitOnNewlineArray();
+                data = testdata;
                 return;
             }
-            register = new int[4];
-            Observations = new List<Observation>();
-            string[] lines = input.GetDataCached().SplitOnNewlineArray(false);
-            Instructions = new List<string>();
 
-            Op = new List<int>[16];
-            for (int i = 0; i < 16; i++)
-            {
-                Op[i] = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-            }
+            data = input.GetDataCached();
 
-            int counter = 0;
-            Observation currentObs = null;
-
-            bool isBlank = false;
-
-            while (lines[counter].Length != 0 || isBlank == false)
-            {
-                isBlank = true;
-                if (lines[counter].StartsWith("Before"))
-                {
-                    currentObs = new Observation();
-                    currentObs.Precondition[0] = byte.Parse("" + lines[counter][9]);
-                    currentObs.Precondition[1] = byte.Parse("" + lines[counter][12]);
-                    currentObs.Precondition[2] = byte.Parse("" + lines[counter][15]);
-                    currentObs.Precondition[3] = byte.Parse("" + lines[counter][18]);
-                    isBlank = false;
-                }
-                if (lines[counter].Length > 5 && lines[counter].Length < 15)
-                {
-                    currentObs.Opcode = lines[counter].Split(" ").Select(l => byte.Parse(l)).ToArray();
-                    isBlank = false;
-                }
-                if (lines[counter].StartsWith("After"))
-                {
-
-                    currentObs.Postcondition[0] = byte.Parse("" + lines[counter][9]);
-                    currentObs.Postcondition[1] = byte.Parse("" + lines[counter][12]);
-                    currentObs.Postcondition[2] = byte.Parse("" + lines[counter][15]);
-                    currentObs.Postcondition[3] = byte.Parse("" + lines[counter][18]);
-                    Observations.Add(currentObs);
-                    currentObs = null;
-                    isBlank = false;
-                }
-                counter++;
-            }
-            counter++;
-            while (counter < lines.Length)
-            {
-                if (lines[counter].Length > 1)
-                {
-                    Instructions.Add(lines[counter]);
-                }
-                counter++;
-            }
-
-            Computer = new ElfCode();
-            Computer.CreateMachine(5);
-            Computer.SetIpRegister(4);
 
         }
 
@@ -97,6 +43,23 @@ namespace AdventOfCode2018
         }
 
         public int Problem1()
+        {
+            Init();
+            return RunTests();
+        }
+
+        public int Problem2()
+        {
+            Computer.Processor = Reconfigure();
+            Computer.LoadSeparatedMachineCode(Instructions);
+            //Computer.Assemble();
+            Computer.InitRegisters(new int[] { 0, 0, 0, 0, 0 });
+            Computer.Run();
+
+            return Computer.register[0];
+        }
+
+        public int RunTests()
         {
             int hasAtleast3 = 0;
             foreach (Observation observation in Observations)
@@ -126,15 +89,38 @@ namespace AdventOfCode2018
             return hasAtleast3;
         }
 
-        public int Problem2()
-        {
-            Computer.Processor = Reconfigure();
-            Computer.LoadSeparatedMachineCode(Instructions);
-            //Computer.Assemble();
-            Computer.InitRegisters(new int[] { 0, 0, 0, 0, 0 });
-            Computer.Run();
 
-            return Computer.register[0];
+        public void Init()
+        {
+            register = new int[4];
+            Observations = new List<Observation>();
+
+            Instructions = new List<string>();
+
+            Op = new List<int>[16];
+            for (int i = 0; i < 16; i++)
+            {
+                Op[i] = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            }
+
+            int counter = 0;
+
+            data = data.ReplaceNewLine();
+
+            string observationsPart = data.Split($"{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}").First();
+            string instructionsPart = data.Split($"{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}").Last();
+            Instructions = instructionsPart.SplitOnNewline();
+
+            foreach (string observation in observationsPart.Split($"{Environment.NewLine}{Environment.NewLine}"))
+            {
+                Observation currentObs = new Observation();
+                currentObs.Parse(observation);
+                Observations.Add(currentObs);
+            }
+
+            Computer = new ElfCode();
+            Computer.CreateMachine(5);
+            Computer.SetIpRegister(4);
         }
 
         public Action<int, int, int>[] Reconfigure()
@@ -171,12 +157,7 @@ namespace AdventOfCode2018
 
             return remappedActions.ToArray();
         }
-
-        public void Eqrr(int a, int b, int c)
-        {
-            register[c] = register[a] == register[b] ? 1 : 0;
-        }
-
+         
         public class Observation
         {
             public int[] Precondition { get; set; }
@@ -201,6 +182,48 @@ namespace AdventOfCode2018
                 }
 
                 return true;
+            }
+
+            public void Parse(string data)
+            {
+                Parsed p = new Parsed();
+                p.Parse(data);
+                Precondition[0] = p.R0Pre;
+                Precondition[1] = p.R1Pre;
+                Precondition[2] = p.R2Pre;
+                Precondition[3] = p.R3Pre;
+                Postcondition[0] = p.R0Post;
+                Postcondition[1] = p.R1Post;
+                Postcondition[2] = p.R2Post;
+                Postcondition[3] = p.R3Post;
+                Opcode[0] = p.I0;
+                Opcode[1] = p.I1;
+                Opcode[2] = p.I2;
+                Opcode[3] = p.I3;
+            }
+            private class Parsed : IParsed
+            {
+                public string DataFormat => @"Before: \[(\d+), (\d+), (\d+), (\d+)\]
+(\d+) (\d+) (\d+) (\d+)
+After:  \[(\d+), (\d+), (\d+), (\d+)\]";
+
+                public string[] PropertyNames => new string[] {nameof(R0Pre),nameof(R1Pre),nameof(R2Pre),nameof(R3Pre),
+                nameof(I0),nameof(I1),nameof(I2),nameof(I3),
+                nameof(R0Post),nameof(R1Post),nameof(R2Post),nameof(R3Post)};
+                public int R0Pre { get; set; }
+                public int R1Pre { get; set; }
+                public int R2Pre { get; set; }
+                public int R3Pre { get; set; }
+                public int R0Post { get; set; }
+                public int R1Post { get; set; }
+                public int R2Post { get; set; }
+                public int R3Post { get; set; }
+                public byte I0 { get; set; }
+                public byte I1 { get; set; }
+                public byte I2 { get; set; }
+                public byte I3 { get; set; }
+
+
             }
         }
 

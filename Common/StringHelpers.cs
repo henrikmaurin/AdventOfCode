@@ -119,6 +119,14 @@ namespace Common
 			return retval;
 		}
 
+		public static string ReplaceNewLine(this string me)
+		{
+			me = me.Replace("\r\n", Environment.NewLine);
+			me = me.Replace("\r", Environment.NewLine);
+			me = me.Replace("\n", Environment.NewLine);
+			return me;
+		}
+
 		public static string[][] GroupByEmptyLine(this string me)
 		{
 			List<string[]> list = new List<string[]>();
