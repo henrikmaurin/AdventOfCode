@@ -1,9 +1,12 @@
 ﻿using Common;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+
+using static AdventOfCode2018.Day24;
 
 namespace AdventOfCode2018
 {
@@ -11,13 +14,14 @@ namespace AdventOfCode2018
     {
         private const int day = 15;
         private string[] data;
-        public int[,] Map { get; set; }
-        public int[,] WorkingMap { get; set; }
+
+        public Map2D<int> Map { get; set; }
+        //public int[,] WorkingMap { get; set; }
         public List<Combatant> Combatants { get; set; }
         public int xSize { get; private set; }
         public int ySize { get; private set; }
-        public List<Coord> targets { get; private set; }
-        public string[] Data { get; set; }
+        //public List<Coord> targets { get; private set; }
+        public bool DoDumpMap { get; private set; } = false;
 
         public Day15(string testdata = null) : base(Global.Year, day, testdata != null)
         {
@@ -26,37 +30,36 @@ namespace AdventOfCode2018
                 data = testdata.SplitOnNewlineArray();
                 return;
             }
-            Data = input.GetDataCached().SplitOnNewlineArray();
+            data = input.GetDataCached().SplitOnNewlineArray();
 
         }
 
-        private void InitMap()
+        public void InitMap()
         {
-            xSize = Data[0].Length;
-            ySize = Data.Length;
+            xSize = data[0].Length;
+            ySize = data.Length;
 
             Combatants = new List<Combatant>();
 
-            Map = new int[xSize, ySize];
+            Map = new Map2D<int>();
+            Map.Init(xSize, ySize, 0);
 
-            for (int y = 0; y < ySize; y++)
+            foreach (Vector2D coord in Map.EnumerateCoords())
             {
-                for (int x = 0; x < xSize; x++)
+                switch (data[coord.Y][coord.X])
                 {
-                    switch (Data[y][x])
-                    {
-                        case '#':
-                            Map[x, y] = int.MaxValue;
-                            break;
-                        case 'E':
-                        case 'G':
-                            Combatant p = new Combatant { X = x, Y = y, Type = Data[y][x], HP = 200, Dead = false };
-                            Map[x, y] = 0;
-                            Combatants.Add(p);
-                            break;
-                    }
+                    case '#':
+                        Map[coord] = int.MaxValue;
+                        break;
+                    case 'E':
+                    case 'G':
+                        Combatant p = new Combatant { Position = coord, Type = data[coord.Y][coord.X], HP = 200, Dead = false };
+                        Map[coord] = 0;
+                        Combatants.Add(p);
+                        break;
                 }
             }
+
             DumpMap(Map, "Initial.txt");
         }
 
@@ -75,130 +78,21 @@ namespace AdventOfCode2018
             int rounds = 0;
 
             DumpMapLarge(Map, "Large_init.txt");
+            Map2D<int> WorkingMap = new Map2D<int>();
 
             while (!done)
             {
-                List<Combatant> remaining = Combatants.Where(a => !a.Dead).OrderBy(a => a.Y).ThenBy(a => a.X).ToList();
-
-                foreach (Combatant c in remaining)
-                {
-                    //                    DumpMap(Map, "Anim.txt");
-                    //                    Thread.Sleep(5);
-
-                    if (!c.Dead)
-                    {
-                        targets = FindTargets(c);
-
-                        ClumsyMap(c.X, c.Y);
-                        DumpMapLarge(WorkingMap, "Working.txt", new Coord { X = c.X, Y = c.Y });
-
-                        //                        DumpMap(WorkingMap, "Anim.txt");
-                        //                     Thread.Sleep(5);
-                        int minDistance = int.MaxValue;
-
-                        foreach (Coord target in targets)
-                        {
-
-                            if (WorkingMap[target.X, target.Y] > 0 && WorkingMap[target.X, target.Y] < int.MaxValue)
-                            {
-                                target.Distance = WorkingMap[target.X, target.Y];
-                                target.InReach = true;
-                                if (target.Distance <= minDistance)
-                                {
-                                    minDistance = target.Distance;
-                                    Coord backtrackDir;
-                                    if (WorkingMap[target.X, target.Y - 1] == minDistance - 1)
-                                    {
-                                        backtrackDir = Backtrack(target.X, target.Y - 1).Last();
-                                    }
-                                    else if (WorkingMap[target.X - 1, target.Y] == minDistance - 1)
-                                    {
-                                        backtrackDir = Backtrack(target.X - 1, target.Y).Last();
-                                    }
-                                    else if (WorkingMap[target.X + 1, target.Y] == minDistance - 1)
-                                    {
-                                        backtrackDir = Backtrack(target.X + 1, target.Y).Last();
-                                    }
-                                    else if (WorkingMap[target.X, target.Y + 1] == minDistance - 1)
-                                    {
-                                        backtrackDir = Backtrack(target.X, target.Y + 1).Last();
-                                    }
-                                    else
-                                    {
-                                        //target.Distance = int.MaxValue;
-                                        backtrackDir = new Coord();
-                                    }
-
-
-
-
-                                    if (backtrackDir.Y < c.Y)
-                                        target.TravelRank = 0;
-                                    else if (backtrackDir.Y > c.Y)
-                                        target.TravelRank = 3;
-                                    else
-                                    {
-                                        if (backtrackDir.X < c.X)
-                                            target.TravelRank = 1;
-                                        else
-                                            target.TravelRank = 2;
-                                    }
-                                }
-                                else
-                                    target.TravelRank = 4;
-
-
-                            }
-                            if (target.X == c.X && target.Y == c.Y)
-                            {
-                                target.Distance = 0;
-                                target.InReach = true;
-                            }
-
-                        }
-                        Coord ChosenTarget = targets?.Where(t => t.InReach == true).OrderBy(t => t.Distance).ThenBy(t => t.TravelRank).FirstOrDefault();
-                        if (rounds == 23 && c.Y == 15)
-                        {
-                            //DumpMap(Map, "FoundPath.txt", new Coord { X = c.X, Y = c.Y }, Backtrack(ChosenTarget.X, ChosenTarget.Y), new Coord { X = ChosenTarget.X, Y = ChosenTarget.Y });
-                        }
-
-
-                        if (ChosenTarget != null && !(ChosenTarget.X == c.X && ChosenTarget.Y == c.Y))
-                        {
-                            List<Coord> nextMove = Backtrack(ChosenTarget.X, ChosenTarget.Y);
-                            //Console.WriteLine($"{c.Type} moves from {c.X},{c.Y} to {nextMove.Last().X},{nextMove.Last().Y}");
-                            //DumpMap(Map, "Debug.txt", new Coord { X = c.X, Y = c.Y }, nextMove, ChosenTarget);
-                            //DumpMap(WorkingMap, "WorkingMap.txt");
-                            c.X = nextMove.Last().X;
-                            c.Y = nextMove.Last().Y;
-                            //Console.ReadKey();
-                            //DumpMap(Map, "Debug.txt");
-                        }
-                        Attack(c);
-
-
-
-                        if (!Combatants.Any(e => e.Type != c.Type && !e.Dead))
-                        {
-
-                            done = true;
-                            int remainingHP = Combatants.Sum(co => co.HP);
-                            if (c == remaining.Where(a => !a.Dead).Last())
-                            {
-                                rounds++;
-                            }
-                            DumpMap(Map, "End.txt");
-
-                            return $"Done after {rounds} rounds, Remaining HP: {remainingHP}, Answer: {rounds * remainingHP} ";
-
-                        }
-                    }
-                    //DumpMap(Map, $"Round1.txt");
-                    ///Console.ReadKey();
-                }
-                targets.Clear();
+                done = BattleRound();
                 DumpMap(Map, $"Round{rounds}.txt");
-                //Console.ReadKey();
+
+
+                if (done)
+                {
+                    int remainingHP = Combatants.Sum(co => co.HP);
+
+
+                    Console.WriteLine($"Done after {rounds} rounds, Remaining HP: {remainingHP}, Answer: {rounds * remainingHP} ");
+                }
                 rounds++;
             }
             return string.Empty;
@@ -208,144 +102,144 @@ namespace AdventOfCode2018
         public int Problem2(int ElfPower = 3)
         {
             InitMap();
-            bool done = false;
-            int rounds = 0;
+            bool flawlessVictory = false;
             int elfCount = Combatants.Where(e => e.Type == 'E').Count();
-            while (!done)
+            int elfPower = 3;
+            while (!flawlessVictory)
             {
-                Console.WriteLine($"Round {rounds}");
-                List<Combatant> remaining = Combatants.Where(a => !a.Dead).OrderBy(a => a.Y).ThenBy(a => a.X).ToList();
-                if (rounds == 126)
-                {
-                    rounds = 126;
-                }
+                InitMap();
+                bool done = false;
+                int rounds = 0;
 
-                foreach (Combatant c in remaining)
+                DumpMapLarge(Map, "Large_init.txt");
+                Map2D<int> WorkingMap = new Map2D<int>();
+
+                while (!done)
                 {
-                    if (!c.Dead)
+                    done = BattleRound(elfPower);
+                    DumpMap(Map, $"Round{rounds}.txt");
+
+
+                    if (done)
                     {
-                        targets = FindTargets(c);
-
-
-                        ClumsyMap(c.X, c.Y);
-                        //                       DumpMap(WorkingMap, "state");
-                        foreach (Coord target in targets)
+                        if (Combatants.Where(e => e.Type == 'E' && e.Dead).Count() == 0)
                         {
-                            if (WorkingMap[target.X, target.Y] > 0 && WorkingMap[target.X, target.Y] < int.MaxValue)
-                            {
-                                target.Distance = WorkingMap[target.X, target.Y];
-                                target.InReach = true;
-                            }
-                            if (target.X == c.X && target.Y == c.Y)
-                            {
-                                target.Distance = 0;
-                                target.InReach = true;
-                            }
-
-                        }
-                        Coord ChosenTarget = targets?.Where(t => t.InReach == true).OrderBy(t => t.Distance).ThenBy(t => t.Y).ThenBy(t => t.X).FirstOrDefault();
-                        if (ChosenTarget != null && !(ChosenTarget.X == c.X && ChosenTarget.Y == c.Y))
-                        {
-                            List<Coord> nextMove = Backtrack(ChosenTarget.X, ChosenTarget.Y);
-                            //                            Console.WriteLine($"{c.Type} moves from {c.X},{c.Y} to {nextMove.Last().X},{nextMove.Last().Y}");
-                            //                            DumpMap(Map, "Debug.txt", new Coord { X = c.X, Y = c.Y }, nextMove, ChosenTarget);
-                            //                            DumpMap(WorkingMap, "WorkingMap.txt");
-                            c.X = nextMove.Last().X;
-                            c.Y = nextMove.Last().Y;
-                            //Console.ReadKey();
-                            //DumpMap(Map, "Debug.txt");
-                        }
-                        Attack(c, ElfPower);
-
-
-
-                        if (!Combatants.Any(e => e.Type != c.Type && !e.Dead))
-                        {
-
-                            done = true;
                             int remainingHP = Combatants.Sum(co => co.HP);
-                            if (c == remaining.Where(a => !a.Dead).Last())
-                            {
-                                rounds++;
-                            }
-
                             Console.WriteLine($"Done after {rounds} rounds, Remaining HP: {remainingHP}, Answer: {rounds * remainingHP} ");
-                            //                           DumpMap(Map, "End.txt");
-                            int alive = Combatants.Where(e => e.Type == 'E' && !e.Dead).Count();
-                            return elfCount - alive;
+                            flawlessVictory = true;
+                            return rounds * remainingHP;
+
                         }
                     }
-                    //DumpMap(Map, $"Round1.txt");
-                    ///Console.ReadKey();
+                    rounds++;
                 }
-                targets.Clear();
-                //DumpMap(Map, $"Round1.txt");
-                //Console.ReadKey();
-                rounds++;
+                elfPower++;
             }
             return int.MaxValue;
         }
 
+        public bool BattleRound(int elfPower = 3)
+        {
+            List<Combatant> remaining = GetRemaingCombatants();
+            bool done = false;
+
+            foreach (Combatant combatant in remaining)
+            {
+                // Could die during round
+                if (!combatant.Dead)
+                {
+                    List<Combatant> adjacentEnemies = FindAdjacent(combatant);
+
+                    if (adjacentEnemies.Count == 0)
+                    {
+                        Vector2D nextMove = GetNextStep(combatant);
+                        combatant.Position = nextMove;
+                    }
+
+                    adjacentEnemies = FindAdjacent(combatant);
+
+                    if (adjacentEnemies.Count > 0)
+                    {
+                        AttackEnemy(combatant, adjacentEnemies.First(), elfPower);
+                        if (!Combatants.Any(e => e.Type != combatant.Type && !e.Dead))
+                        {
+                            int remainingHP = Combatants.Sum(co => co.HP);
+                            if (combatant == remaining.Where(a => !a.Dead).Last())
+                            {
+
+                            }
+                            DumpMap(Map, "End.txt");
+                            done = true;
+                        }
+                    }
+                }
+                //DumpMap(Map, $"Round1.txt");
+                ///Console.ReadKey();
+            }
+            return done;
+        }
+
+        public List<Combatant> FindAdjacent(Combatant combatant)
+        {
+            return Combatants.Where(e => e.Type != combatant.Type)
+                             .Where(e => !e.Dead)
+                             .Where(e => e.Position.In(Directions.GetNeighboringCoordsFor(combatant.Position)))
+                             .OrderBy(e => e.HP)
+                             .ThenBy(e => e.Position.Y)
+                             .ThenBy(e => e.Position.X)
+                             .ToList();
+        }
+
         public List<Coord> FindTargets(Combatant combatant)
         {
-            targets = new List<Coord>();
+            List<Coord> targets = new List<Coord>();
             foreach (Combatant enemy in Combatants.Where(e => e.Type != combatant.Type && !e.Dead && e != combatant))
             {
-                if (Map[enemy.X - 1, enemy.Y] == 0)
+                foreach (Vector2D position in Directions.GetNeighboringCoordsFor(enemy.Position))
                 {
-                    if (!targets.Any(t => t.X == enemy.X - 1 && t.Y == enemy.Y))
-                    {
-                        targets.Add(new Coord { X = enemy.X - 1, Y = enemy.Y });
-                    }
-                }
+                    if (Map[position] != 0)
+                        continue;
+                    if (Combatants.Where(c => c.Position.Equals(position) && !c.Dead).Any())
+                        continue;
+                    if (targets.Any(t => t.Equals(enemy.Position)))
+                        continue;
 
-                if (Map[enemy.X + 1, enemy.Y] == 0)
-                {
-                    if (!targets.Any(t => t.X == enemy.X + 1 && t.Y == enemy.Y))
-                    {
-                        targets.Add(new Coord { X = enemy.X + 1, Y = enemy.Y });
-                    }
-                }
-
-                if (Map[enemy.X, enemy.Y - 1] == 0)
-                {
-                    if (!targets.Any(t => t.X == enemy.X && t.Y == enemy.Y - 1))
-                    {
-                        targets.Add(new Coord { X = enemy.X, Y = enemy.Y - 1 });
-                    }
-                }
-
-                if (Map[enemy.X, enemy.Y + 1] == 0)
-                {
-                    if (!targets.Any(t => t.X == enemy.X && t.Y == enemy.Y + 1))
-                    {
-                        targets.Add(new Coord { X = enemy.X, Y = enemy.Y + 1 });
-                    }
+                    targets.Add(new Coord { X = position.X, Y = position.Y });
                 }
             }
             return targets;
         }
 
-
-        public void Attack(Combatant combatant, int elfPower = 3)
+        public List<Coord> FindDistance(List<Coord> targets, Map2D<int> distances)
         {
-            Combatant enemy = Combatants.Where(c => !c.Dead && c.Type != combatant.Type)
-                  .Where(c => c.X == combatant.X && c.Y == combatant.Y - 1 ||
-                       c.X == combatant.X && c.Y == combatant.Y + 1 ||
-                       c.X == combatant.X - 1 && c.Y == combatant.Y ||
-                       c.X == combatant.X + 1 && c.Y == combatant.Y)
-                    .OrderBy(c => c.HP)
-                    .ThenBy(c => c.Y)
-                    .ThenBy(c => c.X)
-                    .FirstOrDefault();
+            foreach (Coord target in targets)
+            {
+                target.Distance = distances[target];
+            }
+            return targets.Where(t => t.Distance > 0).OrderBy(t => t.Distance).ToList();
+        }
 
+        public Vector2D GetNextStep(Combatant combatant)
+        {
+            List<Coord> targets = FindTargets(combatant);
+            Map2D<int> targetMap = ClumsyMap(combatant.Position.X, combatant.Position.Y);
+            targets = FindDistance(targets, targetMap);
+            if (targets.Count > 0)
+            {
+                int minDistance = targets.Select(x => x.Distance).Min();
+                Coord target = targets.Where(t => t.Distance == minDistance).OrderBy(t => t.Y).ThenBy(t => t.X).First();
+                var track = Backtrack(target.X, target.Y, targetMap);
+                return track.Last();
+            }
+
+            return combatant.Position;
+        }
+    
+        public void AttackEnemy(Combatant combatant, Combatant enemy, int elfPower = 3)
+        {
             if (enemy != null)
             {
-                if ((enemy.X == combatant.X && enemy.Y == combatant.Y - 1)
-                    || (enemy.X == combatant.X && enemy.Y == combatant.Y + 1)
-                    || (enemy.X == combatant.X - 1 && enemy.Y == combatant.Y)
-                    || (enemy.X == combatant.X + 1 && enemy.Y == combatant.Y)
-                    )
+                if (enemy.Position.In(Directions.GetNeighboringCoordsFor(combatant.Position)))
                 {
                     if (enemy.Type == 'G')
                     {
@@ -355,11 +249,8 @@ namespace AdventOfCode2018
                     {
                         enemy.HP -= 3;
                     }
-
-                    //                   Console.WriteLine($"{combatant.Type} at {combatant.X},{combatant.Y} attacks {enemy.Type} at  {enemy.X},{enemy.Y}");
                     if (enemy.HP <= 0)
                     {
-                        //Console.WriteLine($"{enemy.Type} at {enemy.X},{enemy.Y} dies");
                         enemy.Dead = true;
                         enemy.HP = 0;
 
@@ -368,26 +259,26 @@ namespace AdventOfCode2018
             }
         }
 
-        public List<Coord> Backtrack(int x, int y)
+        public List<Coord> Backtrack(int x, int y, Map2D<int> map)
         {
             List<Coord> track = new List<Coord>();
             track.Add(new Coord { X = x, Y = y });
-            int currentVal = WorkingMap[x, y];
+            int currentVal = map[x, y];
             while (currentVal > 1)
             {
-                if (WorkingMap[x, y + 1] == currentVal - 1)
+                if (map[x, y - 1] == currentVal - 1)
                 {
                     y--;
                 }
-                else if (WorkingMap[x + 1, y] == currentVal - 1)
-                {
-                    x--;
-                }
-                else if (WorkingMap[x - 1, y] == currentVal - 1)
+                else if (map[x + 1, y] == currentVal - 1)
                 {
                     x++;
                 }
-                else if (WorkingMap[x, y - 1] == currentVal - 1)
+                else if (map[x - 1, y] == currentVal - 1)
+                {
+                    x--;
+                }
+                else if (map[x, y + 1] == currentVal - 1)
                 {
                     y++;
                 }
@@ -397,35 +288,36 @@ namespace AdventOfCode2018
             return track;
         }
 
-        public void ClumsyMap(int xpos, int ypos)
+        public Map2D<int> ClumsyMap(int xpos, int ypos)
         {
             int changes = 1;
-            WorkingMap = new int[xSize, ySize];
+            Map2D<int> map = new Map2D<int>();
+            map.Init(xSize, ySize);
 
 
             foreach (Combatant c in Combatants.Where(c => !c.Dead))
             {
-                WorkingMap[c.X, c.Y] = int.MaxValue;
+                map[c.Position.X, c.Position.Y] = int.MaxValue;
             }
 
-            if (WorkingMap[xpos - 1, ypos] == 0 && Map[xpos - 1, ypos] != int.MaxValue)
+            if (map[xpos - 1, ypos] == 0 && Map[xpos - 1, ypos] != int.MaxValue)
             {
-                WorkingMap[xpos - 1, ypos] = 1;
+                map[xpos - 1, ypos] = 1;
             }
 
-            if (WorkingMap[xpos + 1, ypos] == 0 && Map[xpos + 1, ypos] != int.MaxValue)
+            if (map[xpos + 1, ypos] == 0 && Map[xpos + 1, ypos] != int.MaxValue)
             {
-                WorkingMap[xpos + 1, ypos] = 1;
+                map[xpos + 1, ypos] = 1;
             }
 
-            if (WorkingMap[xpos, ypos - 1] == 0 && Map[xpos, ypos - 1] != int.MaxValue)
+            if (map[xpos, ypos - 1] == 0 && Map[xpos, ypos - 1] != int.MaxValue)
             {
-                WorkingMap[xpos, ypos - 1] = 1;
+                map[xpos, ypos - 1] = 1;
             }
 
-            if (WorkingMap[xpos, ypos + 1] == 0 && Map[xpos, ypos + 1] != int.MaxValue)
+            if (map[xpos, ypos + 1] == 0 && Map[xpos, ypos + 1] != int.MaxValue)
             {
-                WorkingMap[xpos, ypos + 1] = 1;
+                map[xpos, ypos + 1] = 1;
             }
             int range = 0;
             while (changes != 0)
@@ -439,48 +331,56 @@ namespace AdventOfCode2018
                     {
                         if (Map[x, y] == int.MaxValue)
                         {
-                            WorkingMap[x, y] = int.MaxValue;
+                            map[x, y] = int.MaxValue;
                         }
-                        else if (WorkingMap[x, y] == range)
+                        else if (map[x, y] == range)
                         {
-                            if (WorkingMap[x - 1, y] == 0)
+                            if (map[x - 1, y] == 0)
                             {
-                                WorkingMap[x - 1, y] = range + 1;
+                                map[x - 1, y] = range + 1;
                                 changes++;
                             }
 
-                            if (WorkingMap[x + 1, y] == 0)
+                            if (map[x + 1, y] == 0)
                             {
-                                WorkingMap[x + 1, y] = range + 1;
+                                map[x + 1, y] = range + 1;
                                 changes++;
                             }
 
-                            if (WorkingMap[x, y - 1] == 0)
+                            if (map[x, y - 1] == 0)
                             {
-                                WorkingMap[x, y - 1] = range + 1;
+                                map[x, y - 1] = range + 1;
                                 changes++;
                             }
 
-                            if (WorkingMap[x, y + 1] == 0)
+                            if (map[x, y + 1] == 0)
                             {
-                                WorkingMap[x, y + 1] = range + 1;
+                                map[x, y + 1] = range + 1;
                                 changes++;
                             }
                         }
                     }
                 }
             }
-
+            return map;
         }
 
-        public void DumpMap(int[,] map, string filename, Coord h1 = null, List<Coord> h2 = null, Coord h3 = null)
+        public List<Combatant> GetRemaingCombatants()
         {
+            return Combatants.Where(a => !a.Dead).OrderBy(a => a.Position.Y).ThenBy(a => a.Position.X).ToList();
+        }
+
+        public void DumpMap(Map2D<int> map, string filename, Coord h1 = null, List<Coord> h2 = null, Coord h3 = null, List<Coord> targets = null)
+        {
+            if (!DoDumpMap)
+                return;
+
             string result = string.Empty;
             for (int y = 0; y < ySize; y++)
             {
                 for (int x = 0; x < xSize; x++)
                 {
-                    Combatant combatant = Combatants.Where(c => c.X == x && c.Y == y && !c.Dead).SingleOrDefault();
+                    Combatant combatant = Combatants.Where(c => c.Position.X == x && c.Position.Y == y && !c.Dead).SingleOrDefault();
                     Coord target = targets?.Where(t => t.X == x && t.Y == y).SingleOrDefault();
                     if (h1?.X == x && h1?.Y == y)
                     {
@@ -531,7 +431,7 @@ namespace AdventOfCode2018
                     }
                 }
                 result += "   ";
-                foreach (Combatant c in Combatants.Where(a => !a.Dead).Where(a => a.Y == y).OrderBy(a => a.X))
+                foreach (Combatant c in Combatants.Where(a => !a.Dead).Where(a => a.Position.Y == y).OrderBy(a => a.Position.X))
                 {
                     result += $"{c.Type} HP: {c.HP}  ";
                 }
@@ -541,8 +441,11 @@ namespace AdventOfCode2018
             File.WriteAllText($"C:\\temp\\{filename}", result);
         }
 
-        public void DumpMapLarge(int[,] map, string filename, Coord h1 = null, List<Coord> h2 = null, Coord h3 = null)
+        public void DumpMapLarge(Map2D<int> map, string filename, Coord h1 = null, List<Coord> h2 = null, Coord h3 = null, List<Coord> targets = null)
         {
+            if (!DoDumpMap)
+                return;
+
             string result = string.Empty;
             string line1 = string.Empty;
             string line2 = string.Empty;
@@ -555,7 +458,7 @@ namespace AdventOfCode2018
                     StringBuilder l1 = new StringBuilder("  ");
                     string l2 = "  ";
 
-                    Combatant combatant = Combatants.Where(c => c.X == x && c.Y == y && !c.Dead).SingleOrDefault();
+                    Combatant combatant = Combatants.Where(c => c.Position.X == x && c.Position.Y == y && !c.Dead).SingleOrDefault();
                     Coord target = targets?.Where(t => t.X == x && t.Y == y).SingleOrDefault();
                     if (h1?.X == x && h1?.Y == y)
                     {
@@ -608,7 +511,7 @@ namespace AdventOfCode2018
                 result += line1;
                 result += "   ";
 
-                foreach (Combatant c in Combatants.Where(a => !a.Dead).Where(a => a.Y == y).OrderBy(a => a.X))
+                foreach (Combatant c in Combatants.Where(a => !a.Dead).Where(a => a.Position.Y == y).OrderBy(a => a.Position.X))
                 {
                     result += $"{c.Type} HP: {c.HP}  ";
                 }
@@ -622,24 +525,21 @@ namespace AdventOfCode2018
             File.WriteAllText($"C:\\temp\\{filename}", result);
         }
 
-
     }
 
-    public class Coord
+    public class Coord : Vector2D
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Distance { get; set; }
-        public bool InReach { get; set; }
-        public int TravelRank { get; set; }
+        public int Distance { get; set; }  
     }
     public class Combatant
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public Vector2D Position { get; set; }
         public int HP { get; set; }
         public char Type { get; set; }
-        public bool Dead { get; set; }
-        //public bool Dieing { get; set; }
+        public bool Dead { get; set; }      
+        public string ToString()
+        {
+            return $"{Type}: {Position.ToString()} - ({HP})";
+        }
     }
 }

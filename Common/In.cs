@@ -28,7 +28,7 @@ namespace Common
                 return true;
 
             return false;
-        }
+        }        
 
         public static bool In<T>(this T me, T val1, T val2)
         {

@@ -221,7 +221,7 @@ namespace Common
         public const int UpRight = 6;
         public const int DownRight = 8;
 
-        private static Vector2D[] _directions = {
+        private static Vector2D[] _directionsVectors = {
             new Vector2D{X=0,Y=0},
             new Vector2D{X=0,Y=-1},
             new Vector2D{X=-1,Y=0},
@@ -232,6 +232,24 @@ namespace Common
             new Vector2D{X=-1,Y=1},
             new Vector2D{X=1,Y=1},
         };
+
+        private static Direction[] _directions =
+        {
+            new Direction{DirectionId=None, Vector= _directionsVectors[None]},
+            new Direction{DirectionId=Up, Vector= _directionsVectors[Up]},
+            new Direction{DirectionId=Left, Vector= _directionsVectors[Left]},
+            new Direction{DirectionId=Right, Vector= _directionsVectors[Right]},
+            new Direction{DirectionId=Down, Vector= _directionsVectors[Down]},
+            new Direction{DirectionId=UpLeft, Vector= _directionsVectors[UpLeft]},
+            new Direction{DirectionId=UpRight, Vector= _directionsVectors[UpRight]},
+            new Direction{DirectionId=DownLeft, Vector= _directionsVectors[DownLeft]},
+            new Direction{DirectionId=DownRight, Vector= _directionsVectors[DownRight]},
+        };
+
+        public static Direction Direction(int direction)
+        {
+            return _directions[direction];
+        }
 
         public static int[] GetNeighbors()
         {
@@ -245,12 +263,12 @@ namespace Common
 
         public static Vector2D GetDirection(int direction)
         {
-            return _directions[direction];
+            return _directionsVectors[direction];
         }
 
         public static Vector2D[] GetNeigboingCoords()
         {
-            return _directions[GetNeighbors().First()..GetNeighbors().Last()];
+            return _directionsVectors[GetNeighbors().First()..GetNeighbors().Last()];
         }
 
         public static Vector2D[] GetNeighboringCoordsFor(int xPos, int yPos)
@@ -264,6 +282,10 @@ namespace Common
             }
 
             return retVal;
+        }
+        public static Vector2D[] GetNeighboringCoordsFor(Vector2D pos)
+        {
+            return GetNeighboringCoordsFor(pos.X, pos.Y);
         }
 
         public static Vector2D[] GetSurroundingCoordsFor(int xPos, int yPos)
@@ -281,7 +303,7 @@ namespace Common
 
         public static Vector2D[] GetSurroundingCoords()
         {
-            return _directions[GetSurrounding().First()..GetSurrounding().Last()];
+            return _directionsVectors[GetSurrounding().First()..GetSurrounding().Last()];
         }
 
         public static int SquareRadius(this Vector2D me, Vector2D other)
@@ -335,6 +357,12 @@ namespace Common
 
     }
 
+    public class Direction
+    {
+        public Vector2D Vector { get; set; }
+        public int DirectionId { get; set; }
+    }
+
     public class Vector2D
     {
         public int X { get; set; }
@@ -358,6 +386,28 @@ namespace Common
         public virtual string ToString()
         {
             return $"{X},{Y}";
+        }
+
+        public bool In(List<Vector2D> vectors)
+        {
+            if (vectors == null)
+                return false;
+
+            foreach (Vector2D vector in vectors)
+                if (Equals(vector)) return true;
+
+            return false;
+        }
+
+        public bool In(Vector2D[] vectors)
+        {
+            if (vectors == null)
+                return false;
+
+            foreach (Vector2D vector in vectors)
+                if (Equals(vector)) return true;
+
+            return false;
         }
     }
 }
