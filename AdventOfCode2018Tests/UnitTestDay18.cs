@@ -2,39 +2,60 @@ using AdventOfCode2018;
 
 using Common;
 
+using static AdventOfCode2018.Day18;
+
 namespace Tests
 {
-	[TestClass]
-	public class UnitTestDay18
-	{
-		private Day18 day;
+    [TestClass]
+    public class UnitTestDay18
+    {
+        private Day18 day;
         private string data;
         private string[] testdata;
 
         [TestInitialize]
         public void Init()
         {
-            data = @"";
+            data = @".#.#...|#.
+.....#|##|
+.|..|...#.
+..|#.....#
+#.#|||#|#|
+...#.||...
+.|....|...
+||...#|.#|
+|.||||..|.
+...#.|..|.";
             testdata = data.SplitOnNewlineArray(false);
 
             day = new Day18(data);
-		}
+        }
 
 
-		[TestMethod("Day 18, Part 1")]
-		[TestCategory("Example data")]
-		public void Part1()
-		{
+        [TestMethod("Day 18, Part 1")]
+        [TestCategory("Example data")]
+        public void Part1()
+        {
+            day.Init();
 
-			Assert.AreEqual(1, 1);
-		}
+            Map map = day.InitialMap;
 
-		[TestMethod("Day 18, Part 2")]
-		[TestCategory("Example data")]
-		public void Part2()
-		{
+            map = map.Cycle(10);
+            
+            Assert.AreEqual(1147, map.CalcResourceValue());
+        }
 
-			Assert.AreEqual(2, 2);
-		}
-	}
+        [TestMethod("Day 18, Part 2")]
+        [TestCategory("Example data")]
+        public void Part2()
+        {
+            day.Init();
+
+            Map map = day.InitialMap;
+
+            map = map.Cycle(1000000000);
+
+            Assert.AreEqual(0, map.CalcResourceValue());
+        }
+    }
 }

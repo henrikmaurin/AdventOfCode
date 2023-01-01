@@ -354,7 +354,6 @@ namespace Common
             return GetDirection(None);
         }
 
-
     }
 
     public class Direction
