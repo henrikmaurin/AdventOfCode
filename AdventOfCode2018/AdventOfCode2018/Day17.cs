@@ -136,12 +136,6 @@ namespace AdventOfCode2018
             //Drip
             while (Map[x, y + 1] != '#' && y < ymax && !found)
             {
-                if (y == 1713)
-                {
-                    y = y;
-                    Export("Filling.txt");
-                }
-
                 y++;
                 if (Map[x, y] == '|')
                 {
@@ -156,19 +150,11 @@ namespace AdventOfCode2018
                     Map[x, y] = '|';
                 }
             }
-            Console.WriteLine($" to {x},{y}");
             //Fill
             int left = 0, right = 0;
             bool stop = false;
             bool spilling = false;
 
-            if (y == ymax - 1)
-            {
-                Export("Stop.txt");
-            }
-
-
-            //Export("Dripped.txt");
             try
             {
                 while (!spilling && y < ymax && y >= top)
@@ -180,17 +166,10 @@ namespace AdventOfCode2018
                     {
                         left--;
 
-                        //                        if (left == 529)
-                        //                        {
-                        //                            Export("Filling.txt");
-                        //
-                        //                        }
-
-                        if (Map[left, y] == ' ' /*|| Map[left, y] == '|'*/)
+                        if (Map[left, y] == ' ')
                         {
                             Map[left, y] = '~';
                         }
-
 
                         if (Map[left, y + 1] == ' ')
                         {
@@ -224,13 +203,8 @@ namespace AdventOfCode2018
                     while (!stop)
                     {
                         right++;
-                        //                       if (right == 529)
-                        //                       {
-                        //                           Export("Filling.txt");
-                        //
-                        //                      }
-
-                        if (Map[right, y] == ' ' /*|| Map[right, y] == '|'*/)
+                      
+                        if (Map[right, y] == ' ')
                         {
                             Map[right, y] = '~';
                         }
@@ -260,8 +234,7 @@ namespace AdventOfCode2018
                             stop = true;
                             spilling = true;
                         }
-                    }
-                    //                   Export("Filling.txt");
+                    }                   
                     y--;
                 }
             }
