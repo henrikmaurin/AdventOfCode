@@ -1,9 +1,14 @@
 ﻿namespace Common
 {
-    public class Simple2DPathFinder
+    public class Simple2DPathFinder<T> where T: ITraversable<T>
     {
-        public Map2D<IPathFinderAttributes> Map { get; set; }
+        public Map2D<T> Map { get; set; }
         public Map2D<int?> DistanceMap { get; set; }
+
+        public Simple2DPathFinder(Map2D<T> map)
+        {
+            Map = map;
+        }
 
         public void CalcDistances(int startPointX, int startPointY)
         {
@@ -21,13 +26,46 @@
                 changed = false;
                 foreach (Vector2D coordinate in Map.EnumerateCoords())
                 {
-
                     if (DistanceMap[coordinate] == distance)
                     {
                         List<Vector2D> neighbors = DistanceMap.GetNeighbors(coordinate);
                         foreach (var neighbor in neighbors)
                         {
-                            if (DistanceMap[neighbor] == null && Map[neighbor].TraversableFrom(coordinate))
+                            if (DistanceMap[neighbor] == null && Map[neighbor].TraversableFrom(Map[coordinate]))
+                            {
+                                DistanceMap[neighbor] = distance + 1;
+                                changed = true;
+
+                            }
+                        }
+                    }
+                }
+                distance++;
+            }
+        }
+
+        public void CalcDistancesReverse(int endPointX, int endPointY)
+        {
+            DistanceMap = new Map2D<int?>();
+            DistanceMap.Init(Map.MaxX, Map.MaxY, null);
+            DistanceMap.SafeOperations = true;
+
+            bool changed = true;
+            int distance = 0;
+
+            DistanceMap[endPointX, endPointY] = distance;
+
+            while (changed)
+            {
+                changed = false;
+                foreach (Vector2D coordinate in Map.EnumerateCoords())
+                {
+                    if (DistanceMap[coordinate] == distance)
+                    {
+                        List<Vector2D> neighbors = DistanceMap.GetNeighbors(coordinate);
+                        foreach (var neighbor in neighbors)
+                        {
+                            if (DistanceMap[neighbor] == null && Map[coordinate].TraversableFrom(Map[neighbor]))
                             {
                                 DistanceMap[neighbor] = distance + 1;
                                 changed = true;
@@ -70,10 +108,8 @@
 
 
     }
-
-    public interface IPathFinderAttributes
+    public interface ITraversable<T>
     {
-        public bool TraversableFrom(Vector2D from);
+        public bool TraversableFrom(ITraversable<T> from);
     }
-
 }

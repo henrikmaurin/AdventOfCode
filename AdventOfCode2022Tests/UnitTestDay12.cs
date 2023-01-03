@@ -37,8 +37,10 @@ abdefghi";
 		[TestCategory("Example data")]
 		public void Part2()
 		{
+			day.Parse(testdata);
+			day.CalcDistances(5,2);			
 
-			Assert.AreEqual(2, 2);
+			Assert.AreEqual(29, day.FindBestStart());
 		}
 	}
 }

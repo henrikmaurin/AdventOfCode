@@ -13,7 +13,7 @@ namespace Common
 
         public int SizeX => MaxX - MinX;
         public int SizeY => MaxY - MinY;
-
+               
 
         public void Init(int sizeX, int sizeY, T? initialvalue = default(T?))
         {

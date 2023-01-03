@@ -6,10 +6,11 @@ namespace AdventOfCode2022
     {
         private const int day = 12;
         private List<string> data;
-        private Map2D<char> Map;
+        private Map2D<MapData> Map;
         private Vector2D start;
         private Vector2D end;
         Map2D<int?> DistanceMap;
+        Simple2DPathFinder<MapData> pathFinder;
 
 
         public Day12(string testdata = null) : base(Global.Year, day, testdata != null)
@@ -39,24 +40,23 @@ namespace AdventOfCode2022
         }
         public int Problem2()
         {
-            int shortest = int.MaxValue;
-            CalcDistances(end.X, end.Y);
+            return FindBestStart();
+        }
 
-            for (int y = 0; y < Map.MaxY; y++)
+        public int FindBestStart()
+        {
+            int shortest = int.MaxValue;          
+
+            foreach (Vector2D coord in Map.EnumerateCoords())
             {
-                for (int x = 0; x < Map.MaxX; x++)
+
+                if (Map[coord].Height == 'a')
                 {
+                    start = coord;
 
-                    if (Map[x, y] == 'a')
-                    {
-                        start = new Vector2D { X = x, Y = y };
-
-                        int distance = GetSteps();
-                        if (distance < shortest)
-                            shortest = distance;
-                    }
-
-
+                    int distance = GetSteps();
+                    if (distance < shortest)
+                        shortest = distance;
                 }
             }
 
@@ -65,74 +65,53 @@ namespace AdventOfCode2022
 
         public int GetSteps()
         {
-            if (DistanceMap[start] == null)
+            if (pathFinder.DistanceMap[start] == null)
                 return int.MaxValue;
 
-            return DistanceMap[start].Value;
+            return pathFinder.DistanceMap[start].Value;
         }
 
         public void Parse(List<string> mapdata)
         {
-            Map = new Map2D<char>();
+            Map = new Map2D<MapData>();
             Map.Init(mapdata[0].Length, mapdata.Count);
             Map.SafeOperations = true;
 
-            for (int y = 0; y < Map.MaxY; y++)
+            foreach (Vector2D coord in Map.EnumerateCoords())
             {
-                for (int x = 0; x < Map.MaxX; x++)
+                if (mapdata[coord.Y][coord.X] == 'S')
                 {
-                    if (mapdata[y][x] == 'S')
-                    {
-                        start = new Vector2D { X = x, Y = y };
-                        Map[x, y] = 'a';
-                    }
-                    else if (mapdata[y][x] == 'E')
-                    {
-                        end = new Vector2D { X = x, Y = y };
-                        Map[x, y] = 'z';
-                    }
-                    else
-                        Map[x, y] = mapdata[y][x];
+                    start = coord;
+                    Map[coord] = new MapData { Height = 'a' };
                 }
+                else if (mapdata[coord.Y][coord.X] == 'E')
+                {
+                    end = coord;
+                    Map[coord] = new MapData { Height = 'z' };
+                }
+                else
+                    Map[coord] = new MapData { Height = mapdata[coord.Y][coord.X] };
+
             }
         }
 
         public void CalcDistances(int startPointX, int startPointY)
         {
-            DistanceMap = new Map2D<int?>();
-            DistanceMap.Init(Map.MaxX, Map.MaxY, null);
-            DistanceMap.SafeOperations = true;
+            pathFinder = new Simple2DPathFinder<MapData>(Map);
 
-            bool changed = true;
-            int distance = 0;
+            pathFinder.CalcDistancesReverse(startPointX, startPointY);
+        }
 
-            DistanceMap[startPointX, startPointY] = distance;
 
-            while (changed)
+        public class MapData : ITraversable<MapData>
+        {
+            public char Height { get; set; }
+            public bool TraversableFrom(ITraversable<MapData> fromPoint)
             {
-                changed = false;
-                for (int y = 0; y < Map.MaxY; y++)
-                {
-                    for (int x = 0; x < Map.MaxX; x++)
-                    {
-                        if (DistanceMap[x, y] == distance)
-                        {
-                            List<Vector2D> neighbors = DistanceMap.GetNeighbors(x, y);
+                if (Height <= ((MapData)fromPoint).Height + 1)
+                    return true;
 
-                            char mapValue = Map[x, y];
-
-                            foreach (var neighbor in neighbors)
-                            {
-                                if (DistanceMap[neighbor.X, neighbor.Y] == null && (Map[neighbor] == mapValue || Map[neighbor] == mapValue - 1 || Map[neighbor] > mapValue))
-                                {
-                                    DistanceMap[neighbor.X, neighbor.Y] = distance + 1;
-                                    changed = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                distance++;
+                return false;
             }
         }
 
