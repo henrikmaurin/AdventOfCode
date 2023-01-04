@@ -1,5 +1,5 @@
 ﻿using Common;
-using Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace AdventOfCode2018
                 return;
             }
             Instructions = input.GetDataCached().IsSingleLine();
-            Map = new List<Room>();
+
 
         }
         public void Run()
@@ -112,6 +112,9 @@ namespace AdventOfCode2018
 
         public void BuildMap(string instructions, int x, int y, string lastmove)
         {
+            if (Map == null)
+                Map = new List<Room>();
+
             int initialX = x, initialy = y;
 
             int pos = 0;
