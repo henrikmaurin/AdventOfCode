@@ -1,5 +1,4 @@
 ﻿using Common;
-using System.Net.Sockets;
 
 namespace AdventOfCode2022
 {
