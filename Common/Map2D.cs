@@ -124,7 +124,7 @@ namespace Common
         {
             Map2D<T> clone = new Map2D<T>();
             clone.SafeOperations = SafeOperations;
-            clone.Init(MaxX, MaxY);
+            clone.Init(MinX, MinY, MaxX, MaxY);
 
             return clone;
         }
