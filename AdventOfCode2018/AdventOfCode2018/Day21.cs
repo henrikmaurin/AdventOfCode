@@ -49,7 +49,9 @@ namespace AdventOfCode2018
             };
             Computer.Run(bp);
 
-            return Computer.register[3];
+            Computer.Instructions[28].Split(" ")[1].ToInt();
+
+            return Computer.register[Computer.Instructions[29].Split(" ")[1].ToInt()];
         }
 
         public bool Breakpoint1()
@@ -79,16 +81,13 @@ namespace AdventOfCode2018
 
         public int Problem2()
         {
-            //            string op = Instructions[0];
-            //            Parse(op);
-            //            Instructions.RemoveAt(0);
-            List<int> reg = new List<int>();
+            HashSet<int> reg = new HashSet<int>();
             int val = 0; ;
 
             bool dup = false;
             while (!dup)
             {
-                val = Logic(val);
+                val = Logic(val, Computer.Instructions[8].Split(" ")[1].ToInt());
                 if (!reg.Contains(val))
                 {
                     reg.Add(val);
@@ -117,66 +116,10 @@ namespace AdventOfCode2018
             Computer.Run(bp);
 
         }
-        /*       public void Run_1()
-               {
-                   if (CompiledCode == null)
-                   {
-                       return;
-                   }
-
-                   int codeLength = CompiledCode.Count() / 4;
-                   int ip = GetIp();
-                   while (ip >= 0 && ip < codeLength)
-                   {
-                       if (ip == 28)
-                       {
-                           return;
-                       }
-
-                       Processor[CompiledCode[ip * 4]].Invoke(CompiledCode[ip * 4 + 1], CompiledCode[ip * 4 + 2], CompiledCode[ip * 4 + 3]);
-                       ip = IpInc();
-                   }
-               }
-
-               public void Run_2()
-               {
-                   if (CompiledCode == null)
-                   {
-                       return;
-                   }
-
-                   List<int> reg = new List<int>();
-
-                   int codeLength = CompiledCode.Count() / 4;
-                   int ip = GetIp();
-                   while (ip >= 0 && ip < codeLength)
-                   {
-                       if (ip == 28)
-                       {
-                           if (!reg.Contains(register[3]))
-                           {
-                               reg.Add(register[3]);
-                               if (reg.Count() % 1000 == 0)
-                               {
-                                   Console.WriteLine(reg.Count());
-                               }
-                           }
-                           else
-                           {
-                               Console.WriteLine(reg.Last());
-                               Console.WriteLine(DateTime.Now);
-                               return;
-                           }
-                       }
-                       Processor[CompiledCode[ip * 4]].Invoke(CompiledCode[ip * 4 + 1], CompiledCode[ip * 4 + 2], CompiledCode[ip * 4 + 3]);
-                       ip = IpInc();
-                   }
-               }
-               */
-        public int Logic(int a)
+       
+        public int Logic(int a, int b)
         {
-            a |= 0x10000;
-            int b = 4921097;
+            a |= 0x10000;          
             b += a & 0xff; b &= 0xffffff;
             b *= 65899; b &= 0xffffff;
             b += (a >> 8) & 0xff; b &= 0xffffff;
@@ -184,21 +127,6 @@ namespace AdventOfCode2018
             b += (a >> 16) & 0xff; b &= 0xffffff;
             b *= 65899; b &= 0xffffff;
             return b;
-
-
-            /*    register[3] = register[3] + register[4];
-                register[3] |= 16777215;
-                register[3] *= 65899;
-                register[3] |= 16777215;
-
-                register[3] = register[1] >> 8;
-                register[3] &= 256;
-
-                register[3] = register[1] >> 16;
-                register[3] &= 256;
-
-                register[3] *= 65899;
-                register[1] = register[3];*/
         }
 
     }
