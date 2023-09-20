@@ -1,11 +1,13 @@
-﻿namespace Common
+﻿/*
+
+namespace Common
 {
-    public class Simple2DPathFinder<T> where T : ITraversable<T>
+    public class Cost2DPathFinder<T> where T: ICostTraversable<T>
     {
         public Map2D<T> Map { get; set; }
         public Map2D<int?> DistanceMap { get; set; }
 
-        public Simple2DPathFinder(Map2D<T> map)
+        public Cost2DPathFinder(Map2D<T> map)
         {
             Map = map;
         }
@@ -106,5 +108,7 @@
             return path;
         }
 
+
     }
 }
+*/

@@ -12,7 +12,7 @@ namespace AdventOfCode2022
         Vector2D start;
         Vector2D goal;
         List<Blizzard> Blizzards;
-        Dictionary<int, Map2D<bool>> mapstates;
+        Dictionary<int, Map2D<MapCacheData>> mapstates;
 
         PriorityQueue<NextMove, int> nextMoves;
         int sizeX;
@@ -40,12 +40,23 @@ namespace AdventOfCode2022
             Parse(data);
             return Start();
         }
-        public int Problem2()
+   /*     public int Problem2()
         {
             Parse(data);
             int moves = Start();
 
             return RunForgot(moves);
+        }*/
+
+        public int Problem2()
+        {
+            Parse(data);
+            int moves = Start();
+   
+            for (int i = 0; i < 10000; i++)
+                moves = RunForgot(moves);
+
+            return moves;
         }
 
         public int Start()
@@ -73,17 +84,17 @@ namespace AdventOfCode2022
             nextMoves.Enqueue(new NextMove
             {
                 Position = goal + Directions.GetDirection(Directions.Up),
-                Moves = moves+1,
+                Moves = moves + 1,
                 History = "Up"
             }, 1); ;
             nextMoves.Enqueue(new NextMove
             {
                 Position = goal,
-                Moves = moves+1,
+                Moves = moves + 1,
                 History = "Stay"
             }, 1);
 
-            moves = Process( start);
+            moves = Process(start);
 
             nextMoves = new PriorityQueue<NextMove, int>();
             nextMoves.Enqueue(new NextMove
@@ -291,9 +302,9 @@ namespace AdventOfCode2022
                 if (nextMove.Position.X == endPos.X && nextMove.Position.Y == endPos.Y)
                   return nextMove.Moves ;
 
-                int nextMoveModulo = nextMove.Moves % ((sizeX - 2) * (sizeY - 2));
+                int nextMoveModulo = nextMove.Moves % mapstates.Count;
 
-                if (mapstates[nextMoveModulo][nextMove.Position] == true)
+                if (mapstates[nextMoveModulo][nextMove.Position].Traverible == false)
                     continue;
 
                 if (!runcourse)
@@ -406,20 +417,20 @@ namespace AdventOfCode2022
                     }
                 }
             }
-            mapstates = new Dictionary<int, Map2D<bool>>();
-            for (int i = 0; i < (sizeX - 2) * (sizeY - 2); i++)
+
+            int stateCount = MathHelpers.LeastCommonMultiple(sizeX - 2, sizeY - 2);
+
+            mapstates = new Dictionary<int, Map2D<MapCacheData>>();
+            for (int i = 0; i < stateCount; i++)
             {
-                Map2D<bool> thisMapState = new Map2D<bool>();
-                thisMapState.Init(sizeX, sizeY, false);
-     //           for (int y = 1; y < thisMapState.SizeY - 2; y++)
-     //               for (int x = 1; x < thisMapState.SizeX - 2; x++)
-     //                   thisMapState[x, y] = Blizzards.Where(b => b.Position.X == x && b.Position.Y == y).Any();
-                thisMapState[start] = false;
-                thisMapState[goal] = false;
+                Map2D<MapCacheData> thisMapState = new Map2D<MapCacheData>();
+                thisMapState.Init(sizeX, sizeY, new MapCacheData { Traverible = false ,StepsToGoal = int.MaxValue, StepsToStart =int.MaxValue });
+                thisMapState[start].Traverible = true;
+                thisMapState[goal].Traverible = true ;
                 mapstates.Add(i, thisMapState);
                 foreach (Blizzard blizzard in Blizzards)
                 {
-                    thisMapState[blizzard.Position] = true;
+                    thisMapState[blizzard.Position].Traverible = true;
                     blizzard.Position = blizzard.Position + blizzard.Direction;
                     if (blizzard.Position.X == 0)
                         blizzard.Position.X = sizeX - 2;
@@ -439,6 +450,13 @@ namespace AdventOfCode2022
             }
 
             return Blizzards;
+        }
+
+        class MapCacheData
+        {
+            public bool Traverible { get; set; }
+            public int StepsToStart { get; set; }
+            public int StepsToGoal { get; set; }
         }
 
         public class Blizzard

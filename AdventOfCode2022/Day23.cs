@@ -1,5 +1,4 @@
 ﻿using Common;
-using System.Security.Cryptography.X509Certificates;
 
 namespace AdventOfCode2022
 {

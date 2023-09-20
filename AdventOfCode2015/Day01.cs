@@ -41,7 +41,7 @@ namespace AdventOfCode2015
         {
             int steps = 0;
             int level = 0;
-            while (level != -1)
+            while (level != target)
             {
 
                 if (directions[steps] == '(')

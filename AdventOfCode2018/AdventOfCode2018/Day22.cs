@@ -44,6 +44,15 @@ namespace AdventOfCode2018
             Console.WriteLine($"P2: Travel Takes {result2} minutes");
         }
 
+        public class MapTile : ITraversable<MapTile>
+        {
+            public int Type { get; set; }
+            public bool TraversableFrom(ITraversable<MapTile> from)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public int Problem1()
         {
             DimX = targetX + 1;

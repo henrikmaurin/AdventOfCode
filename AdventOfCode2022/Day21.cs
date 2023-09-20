@@ -1,6 +1,4 @@
 ﻿using Common;
-using System.Linq;
-using System.Reflection.PortableExecutable;
 
 namespace AdventOfCode2022
 {
