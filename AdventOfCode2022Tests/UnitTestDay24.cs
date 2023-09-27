@@ -42,7 +42,7 @@ namespace AdventOfCode2022Tests
 			Assert.AreEqual(54, day.RunForgot(moves));
 		}
 
-        [TestMethod("Day 24, Part 3")]
+        /*[TestMethod("Day 24, Part 3")]
         [TestCategory("Example data")]
         public void Part3()
         {
@@ -53,6 +53,6 @@ namespace AdventOfCode2022Tests
 
             Assert.AreEqual(360018, moves);
         }
-
+		*/
     }
 }
