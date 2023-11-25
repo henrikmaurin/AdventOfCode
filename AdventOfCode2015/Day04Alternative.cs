@@ -10,7 +10,7 @@ namespace AdventOfCode2015
     public class Day04Alternative : DayBase, IDay
     {
         private const int day = 4;
-        private SecretKey _secret;
+        private SingleString _secret;
 
         public Day04Alternative(bool runtests = false) : base(Global.Year, day, runtests)
         {
@@ -18,7 +18,7 @@ namespace AdventOfCode2015
                 return;
 
             string data = input.GetDataCached().IsSingleLine();
-            _secret = ParseSingleData<SecretKey, SecretKey.Parsed>(data);
+            _secret = SingleString.Parse(data);
         }
 
         public void Run()
@@ -31,13 +31,13 @@ namespace AdventOfCode2015
         public int Problem1()
         {
             AdventCoinMiner miner = new AdventCoinMiner();
-            return miner.Mine(_secret.Key, "00000");
+            return miner.Mine(_secret.Value, "00000");
         }
 
         public int Problem2()
         {
             AdventCoinMiner miner = new AdventCoinMiner();
-            return miner.ParallellMine(_secret.Key, "000000");
+            return miner.ParallellMine(_secret.Value, "000000");
         }
 
         public class AdventCoinMiner
@@ -92,31 +92,6 @@ namespace AdventOfCode2015
             {
                 return BitConverter.ToString(ba).Replace("-", "");
             }
-        }
-
-        public class SecretKey : IParsedDataFormat
-        {
-            public class Parsed : IInDataFormat
-            {
-                public string DataFormat => @"\w+";
-
-                public string[] PropertyNames => new string[] { nameof(SecretKey) };
-
-                public string SecretKey { get; set; }
-            }
-
-            public Type GetReturnType()
-            {
-                return typeof(Parsed);
-            }
-
-            public string Key { get; set; }
-
-            public void Transform(IInDataFormat data)
-            {
-                Parsed instructionData = (Parsed)data;
-                Key = instructionData.SecretKey;
-            }
-        }
+        }        
     }
 }

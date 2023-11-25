@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -133,6 +134,60 @@ namespace Common
         {
             public void Transform(IInDataFormat data);
             public Type GetReturnType();
+        }
+
+        public class SingleIntegers : IParsedDataFormat {
+            public class Parsed : IInDataFormat
+            {
+                public string DataFormat => @"\d+";
+
+                public string[] PropertyNames => new string[] { nameof(Integer) };
+
+                public int Integer { get; set; }
+            }
+
+            public Type GetReturnType()
+            {
+                return typeof(Parsed);
+            }
+
+            public int Value { get; set; }
+
+            public void Transform(IInDataFormat data)
+            {
+                Parsed instructionData = (Parsed)data;
+                Value = instructionData.Integer;
+            }
+        }
+
+        public class SingleString : IParsedDataFormat
+        {
+            public static SingleString Parse(string data)
+            {
+                return ParseSingleData<SingleString, Parsed>(data);
+            }
+
+            public class Parsed : IInDataFormat
+            {
+                public string DataFormat => @"\w+";
+
+                public string[] PropertyNames => new string[] { nameof(String) };
+
+                public string String { get; set; }
+            }
+
+            public Type GetReturnType()
+            {
+                return typeof(Parsed);
+            }
+
+            public string Value { get; set; }
+
+            public void Transform(IInDataFormat data)
+            {
+                Parsed instructionData = (Parsed)data;
+                Value = instructionData.String;
+            }
         }
     }
 }
