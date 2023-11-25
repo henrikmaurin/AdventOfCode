@@ -10,7 +10,7 @@ namespace AdventOfCode2018
     {
         private const int day = 5;
         private string data;
-        public Day05(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day05(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

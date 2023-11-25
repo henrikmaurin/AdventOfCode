@@ -14,7 +14,7 @@ namespace AdventOfCode2018
         private const int day = 7;
         private string[] data;
         public List<Instruction> Instructions { get; set; }
-        public Day07(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day07(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
@@ -119,7 +119,7 @@ namespace AdventOfCode2018
 
 
 
-        private class Parsed : IParsed
+        private class Parsed : IInDataFormat
         {
 
             public char Name { get; set; }

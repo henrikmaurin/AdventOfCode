@@ -9,7 +9,7 @@ namespace AdventOfCode2015
         private string[][] data;
         List<Replacement> replacements;
         private Dictionary<string, int> generations;
-        public Day19(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day19(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

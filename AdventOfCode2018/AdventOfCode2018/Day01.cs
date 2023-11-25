@@ -12,7 +12,7 @@ namespace AdventOfCode2018
         private const int day = 1;
         private string[] data;
         private int[] deviations;
-        public Day01(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day01(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

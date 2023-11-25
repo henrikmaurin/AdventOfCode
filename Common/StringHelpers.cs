@@ -103,7 +103,12 @@ namespace Common
 			return SplitOnNewlineArray(me, removeEmptyLines).ToList();
 		}
 
-		public static string[] SplitOnNewlineArray(this string me, bool removeEmptyLines = true)
+        public static List<string> SplitOnDoubleNewline(this string me, bool removeEmptyLines = true)
+        {
+            return SplitOnNewlineArray(me, removeEmptyLines).ToList();
+        }
+
+        public static string[] SplitOnNewlineArray(this string me, bool removeEmptyLines = true)
 		{
 			if (me == null)
 				return new string[0];
@@ -119,7 +124,23 @@ namespace Common
 			return retval;
 		}
 
-		public static string ReplaceNewLine(this string me)
+        public static string[] SplitOnDoubleNewlineArray(this string me, bool removeEmptyLines = true)
+        {
+            if (me == null)
+                return new string[0];
+
+            var retval = me.Split(
+            new[] { "\r\n\r\n", "\r\r", "\n\n" },
+            StringSplitOptions.None
+            );
+
+            if (removeEmptyLines)
+                retval = retval.Where(m => !string.IsNullOrEmpty(m)).ToArray();
+
+            return retval;
+        }
+
+        public static string ReplaceNewLine(this string me)
 		{
 			me = me.Replace("\r\n", Environment.NewLine);
 			me = me.Replace("\r", Environment.NewLine);
@@ -185,6 +206,17 @@ namespace Common
 		public static bool IsLower(this char indata)
 		{
 			return char.IsLower(indata);
+		}
+
+		public static string SafeSubstring(this string orig, int length)
+		{
+			return orig.Substring(0, orig.Length >= length ? length : orig.Length);
+		}
+
+		public static string SafeSubstring(this string orig, int start, int length)
+		{
+			if (start >= orig.Length) return string.Empty;
+			return orig.Substring(start, orig.Length >= start + length ? length : orig.Length - start);
 		}
 
 	}

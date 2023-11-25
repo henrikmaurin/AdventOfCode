@@ -1,6 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using AdventOfCode2015;
+
 using Common;
+
 using Runner;
 
 
@@ -42,11 +45,13 @@ visualAoC.Display();
 
 
 
-Console.WriteLine("Today(Enter)/Repeat(R)/Year(YYYY):");
+Console.WriteLine("Today(Enter)/Repeat(R)/Year(YYYY)/Animate(A):");
 string? input = Console.ReadLine();
 
 int year = 0;
 int day = 0;
+
+bool animate = false;
 
 switch (input)
 {
@@ -64,6 +69,14 @@ switch (input)
         year = lastRunYear;
         day = lastRunDay;
         break;
+    case "A":
+    case "a":
+        Console.WriteLine("Year:");
+        year = Console.ReadLine().ToInt();
+        Console.WriteLine("Day:");
+        day = Console.ReadLine().ToInt();
+        animate = true;
+        break;
     default:
         year = input.ToInt();
         Console.WriteLine("Day/All(A):");
@@ -75,7 +88,7 @@ switch (input)
 if (year != 0 && day != 0)
     File.WriteAllText(lastrunfile, $"{year},{day}");
 
-if (!Run(year, day))
+if (!Run(year, day, animate))
 {
     Console.WriteLine("Not implemented yet");
 }
@@ -83,7 +96,7 @@ if (!Run(year, day))
 
 
 
-bool Run(int year, int day)
+bool Run(int year, int day, bool animate = false)
 {
     IYear? yearToRun = DayHelper.GetYear(year);
 
@@ -107,14 +120,30 @@ bool Run(int year, int day)
     }
     else
     {
-        IDay dayToRun = yearToRun.Day(day);
-        if (dayToRun == null)
+        if (animate)
         {
-            Console.WriteLine("Could not find day");
-            return false;
-        }
+            IAnimation dayToRun = yearToRun.DayAnimation(day);
+            if (dayToRun == null)
+            {
+                Console.WriteLine("Could not find day");
+                return false;
+            }
 
-        dayToRun.Run();
+            dayToRun.Animate();
+            return true;
+        }
+        else
+        {
+
+            IDay dayToRun = yearToRun.Day(day);
+            if (dayToRun == null)
+            {
+                Console.WriteLine("Could not find day");
+                return false;
+            }
+
+            dayToRun.Run();
+        }
     }
 
     return true;

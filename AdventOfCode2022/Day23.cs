@@ -9,7 +9,7 @@ namespace AdventOfCode2022
         Dictionary<(int, int), Elf> elves;
         Dictionary<(int, int), int> count;
         private int roundCounter;
-        public Day23(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day23(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

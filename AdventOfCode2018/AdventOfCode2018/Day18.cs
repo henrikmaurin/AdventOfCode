@@ -11,7 +11,7 @@ namespace AdventOfCode2018
         private const int day = 18;
         private string[] data;
         public Map InitialMap { get; set; }
-        public Day18(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day18(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

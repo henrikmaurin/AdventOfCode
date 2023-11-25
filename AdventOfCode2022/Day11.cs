@@ -10,7 +10,7 @@ namespace AdventOfCode2022
         string[][] data;
         private Monkey[] monkeys;
 
-        public Day11(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day11(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

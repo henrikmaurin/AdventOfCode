@@ -14,7 +14,7 @@ namespace AdventOfCode2018
 
         private int totalsum;
 
-        public Day08(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day08(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

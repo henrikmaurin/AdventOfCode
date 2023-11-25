@@ -62,7 +62,7 @@
         public int Day { get; private set; }
         public string? Cookie { get; private set; }
         public string? Email { get; private set; }
-        protected AOCGetInput? input;
+        protected AOCGetInput input;
 
     }
 

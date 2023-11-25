@@ -5,12 +5,13 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Common
 {
     public static class Parser
     {
-        public static T Parse<T>(this T obj, string data) where T : IParsed
+        public static T Parse<T>(this T obj, string data) where T : IInDataFormat
         {
             if (obj.PropertyNames == null)
                 throw new Exception("No property names");
@@ -18,22 +19,115 @@ namespace Common
             Regex regex = new Regex(obj.DataFormat);
             GroupCollection matches = regex.Match(data).Groups;
 
+            int offset = 0;
+
+            if (matches.Count > 1 && matches[0].Value == data)
+                offset = 1;
+
             for (int i = 0; i < obj.PropertyNames.Count(); i++)
             {
                 PropertyInfo propertyInfo = obj.GetType().GetProperty(obj.PropertyNames[i]);
-                string value = matches[i + 1].Value;
+                string value = matches[i + offset].Value;
                 var v = Convert.ChangeType(value, propertyInfo.PropertyType);
-              
+
                 propertyInfo.SetValue(obj, v);
             }
 
             return obj;
         }
 
-        public interface IParsed
+        public static T ParseSingleDataPoint<T>(string data) where T : IInDataFormat
+        {
+            T obj = CreateObject<T>();
+
+            return Parse<T>(obj, data);
+        }
+
+        public static T TransformDataPoint<T, U>(U parsedData) where T : IParsedDataFormat where U : IInDataFormat
+        {
+            T obj = CreateObject<T>();
+
+            obj.Transform(parsedData);
+            return obj;
+        }       
+
+        public static IEnumerable<T> ParseLineOfSingleChars2<T, U>(T a1, U a2,string data) where T : IParsedDataFormat where U : IInDataFormat
+        {
+            List<T> list = new List<T>();
+
+            foreach (char c in data)
+            {
+                T transformedDataPoint = TransformDataPoint<T, U>(ParseSingleDataPoint<U>($"{c}"));
+                list.Add(transformedDataPoint);
+            }
+
+            return list;
+        }
+
+        public static IEnumerable<T> ParseLineOfSingleChars<T, U>(string data) where T : IParsedDataFormat where U : IInDataFormat
+        {
+            List<T> list = new List<T>();
+
+            foreach (char c in data)
+            {
+                T transformedDataPoint = TransformDataPoint<T, U>(ParseSingleDataPoint<U>($"{c}"));
+                list.Add(transformedDataPoint);
+            }
+
+            return list;
+        }
+
+        public static IEnumerable<T> ParseLinesDelimitedByNewline<T, U>(string data) where T : IParsedDataFormat where U : IInDataFormat
+        {
+            List<T> list = new List<T>();
+
+            foreach (string s in data.SplitOnNewline())
+            {
+                T transformedDataPoint = TransformDataPoint<T, U>(ParseSingleDataPoint<U>(s));
+                list.Add(transformedDataPoint);
+            }
+
+            return list;
+        }
+
+        public static IEnumerable<T> ParseLinesDelimitedByMultipleNewline<T,U>(string data) where T : IParsedDataFormat where U : IInDataFormat
+        {
+            List<T> list = new List<T>();
+
+            foreach (string s in data.SplitOnDoubleNewline())
+            {
+                T transformedDataPoint = TransformDataPoint<T, U>(ParseSingleDataPoint<U>(s));
+                list.Add(transformedDataPoint);
+            }
+
+            return list;
+        }
+
+        private static T CreateObject<T>()
+        {
+            return (T)Activator.CreateInstance(typeof(T));
+        }
+
+        private static object CreateObjectOfType(Type t)
+        {
+            return Activator.CreateInstance(t);
+        }
+
+        private static Type GetIndataType<T>()
+        {
+            return CreateObject<T>()?.GetType();
+        }
+
+        public interface IInDataFormat
         {
             public string DataFormat { get; }
             public string[] PropertyNames { get; }
+        }
+
+        public interface IParsedDataFormat
+        {
+            public void Transform(IInDataFormat data);
+            public Type GetReturnType();
         }
     }
 }

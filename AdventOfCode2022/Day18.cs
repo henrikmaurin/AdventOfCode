@@ -7,7 +7,7 @@ namespace AdventOfCode2022
         private const int day = 18;
         List<string> data;
         List<Droplet> droplets;
-        public Day18(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day18(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

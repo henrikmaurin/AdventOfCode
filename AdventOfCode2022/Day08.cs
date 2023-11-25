@@ -9,7 +9,7 @@ namespace AdventOfCode2022
         private const int day = 8;
         private List<string> data;
         private Map2D<Tree> Map;
-        public Day08(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day08(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

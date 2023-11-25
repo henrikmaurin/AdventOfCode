@@ -23,7 +23,7 @@ namespace AdventOfCode2018
         //public List<Coord> targets { get; private set; }
         public bool DoDumpMap { get; private set; } = false;
 
-        public Day15(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day15(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

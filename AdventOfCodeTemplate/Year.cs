@@ -66,5 +66,10 @@ namespace AdventOfCodeTemplate
             }
             return null;
         }
+
+        public IAnimation? DayAnimation(int day)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

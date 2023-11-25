@@ -11,7 +11,7 @@ namespace AdventOfCode2018
         private const int day = 23;
         private string[] data;
         public List<Bot> Bots { get; set; }
-        public Day23(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day23(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

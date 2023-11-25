@@ -19,7 +19,7 @@ namespace AdventOfCode2022
         PriorityQueue<NextMove, int> nextMoves;
         int sizeX;
         int sizeY;
-        public Day24(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day24(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
@@ -476,7 +476,7 @@ namespace AdventOfCode2022
         PriorityQueue<NextMove, int> nextMoves;
         int sizeX;
         int sizeY;
-        public Day24(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day24(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

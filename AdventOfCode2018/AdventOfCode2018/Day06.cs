@@ -14,7 +14,7 @@ namespace AdventOfCode2018
         private string[] data;
         private Map2D<MapPoint> map2D;
         private List<Coordinate> coordinates;
-        public Day06(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day06(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
@@ -133,7 +133,7 @@ namespace AdventOfCode2018
             }
 
             public int Id { get; set; }
-            private class Parsed : IParsed
+            private class Parsed : IInDataFormat
             {
                 public string DataFormat => @"(\d+), (\d+)";
                 public string[] PropertyNames => new string[] { nameof(X), nameof(Y) };

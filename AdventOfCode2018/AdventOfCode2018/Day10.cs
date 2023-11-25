@@ -15,7 +15,7 @@ namespace AdventOfCode2018
         private string[] data;
         public List<Light> Lights { get; set; }
         public int SecondsTaken { get; set; }
-        public Day10(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day10(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
@@ -120,7 +120,7 @@ namespace AdventOfCode2018
         public Vector2D Position { get; set; }
         public Vector2D Velocity { get; set; }
 
-        private class Parsed : IParsed
+        private class Parsed : IInDataFormat
         {
             public string DataFormat => @"position=<\s*(-?\d+),\s*(-?\d+)>\s*velocity=<\s*(-?\d+),\s*(-?\d+)>";
             public string[] PropertyNames => new string[] { nameof(X), nameof(Y), nameof(DX), nameof(DY) };

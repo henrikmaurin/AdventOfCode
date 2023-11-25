@@ -11,7 +11,7 @@ namespace AdventOfCode2022
         int direction;
         int globaldirection;
         int sidesize = 0;
-        public Day22(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day22(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

@@ -15,7 +15,7 @@ namespace AdventOfCode2018
         public List<Log> log { get; set; }
         public List<Guard> guardList { get; set; }
 
-        public Day04(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day04(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
@@ -103,7 +103,7 @@ namespace AdventOfCode2018
 
     public class Log
     {
-        private class LogParser : IParsed
+        private class LogParser : IInDataFormat
         {
             public string DataFormat => @"\[(.*)\] (.*)";
 

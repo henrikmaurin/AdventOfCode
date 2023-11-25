@@ -12,7 +12,7 @@ namespace AdventOfCode2018
         private const int day = 14;
         public List<int> RecipieScores { get; set; }
         public string data { get; set; }
-        public Day14(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day14(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

@@ -20,7 +20,7 @@ namespace AdventOfCode2022
         private int bestScore = 0;
 
 
-        public Day16(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day16(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

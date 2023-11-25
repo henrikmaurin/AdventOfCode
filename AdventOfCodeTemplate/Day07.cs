@@ -6,7 +6,7 @@ namespace AdventOfCodeTemplate
     {
         private const int day = 7;
         List<string> data;
-        public Day07(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day07(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

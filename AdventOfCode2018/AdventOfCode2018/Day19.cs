@@ -12,7 +12,7 @@ namespace AdventOfCode2018
         public List<string> Instructions { get; set; }
         public ElfCode Computer { get; set; }
         public int Counter { get; set; }
-        public Day19(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day19(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

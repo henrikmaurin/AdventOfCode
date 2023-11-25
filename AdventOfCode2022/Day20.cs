@@ -9,7 +9,7 @@ namespace AdventOfCode2022
         LinkedList<Node> coords;
         List<Node> order;
         Node nodeZero = null;
-        public Day20(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day20(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

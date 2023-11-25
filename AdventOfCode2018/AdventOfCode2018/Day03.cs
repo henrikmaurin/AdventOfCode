@@ -15,7 +15,7 @@ namespace AdventOfCode2018
         private string[] data;
         private Map2D<int> fabric;
         private List<FabricClaim> FabricClaims;
-        public Day03(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day03(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
@@ -98,7 +98,7 @@ namespace AdventOfCode2018
 
     public class FabricClaim
     {
-        private class Parsed : IParsed
+        private class Parsed : IInDataFormat
         {
             public string DataFormat => @"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)";
             public string[] PropertyNames => new string[] { nameof(Id), nameof(Rect.X), nameof(Rect.Y), nameof(Rect.Width), nameof(Rect.Height) };

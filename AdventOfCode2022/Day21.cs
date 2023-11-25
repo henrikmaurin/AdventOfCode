@@ -10,7 +10,7 @@ namespace AdventOfCode2022
         Dictionary<string, Monkey> monkeys;
         string lastMonkey = null;
 
-        public Day21(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day21(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

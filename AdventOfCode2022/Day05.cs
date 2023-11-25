@@ -8,7 +8,7 @@ namespace AdventOfCode2022
         string[][] data;
         List<Stack<char>> stacks;
 
-        public Day05(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day05(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

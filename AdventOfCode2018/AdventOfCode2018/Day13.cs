@@ -15,7 +15,7 @@ namespace AdventOfCode2018
         private Map2D<MapTile> NewMap { get; set; }
 
 
-        public Day13(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day13(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

@@ -48,5 +48,10 @@ namespace AdventOfCode2020
             }
             return null;
         }
+
+        public IAnimation DayAnimation(int day)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

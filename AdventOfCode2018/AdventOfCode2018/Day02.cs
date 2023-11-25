@@ -11,7 +11,7 @@ namespace AdventOfCode2018
         private const int day = 2;
         private string[] data;
 
-        public Day02(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day02(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

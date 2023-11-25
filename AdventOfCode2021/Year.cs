@@ -52,5 +52,10 @@ namespace AdventOfCode2021
             }
             return null;
         }
+
+        public IAnimation? DayAnimation(int day)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

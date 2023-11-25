@@ -7,7 +7,7 @@ namespace AdventOfCode2015
         private const int day = 17;
         private List<int> data;
         private List<int> usedBuckets;
-        public Day17(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day17(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             usedBuckets = new List<int>();
 

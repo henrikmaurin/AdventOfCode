@@ -12,7 +12,7 @@ namespace AdventOfCode2018
         private string[] data;
         public string Instructions { get; set; }
         public List<Room> Map { get; set; }
-        public Day20(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day20(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

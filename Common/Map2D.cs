@@ -1,8 +1,6 @@
-﻿using System.Collections;
-
-namespace Common
+﻿namespace Common
 {
-    public class Map2D<T>
+    public class Map2D<T> : IMap2D<T>
     {
         public T[] Map { get; protected set; }
         public int MaxX { get; protected set; }
@@ -13,7 +11,7 @@ namespace Common
 
         public int SizeX => MaxX - MinX;
         public int SizeY => MaxY - MinY;
-               
+
 
         public void Init(int sizeX, int sizeY, T? initialvalue = default(T?))
         {
@@ -221,6 +219,16 @@ namespace Common
         public const int UpRight = 6;
         public const int DownRight = 8;
 
+        public static class Vector
+        {
+            public static Vector2D Up { get => GetDirection(Directions.Up); }
+            public static Vector2D Down { get =>GetDirection(Directions.Down); }
+            public static Vector2D Left { get => GetDirection(Directions.Left); }
+            public static Vector2D Right { get => GetDirection(Directions.Right); }
+
+        }
+
+
         private static Vector2D[] _directionsVectors = {
             new Vector2D{X=0,Y=0},
             new Vector2D{X=0,Y=-1},
@@ -360,53 +368,5 @@ namespace Common
     {
         public Vector2D Vector { get; set; }
         public int DirectionId { get; set; }
-    }
-
-    public class Vector2D
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public static Vector2D operator +(Vector2D me, Vector2D coord)
-        {
-            return new Vector2D { X = me.X + coord.X, Y = me.Y + coord.Y };
-        }
-        public static Vector2D operator -(Vector2D me, Vector2D coord)
-        {
-            return new Vector2D { X = me.X - coord.X, Y = me.Y - coord.Y };
-        }
-        public static bool Equals(Vector2D a, Vector2D b)
-        {
-            return a.X == b.X && a.Y == b.Y;
-        }
-        public bool Equals(Vector2D b)
-        {
-            return X == b.X && Y == b.Y;
-        }
-        public virtual string ToString()
-        {
-            return $"{X},{Y}";
-        }
-
-        public bool In(List<Vector2D> vectors)
-        {
-            if (vectors == null)
-                return false;
-
-            foreach (Vector2D vector in vectors)
-                if (Equals(vector)) return true;
-
-            return false;
-        }
-
-        public bool In(Vector2D[] vectors)
-        {
-            if (vectors == null)
-                return false;
-
-            foreach (Vector2D vector in vectors)
-                if (Equals(vector)) return true;
-
-            return false;
-        }
     }
 }

@@ -13,7 +13,7 @@ namespace AdventOfCode2018
         private string[] data;
         public List<Constellation> Constellations { get; set; }
         public List<Point4D> Points { get; set; }
-        public Day25(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day25(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

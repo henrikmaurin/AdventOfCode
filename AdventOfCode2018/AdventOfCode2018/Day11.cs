@@ -14,7 +14,7 @@ namespace AdventOfCode2018
         public Map2D<MapVal> Grid { get; set; }
         private Dictionary<(int, int, int), int> cache;
 
-        public Day11(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day11(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

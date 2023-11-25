@@ -12,7 +12,7 @@ namespace AdventOfCode2018
         private const int day = 24;
         private string[] data;
         public List<Combatant> Combatants { get; set; }
-        public Day24(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day24(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

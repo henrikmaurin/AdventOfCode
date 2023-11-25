@@ -16,7 +16,7 @@ namespace AdventOfCode2018
         public int ymin { get; }
         public int ymax { get; }
 
-        public Day17(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day17(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

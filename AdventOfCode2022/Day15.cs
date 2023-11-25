@@ -8,7 +8,7 @@ namespace AdventOfCode2022
         private const int day = 15;
         List<string> data;
         List<Sensor> Sensors;
-        public Day15(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day15(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

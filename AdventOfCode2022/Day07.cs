@@ -7,7 +7,7 @@ namespace AdventOfCode2022
         private const int day = 7;
         private List<string> data;
         public Directory Filesystem { get; protected set; }
-        public Day07(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day07(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

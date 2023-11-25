@@ -51,5 +51,10 @@ namespace AdventOfCode2017
             }
             return null;
         }
+
+        public IAnimation DayAnimation(int day)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

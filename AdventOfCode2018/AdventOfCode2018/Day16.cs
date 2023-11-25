@@ -20,7 +20,7 @@ namespace AdventOfCode2018
         public ElfCode Computer { get; set; }
         public List<string> Instructions { get; set; }
 
-        public Day16(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day16(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
@@ -201,7 +201,7 @@ namespace AdventOfCode2018
                 Opcode[2] = p.I2;
                 Opcode[3] = p.I3;
             }
-            private class Parsed : IParsed
+            private class Parsed : IInDataFormat
             {
                 public string DataFormat => @"Before: \[(\d+), (\d+), (\d+), (\d+)\]
 (\d+) (\d+) (\d+) (\d+)

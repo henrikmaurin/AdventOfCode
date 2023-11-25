@@ -9,7 +9,7 @@ namespace AdventOfCode2022
         List<string> data;
         private List<Blueprint> Blueprints;
         private Dictionary<string, int> Cache;
-        public Day19(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day19(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

@@ -10,7 +10,7 @@ namespace AdventOfCode2022
         private Dictionary<string, int> scoringNewStratgy;
 
 
-        public Day02(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day02(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             scoring = new Dictionary<string, int>();
             scoring.Add("A X", 4);

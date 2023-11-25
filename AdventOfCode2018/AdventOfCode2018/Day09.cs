@@ -18,7 +18,7 @@ namespace AdventOfCode2018
         public int players { get; set; }
         public int goalscore { get; set; }
 
-        public Day09(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day09(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
@@ -93,7 +93,7 @@ namespace AdventOfCode2018
             return score.Max();
         }
 
-        public class Parsed : IParsed
+        public class Parsed : IInDataFormat
         {
             public string DataFormat => @"(\d+) players; last marble is worth (\d+) points";
             public string[] PropertyNames => new string[] { nameof(NumberOfPlayers), nameof(GoalValue) };

@@ -13,7 +13,7 @@ namespace AdventOfCode2022
         Simple2DPathFinder<MapData> pathFinder;
 
 
-        public Day12(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day12(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {

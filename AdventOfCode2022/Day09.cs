@@ -9,7 +9,7 @@ namespace AdventOfCode2022
         private List<string> data;
         private Dictionary<string, int> visits;
         public List<Vector2D> Knots;
-        public Day09(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day09(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
 
             if (testdata != null)

@@ -9,7 +9,7 @@ namespace AdventOfCode2022
         private Map2D<char> map;
         private List<Map2D<char>> rocks;
 
-        public Day17(string testdata = null) : base(Global.Year, day, testdata != null)
+        public Day17(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
