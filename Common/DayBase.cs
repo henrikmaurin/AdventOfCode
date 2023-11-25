@@ -1,4 +1,6 @@
-﻿namespace Common
+﻿using static Crayon.Output;
+
+namespace Common
 {
 
     public class DayBase
@@ -33,6 +35,16 @@
         public DayBase(bool runtests)
         {
 
+        }
+
+        public static string Answer(string answer)
+        {
+            return Bold().Yellow(answer);
+        }
+
+        public static string Answer(int answer)
+        {
+            return Bold().Yellow($"{answer}");
         }
 
         public void SetCookie()

@@ -27,10 +27,10 @@ namespace AdventOfCode2015
         public void Run()
         {
             int finalFloor = Problem1();
-            Console.WriteLine($"P1: Santa ends up on floor: {finalFloor}");
+            Console.WriteLine($"P1: Santa ends up on floor: {Answer(finalFloor)}");
 
             int numberOfButtonPresses = Problem2();
-            Console.WriteLine($"P2: Santa ends up in basement at button press number: {numberOfButtonPresses}");
+            Console.WriteLine($"P2: Santa ends up in basement at button press number: {Answer(numberOfButtonPresses)}");
         }
 
         public int Problem1()

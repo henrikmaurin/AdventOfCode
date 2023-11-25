@@ -25,10 +25,10 @@ namespace AdventOfCode2015
         public void Run()
         {
             int paperToOrder = Problem1();
-            Console.WriteLine($"P1: The elves nedds to order (paper): {paperToOrder} ");
+            Console.WriteLine($"P1: The elves needs to order (paper): {Answer(paperToOrder)} ");
 
             int ribbontoOrder = Problem2();
-            Console.WriteLine($"P1: The elves nedds to order (ribbon): {ribbontoOrder}");
+            Console.WriteLine($"P2: The elves needs to order (ribbon): {Answer(ribbontoOrder)}");
         }
 
         public int Problem1()

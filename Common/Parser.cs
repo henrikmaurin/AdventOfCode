@@ -64,6 +64,11 @@ namespace Common
             return list;
         }
 
+        public static T ParseSingleData<T,U>(string data) where T: IParsedDataFormat where U : IInDataFormat
+        {
+            return TransformDataPoint<T,U>(ParseSingleDataPoint<U> (data));
+        }
+
         public static IEnumerable<T> ParseLineOfSingleChars<T, U>(string data) where T : IParsedDataFormat where U : IInDataFormat
         {
             List<T> list = new List<T>();

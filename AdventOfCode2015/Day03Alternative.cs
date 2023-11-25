@@ -1,6 +1,5 @@
 ﻿using Common;
 
-using static AdventOfCode2015.Day01Alternative;
 using static Common.Parser;
 
 namespace AdventOfCode2015
@@ -23,10 +22,10 @@ namespace AdventOfCode2015
         public void Run()
         {
             int housesVisited = Problem1();
-            Console.WriteLine($"P1: Santa has visited {housesVisited} houses");
+            Console.WriteLine($"P1: Santa has visited {Answer(housesVisited)} houses");
 
             housesVisited = Problem2();
-            Console.WriteLine($"P2: Santa and RoboSanta har visited {housesVisited} houses");
+            Console.WriteLine($"P2: Santa and RoboSanta har visited {Answer(housesVisited)} houses");
         }
 
         public int Problem1()
