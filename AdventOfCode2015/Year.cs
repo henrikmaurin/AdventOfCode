@@ -21,7 +21,7 @@ namespace AdventOfCode2015
                 case 4:
                     return new Day04Alternative();
                 case 5:
-                    return new Day05();
+                    return new Day05Alternative();
                 case 6:
                     return new Day06();
                 case 7:

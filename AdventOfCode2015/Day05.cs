@@ -92,7 +92,7 @@ namespace AdventOfCode2015
 
         public bool Naughty2(string str)
         {
-            return !Nice(str);
+            return !Nice2(str);
         }
 
         public bool NiceRuleDoubbleLettersTwice(string str)

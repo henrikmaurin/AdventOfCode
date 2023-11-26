@@ -96,6 +96,19 @@ namespace Common
             return list;
         }
 
+        public static IEnumerable<SingleString> ParseLinesDelimitedByNewlineSingleString(string data)
+        {
+            List<SingleString> list = new List<SingleString>();
+
+            foreach (string s in data.SplitOnNewline())
+            {
+                SingleString transformedDataPoint = TransformDataPoint<SingleString, SingleString.Parsed>(ParseSingleDataPoint<SingleString.Parsed>(s));
+                list.Add(transformedDataPoint);
+            }
+
+            return list;
+        }      
+
         public static IEnumerable<T> ParseLinesDelimitedByMultipleNewline<T,U>(string data) where T : IParsedDataFormat where U : IInDataFormat
         {
             List<T> list = new List<T>();
@@ -136,7 +149,7 @@ namespace Common
             public Type GetReturnType();
         }
 
-        public class SingleIntegers : IParsedDataFormat {
+        public class SingleInteger : IParsedDataFormat {
             public class Parsed : IInDataFormat
             {
                 public string DataFormat => @"\d+";
