@@ -103,12 +103,12 @@ namespace Common
 			return SplitOnNewlineArray(me, removeEmptyLines).ToList();
 		}
 
-        public static List<string> SplitOnDoubleNewline(this string me, bool removeEmptyLines = true)
-        {
-            return SplitOnNewlineArray(me, removeEmptyLines).ToList();
-        }
+		public static List<string> SplitOnDoubleNewline(this string me, bool removeEmptyLines = true)
+		{
+			return SplitOnNewlineArray(me, removeEmptyLines).ToList();
+		}
 
-        public static string[] SplitOnNewlineArray(this string me, bool removeEmptyLines = true)
+		public static string[] SplitOnNewlineArray(this string me, bool removeEmptyLines = true)
 		{
 			if (me == null)
 				return new string[0];
@@ -124,23 +124,23 @@ namespace Common
 			return retval;
 		}
 
-        public static string[] SplitOnDoubleNewlineArray(this string me, bool removeEmptyLines = true)
-        {
-            if (me == null)
-                return new string[0];
+		public static string[] SplitOnDoubleNewlineArray(this string me, bool removeEmptyLines = true)
+		{
+			if (me == null)
+				return new string[0];
 
-            var retval = me.Split(
-            new[] { "\r\n\r\n", "\r\r", "\n\n" },
-            StringSplitOptions.None
-            );
+			var retval = me.Split(
+			new[] { "\r\n\r\n", "\r\r", "\n\n" },
+			StringSplitOptions.None
+			);
 
-            if (removeEmptyLines)
-                retval = retval.Where(m => !string.IsNullOrEmpty(m)).ToArray();
+			if (removeEmptyLines)
+				retval = retval.Where(m => !string.IsNullOrEmpty(m)).ToArray();
 
-            return retval;
-        }
+			return retval;
+		}
 
-        public static string ReplaceNewLine(this string me)
+		public static string ReplaceNewLine(this string me)
 		{
 			me = me.Replace("\r\n", Environment.NewLine);
 			me = me.Replace("\r", Environment.NewLine);

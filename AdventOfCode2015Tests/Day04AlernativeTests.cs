@@ -22,43 +22,23 @@ namespace AdventOfCode2015Tests
         }
 
         [TestMethod]
-        public void Problem1_Example1()
+        [DataRow(609043, "abcdef")]
+        [DataRow(1048970, "pqrstuv")]
+        public void Problem1(int expectedResult, string secretCode)
         {
-            string secretCode = "abcdef";
-
             int result = miner.Mine(secretCode, "00000");
 
-            Assert.AreEqual(609043, result);
-        }
+            Assert.AreEqual(expectedResult, result);
+        }        
 
         [TestMethod]
-        public void Problem1_Example2()
-        {
-            string secretCode = "pqrstuv";
-
-            int result = miner.Mine(secretCode, "00000");
-
-            Assert.AreEqual(1048970, result);
-        }
-
-        [TestMethod]
-        public void Problem1_Example1_Parallell()
-        {
-            string secretCode = "abcdef";
-
+        [DataRow(609043, "abcdef")]
+        [DataRow(1048970, "pqrstuv")]
+        public void Problem1_Parallell(int expectedResult, string secretCode)
+        {          
             int result = miner.ParallellMine(secretCode, "00000");
 
-            Assert.AreEqual(609043, result);
-        }
-
-        [TestMethod]
-        public void Problem1_Example2_Parallell()
-        {
-            string secretCode = "pqrstuv";
-
-            int result = miner.ParallellMine(secretCode, "00000");
-
-            Assert.AreEqual(1048970, result);
+            Assert.AreEqual(expectedResult, result);
         }
     }
 }

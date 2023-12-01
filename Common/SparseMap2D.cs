@@ -50,19 +50,48 @@
             return true;
         }
 
-        public virtual T Get(int xPos, int yPos)
+        public bool IsInRange(Vector2D pos)
+        {
+            return IsInRange(pos.X, pos.Y);
+        }
+
+        public virtual T? Get(int xPos, int yPos)
+        {
+            Vector2D vector2D = new Vector2D { X = xPos, Y = yPos };
+
+            return Get(vector2D);
+        }
+
+        public virtual T? Get(Vector2D pos)
         {
             if (Map == null)
                 throw new NullReferenceException("Map not initialized");
 
-            if (!IsInRange(xPos, yPos))
+            if (!IsInRange(pos))
                 throw new IndexOutOfRangeException();
 
+            if (Map.ContainsKey(pos.ToString()))
+                return Map[pos.ToString()];
+
+            return default(T?);
+        }
+
+        public virtual T? Set(int xPos, int yPos, T value)
+        {
             Vector2D vector2D = new Vector2D { X = xPos, Y = yPos };
+            return Set(vector2D, value);
+        }
 
-            Map.TryGetValue(vector2D.ToString(), out T result);
+        public virtual T? Set(Vector2D pos, T value)
+        {
+            T? data = Get(pos);
 
-            return result??default(T);
+            if (data == null)
+                Map.Add(pos.ToString(), value);
+            else
+                Map[pos.ToString()] = value;
+
+            return data;
         }
     }
 }

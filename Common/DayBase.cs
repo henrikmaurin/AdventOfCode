@@ -47,6 +47,11 @@ namespace Common
             return Bold().Yellow($"{answer}");
         }
 
+        public static string Answer(long answer)
+        {
+            return Bold().Yellow($"{answer}");
+        }
+
         public void SetCookie()
         {
             Console.Write("Enter cookie: ");

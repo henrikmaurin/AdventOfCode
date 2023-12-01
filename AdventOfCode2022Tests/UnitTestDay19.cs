@@ -35,17 +35,17 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
 		//[Ignore]
 		public void Part2_1()
 		{
-            day.Parse(testdata);
-            Assert.AreEqual(56, day.RunBlueprint(0,32));
+			day.Parse(testdata);
+			Assert.AreEqual(56, day.RunBlueprint(0,32));
 		}
 
-        [TestMethod("Day 19, Part 2")]
-        [TestCategory("Example data")]
+		[TestMethod("Day 19, Part 2")]
+		[TestCategory("Example data")]
 		//[Ignore]
-        public void Part2_2()
-        {
-            day.Parse(testdata);
-            Assert.AreEqual(62, day.RunBlueprint(1, 32));
-        }
-    }
+		public void Part2_2()
+		{
+			day.Parse(testdata);
+			Assert.AreEqual(62, day.RunBlueprint(1, 32));
+		}
+	}
 }

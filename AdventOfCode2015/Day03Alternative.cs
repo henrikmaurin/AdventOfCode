@@ -166,7 +166,7 @@ namespace AdventOfCode2015
         {
             public class Parsed : IInDataFormat
             {
-                public string DataFormat => ".";
+                public string DataFormat => "(.)";
 
                 public string[] PropertyNames => new string[] { nameof(Instruction) };
                 public char Instruction { get; set; }

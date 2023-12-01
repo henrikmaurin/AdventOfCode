@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -18,20 +19,22 @@ namespace Common
                 throw new Exception("No property names");
 
             Regex regex = new Regex(obj.DataFormat);
-            GroupCollection matches = regex.Match(data).Groups;
+            Match match = regex.Match(data);
 
-            int offset = 0;
-
-            if (matches.Count > 1 && matches[0].Value == data)
-                offset = 1;
-
-            for (int i = 0; i < obj.PropertyNames.Count(); i++)
+            if (match.Success)
             {
-                PropertyInfo propertyInfo = obj.GetType().GetProperty(obj.PropertyNames[i]);
-                string value = matches[i + offset].Value;
-                var v = Convert.ChangeType(value, propertyInfo.PropertyType);
+                for (int i = 0; i < obj.PropertyNames.Count(); i++)
+                {
+                    PropertyInfo propertyInfo = obj.GetType().GetProperty(obj.PropertyNames[i]);
+                    string value = match.Groups[i + 1].Value; // Use i + 1 to skip the entire match group
+                    var convertedValue = Convert.ChangeType(value, propertyInfo.PropertyType);
 
-                propertyInfo.SetValue(obj, v);
+                    propertyInfo.SetValue(obj, convertedValue);
+                }
+            }
+            else
+            {
+                throw new Exception("No match found");
             }
 
             return obj;
@@ -96,7 +99,7 @@ namespace Common
             return list;
         }
 
-        public static IEnumerable<SingleString> ParseLinesDelimitedByNewlineSingleString(string data)
+        public static List<SingleString> ParseLinesDelimitedByNewlineSingleString(string data)
         {
             List<SingleString> list = new List<SingleString>();
 
@@ -152,7 +155,7 @@ namespace Common
         public class SingleInteger : IParsedDataFormat {
             public class Parsed : IInDataFormat
             {
-                public string DataFormat => @"\d+";
+                public string DataFormat => @"(\d+)";
 
                 public string[] PropertyNames => new string[] { nameof(Integer) };
 
@@ -182,7 +185,7 @@ namespace Common
 
             public class Parsed : IInDataFormat
             {
-                public string DataFormat => @"\w+";
+                public string DataFormat => @"(\w+)";
 
                 public string[] PropertyNames => new string[] { nameof(String) };
 
@@ -200,6 +203,35 @@ namespace Common
             {
                 Parsed instructionData = (Parsed)data;
                 Value = instructionData.String;
+            }
+        }
+
+        public class SingleStrings :IEnumerable<string> 
+        {
+            public List<SingleString> Lines { get; set; }
+            public SingleStrings()
+            {
+                Lines = new List<SingleString>();
+            }
+            public string this[int key]
+            {
+                get => Lines[key].Value;
+                set => Lines[key].Value = value;
+            }
+
+            public IEnumerable<string> GetLines()
+            {
+                return Lines.Select(x => x.Value);
+            }
+
+            public IEnumerator<string> GetEnumerator()
+            {
+                return GetLines().GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                throw new NotImplementedException();
             }
         }
     }
