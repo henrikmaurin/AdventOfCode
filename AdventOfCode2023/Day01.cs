@@ -34,31 +34,26 @@ namespace AdventOfCode2023
         public int Problem1()
         {
             DecoderElf elf = new DecoderElf();
-            int sum = elf.DecodeAllLines( calibrationDocument );
+            int sum = elf.DecodeAllLines(calibrationDocument);
 
             return sum;
         }
         public int Problem2()
         {
             DecoderElf elf = new DecoderElf();
-            int sum = elf.DecodeAllLines(calibrationDocument,alsoConvertSpelledOutNumbers:true);
+            int sum = elf.DecodeAllLines(calibrationDocument, alsoUseSpelledOutNumbers: true);
 
             return sum;
         }
 
         public class DecoderElf
         {
-            public int DecodeAllLines(IEnumerable<string> linesOfCalibrationData, bool alsoConvertSpelledOutNumbers = false)
+            public int DecodeAllLines(IEnumerable<string> linesOfCalibrationData, bool alsoUseSpelledOutNumbers = false)
             {
                 int sum = 0;
                 foreach (string line in linesOfCalibrationData)
                 {
-                    string lineToDecode = line;
-
-                    if (alsoConvertSpelledOutNumbers)
-                        lineToDecode = DocumentDecoder.ReplaceWordNumbers(lineToDecode);
-
-                    sum += DocumentDecoder.Findfirst(lineToDecode) * 10 + DocumentDecoder.FindLast(lineToDecode);
+                    sum += DocumentDecoder.Findfirst(line, alsoUseSpelledOutNumbers) * 10 + DocumentDecoder.FindLast(line, alsoUseSpelledOutNumbers);
                 }
                 return sum;
             }
@@ -66,32 +61,44 @@ namespace AdventOfCode2023
 
         public static class DocumentDecoder
         {
-            private static readonly char[] numbers = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            private static readonly string[] numberstrings = new string[] { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
-            private static readonly string[] newnumbers = new string[] { "z0ro", "o1e", "t2o", "t3ree", "f4ur", "f5ve", "s6x", "s7ven", "e8ght", "n9ne" };
+            private static readonly string[] allnumbers = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
 
-            public static int Findfirst(string s)
+            public static int Findfirst(string s, bool useSpelledOutNumbers)
             {
-                int first = s.IndexOfAny(numbers);
+                int maxCount = 10;
+                if (useSpelledOutNumbers)
+                    maxCount = 20;
 
-                return s[first].ToInt();
+                int first = s.IndexOfAny(allnumbers[0..maxCount]);
+
+                return DecodeNumberAt(s, first, useSpelledOutNumbers);
             }
 
-            public static int FindLast(string s)
+            public static int FindLast(string s, bool useSpelledOutNumbers)
             {
-                int first = s.LastIndexOfAny(numbers);
+                int maxCount = 10;
+                if (useSpelledOutNumbers)
+                    maxCount = 20;
 
-                return s[first].ToInt();
+                int last = s.LastIndexOfAny(allnumbers[0..maxCount]);
+
+                return DecodeNumberAt(s, last, useSpelledOutNumbers);
             }
 
-            public static string ReplaceWordNumbers(string s)
+            public static int DecodeNumberAt(string s, int at, bool useSpelledOutNumbers)
             {
-                for (int i = 1; i < numberstrings.Length; i++)
+                int maxCount = 10;
+                if (useSpelledOutNumbers)
+                    maxCount = 20;
+
+
+                for (int i = 0; i < maxCount; i++)
                 {
-                    s = s.Replace(numberstrings[i], newnumbers[i]);
+                    if (s.Substring(at).StartsWith(allnumbers[i]))
+                        return i % 10;
                 }
 
-                return s;
+                return 0;
             }
         }
     }

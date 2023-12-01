@@ -219,5 +219,22 @@ namespace Common
 			return orig.Substring(start, orig.Length >= start + length ? length : orig.Length - start);
 		}
 
+		public static int IndexOfAny(this string thisString, string[] strings, int startIndex=0)
+		{
+            List<int> result = strings.Select(s => thisString.IndexOf(s, startIndex)).Where(i=>i>=0).ToList();
+
+            return result.Min();
+		}
+
+		public static int LastIndexOfAny(this string thisString, string[] strings, int startIndex = -1)
+		{
+			if (startIndex == -1)
+				startIndex = thisString.Length-1;
+
+			List<int> result = strings.Select(s => thisString.LastIndexOf(s, startIndex)).ToList();
+
+            return result.Max();
+		}
+
 	}
 }
