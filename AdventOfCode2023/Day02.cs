@@ -1,150 +1,172 @@
-﻿using System.Collections.Specialized;
+﻿using Common;
 
-using Common;
+using static Common.Parser;
 
 namespace AdventOfCode2023
 {
     public class Day02 : DayBase, IDay
     {
         private const int day = 2;
-        List<string> data;
+        string data;
+        private IEnumerable<Game> setOfGames;
         public Day02(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
-                data = testdata.SplitOnNewline();
+                data = testdata;
                 return;
             }
 
-            data = input.GetDataCached().SplitOnNewline();
+            data = input.GetDataCached();
+            setOfGames = Parser.ParseLinesDelimitedByNewline<Game, Game.Parsed>(data);
         }
         public void Run()
         {
-
-            long result = 0;
-
-//            data = @"Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-//Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
-//Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
-//Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
-//Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green".SplitOnDoubleNewline();
-
-
-            foreach (var item in data)
-            {
-                string game = item.Split(":").First();
-                string rounds = item.Split(":").Last();
-
-                int red = 0;
-                int green = 0;
-                int blue = 0;
-                bool failed = false;
-                foreach (var round in rounds.Trim().Split(";"))
-                {
-
-
-                    foreach (string cubes in round.Trim().Split(","))
-                    {
-                        int amount = cubes.Trim().Split(" ").First().ToInt();
-                        string color = cubes.Trim().Split(" ").Last().Trim();
-
-                        switch (color)
-                        {
-                            case "red":
-                                if (amount > 12)
-                                    failed = true;
-                                break;
-                            case "blue":
-                                if (amount > 14)
-                                    failed = true;
-                                break;
-                            case "green":
-                                if (amount > 13)
-                                    failed = true;
-                                break;
-                        }
-                    }
-
-
-                }
-                if (failed)
-                {
-                    continue;
-                }
-                int id = game.Split(" ").Last().ToInt();
-                result += id;
-
-            }
-
-            Console.WriteLine(result);
-
-            result = 0;
-
-            foreach (var item in data)
-            {
-                string game = item.Split(":").First();
-                string rounds = item.Split(":").Last();
-
-                int red = 0;
-                int green = 0;
-                int blue = 0;
-
-                foreach (var round in rounds.Trim().Split(";"))
-                {
-                    foreach (string cubes in round.Trim().Split(","))
-                    {
-                        int amount = cubes.Trim().Split(" ").First().ToInt();
-                        string color = cubes.Trim().Split(" ").Last().Trim();
-
-                        switch (color)
-                        {
-                            case "red":
-                                if (red < amount)
-                                    red = amount;
-                                break;
-                            case "blue":
-                                if (blue < amount) blue = amount;
-
-                                break;
-                            case "green":
-                                if (green < amount) green = amount;
-
-                                break;
-                        }
-                    }
-
-
-
-
-
-                }
-                int id = game.Split(" ").Last().ToInt();
-                result += red * green * blue;
-
-            }
-
-            Console.WriteLine(result);
-
-
-
-
-
-
-
-
             int result1 = Problem1();
-            Console.WriteLine($"P1: Result: {result1}");
+            Console.WriteLine($"P1: The sum of all possible games is {Answer(result1)}");
 
             int result2 = Problem2();
-            Console.WriteLine($"P2: Result: {result2}");
+            Console.WriteLine($"P2: The sum of power is {Answer(result2)}");
         }
         public int Problem1()
         {
-            return 0;
+            return GameElf.PlayGamesWithLimits(setOfGames);
         }
+
         public int Problem2()
         {
-            return 0;
+            return GameElf.FindTotalPower(setOfGames);
+        }
+
+        public static class GameElf
+        {
+            public static int PlayGamesWithLimits(IEnumerable<Game> games)
+            {
+                int sum = 0;
+
+                foreach (Game game in games)
+                {
+                    if (game.Draws.Select(d => d.Red).Where(r => r > 12).Any())
+                        continue;
+                    if (game.Draws.Select(d => d.Green).Where(r => r > 13).Any())
+                        continue;
+                    if (game.Draws.Select(d => d.Blue).Where(r => r > 14).Any())
+                        continue;
+
+                    sum += game.GameNo;
+                }
+                return sum;
+            }
+
+            public static int FindTotalPower(IEnumerable<Game> games)
+            {
+                int sum = 0;
+
+                foreach (Game game in games)
+                {
+                    int product = 1;
+
+                    product *= game.Draws.Select(d => d.Red).Max();
+                    product *= game.Draws.Select(d => d.Green).Max();
+                    product *= game.Draws.Select(d => d.Blue).Max();
+
+                    sum += product;
+                }
+                return sum;
+
+            }
+        }
+
+            public class Game : IParsedDataFormat
+            {
+                public int GameNo { get; set; }
+                public List<Draw> Draws { get; set; }
+
+                public class Parsed : IInDataFormat
+                {
+                    public string DataFormat => @"Game (\d+): (.+)";
+
+                    public string[] PropertyNames => new string[] { nameof(GameNo), nameof(Draws) };
+
+                    public int GameNo { get; set; }
+                    public string Draws { get; set; }
+                }
+
+                public void Transform(IInDataFormat data)
+                {
+                    Parsed gameRound = (Parsed)data;
+                    GameNo = gameRound.GameNo;
+                    Draws = new List<Draw>();
+
+                    foreach (string draw in gameRound.Draws.Split(';'))
+                    {
+                        Draw d = Draw.FromText(draw.Trim());
+                        Draws.Add(d);
+                    }
+                }
+            }
+
+            public class Draw
+            {
+                public int Red { get; set; }
+                public int Green { get; set; }
+                public int Blue { get; set; }
+
+                public static Draw FromText(string text)
+                {
+                    Draw draw = new Draw();
+
+                    List<string> cubes = text.Split(',').ToList();
+                    foreach (string amountAndColor in cubes)
+                    {
+                        int amount = amountAndColor.Trim().Split(" ").First().ToInt();
+                        switch (amountAndColor.Trim().Split(" ").Last().Trim())
+                        {
+                            case "red":
+                                draw.Red += amount;
+                                break;
+                            case "green":
+                                draw.Green += amount;
+                                break;
+                            case "blue":
+                                draw.Blue += amount;
+                                break;
+                        }
+                    }
+                    return draw;
+                }
+
+                IEnumerable<Cubes> GetCubes()
+                {
+                    List<Cubes> cubes = new List<Cubes>();
+                    if (Red > 0)
+                    {
+                        cubes.Add(new Cubes { Color = ColorEnum.Red, Amount = Red });
+                    }
+                    if (Green > 0)
+                    {
+                        cubes.Add(new Cubes { Color = ColorEnum.Green, Amount = Green });
+                    }
+                    if (Blue > 0)
+                    {
+                        cubes.Add(new Cubes { Color = ColorEnum.Blue, Amount = Blue });
+                    }
+                    return cubes;
+                }
+
+            }
+
+            public class Cubes
+            {
+                public int Amount { get; set; }
+                public ColorEnum Color { get; set; }
+            }
+
+            public enum ColorEnum
+            {
+                Red,
+                Green,
+                Blue,
+            }
         }
     }
-}

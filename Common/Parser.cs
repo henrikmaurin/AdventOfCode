@@ -149,7 +149,7 @@ namespace Common
         public interface IParsedDataFormat
         {
             public void Transform(IInDataFormat data);
-            public Type GetReturnType();
+            //public Type GetReturnType();
         }
 
         public class SingleInteger : IParsedDataFormat {
