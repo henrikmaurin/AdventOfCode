@@ -77,96 +77,96 @@ namespace AdventOfCode2023
             }
         }
 
-            public class Game : IParsedDataFormat
+        public class Game : IParsedDataFormat
+        {
+            public int GameNo { get; set; }
+            public List<Draw> Draws { get; set; }
+
+            public class Parsed : IInDataFormat
             {
+                public string DataFormat => @"Game (\d+): (.+)";
+
+                public string[] PropertyNames => new string[] { nameof(GameNo), nameof(Draws) };
+
                 public int GameNo { get; set; }
-                public List<Draw> Draws { get; set; }
-
-                public class Parsed : IInDataFormat
-                {
-                    public string DataFormat => @"Game (\d+): (.+)";
-
-                    public string[] PropertyNames => new string[] { nameof(GameNo), nameof(Draws) };
-
-                    public int GameNo { get; set; }
-                    public string Draws { get; set; }
-                }
-
-                public void Transform(IInDataFormat data)
-                {
-                    Parsed gameRound = (Parsed)data;
-                    GameNo = gameRound.GameNo;
-                    Draws = new List<Draw>();
-
-                    foreach (string draw in gameRound.Draws.Split(';'))
-                    {
-                        Draw d = Draw.FromText(draw.Trim());
-                        Draws.Add(d);
-                    }
-                }
+                public string Draws { get; set; }
             }
 
-            public class Draw
+            public void Transform(IInDataFormat data)
             {
-                public int Red { get; set; }
-                public int Green { get; set; }
-                public int Blue { get; set; }
+                Parsed gameRound = (Parsed)data;
+                GameNo = gameRound.GameNo;
+                Draws = new List<Draw>();
 
-                public static Draw FromText(string text)
+                foreach (string draw in gameRound.Draws.Split(';'))
                 {
-                    Draw draw = new Draw();
-
-                    List<string> cubes = text.Split(',').ToList();
-                    foreach (string amountAndColor in cubes)
-                    {
-                        int amount = amountAndColor.Trim().Split(" ").First().ToInt();
-                        switch (amountAndColor.Trim().Split(" ").Last().Trim())
-                        {
-                            case "red":
-                                draw.Red += amount;
-                                break;
-                            case "green":
-                                draw.Green += amount;
-                                break;
-                            case "blue":
-                                draw.Blue += amount;
-                                break;
-                        }
-                    }
-                    return draw;
+                    Draw d = Draw.FromText(draw.Trim());
+                    Draws.Add(d);
                 }
-
-                IEnumerable<Cubes> GetCubes()
-                {
-                    List<Cubes> cubes = new List<Cubes>();
-                    if (Red > 0)
-                    {
-                        cubes.Add(new Cubes { Color = ColorEnum.Red, Amount = Red });
-                    }
-                    if (Green > 0)
-                    {
-                        cubes.Add(new Cubes { Color = ColorEnum.Green, Amount = Green });
-                    }
-                    if (Blue > 0)
-                    {
-                        cubes.Add(new Cubes { Color = ColorEnum.Blue, Amount = Blue });
-                    }
-                    return cubes;
-                }
-
-            }
-
-            public class Cubes
-            {
-                public int Amount { get; set; }
-                public ColorEnum Color { get; set; }
-            }
-
-            public enum ColorEnum
-            {
-                Red,
-                Green,
-                Blue,
             }
         }
+
+        public class Draw
+        {
+            public int Red { get; set; }
+            public int Green { get; set; }
+            public int Blue { get; set; }
+
+            public static Draw FromText(string text)
+            {
+                Draw draw = new Draw();
+
+                List<string> cubes = text.Split(',').ToList();
+                foreach (string amountAndColor in cubes)
+                {
+                    int amount = amountAndColor.Trim().Split(" ").First().ToInt();
+                    switch (amountAndColor.Trim().Split(" ").Last().Trim())
+                    {
+                        case "red":
+                            draw.Red += amount;
+                            break;
+                        case "green":
+                            draw.Green += amount;
+                            break;
+                        case "blue":
+                            draw.Blue += amount;
+                            break;
+                    }
+                }
+                return draw;
+            }
+
+            IEnumerable<Cubes> GetCubes()
+            {
+                List<Cubes> cubes = new List<Cubes>();
+                if (Red > 0)
+                {
+                    cubes.Add(new Cubes { Color = ColorEnum.Red, Amount = Red });
+                }
+                if (Green > 0)
+                {
+                    cubes.Add(new Cubes { Color = ColorEnum.Green, Amount = Green });
+                }
+                if (Blue > 0)
+                {
+                    cubes.Add(new Cubes { Color = ColorEnum.Blue, Amount = Blue });
+                }
+                return cubes;
+            }
+
+        }
+
+        public class Cubes
+        {
+            public int Amount { get; set; }
+            public ColorEnum Color { get; set; }
+        }
+
+        public enum ColorEnum
+        {
+            Red,
+            Green,
+            Blue,
+        }
     }
+}
