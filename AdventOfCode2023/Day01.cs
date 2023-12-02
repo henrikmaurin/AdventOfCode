@@ -8,7 +8,7 @@ namespace AdventOfCode2023
     {
         private const int day = 1;
 
-        SingleStrings calibrationDocument = new SingleStrings();
+        private SingleStrings calibrationDocument = new SingleStrings();
 
         string data;
         public Day01(string? testdata = null) : base(Global.Year, day, testdata != null)
