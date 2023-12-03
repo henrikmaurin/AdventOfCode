@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-using Common;
+﻿using Common;
 
 namespace AdventOfCode2023
 {
@@ -9,6 +7,7 @@ namespace AdventOfCode2023
     {
         private const int day = 3;
         List<string> data;
+        private GondolaEngine gondolaEngine;
         public Day03(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -18,194 +17,131 @@ namespace AdventOfCode2023
             }
 
             data = input.GetDataCached().SplitOnNewline();
-        }
-
-       
-
-        public bool HasAdjacentPart(int x, int y)
-        {
-            return IsPart(x, y - 1) ||
-             IsPart(x - 1, y - 1) ||
-             IsPart(x + 1, y - 1) ||
-
-             IsPart(x - 1, y) ||
-             IsPart(x + 1, y) ||
-
-             IsPart(x, y + 1) ||
-             IsPart(x - 1, y + 1) ||
-             IsPart(x + 1, y + 1);
-        }
-
-        public List<string> AdjacentCogs(int x, int y)
-        {
-            List<string> result = new List<string>();
-            if (IsCog(x - 1, y - 1))
-                result.Add($"{x - 1}x{y - 1}");
-            if (IsCog(x, y - 1))
-                result.Add($"{x}x{y - 1}");
-            if (IsCog(x + 1, y - 1))
-                result.Add($"{x + 1}x{y - 1}");
-
-            if (IsCog(x - 1, y))
-                result.Add($"{x - 1}x{y}");
-            if (IsCog(x + 1, y))
-                result.Add($"{x + 1}x{y}");
-
-            if (IsCog(x - 1, y + 1))
-                result.Add($"{x - 1}x{y + 1}");
-            if (IsCog(x, y + 1))
-                result.Add($"{x}x{y + 1}");
-            if (IsCog(x + 1, y + 1))
-                result.Add($"{x + 1}x{y + 1}");
-
-            return result;
-        }
-
-
-
-        public bool IsCog(int x, int y)
-        {
-            if (x < 0 || y < 0)
-            {
-                return false;
-            }
-            if (y >= data.Count)
-            {
-                return false;
-            }
-            if (x >= data[y].Length)
-            {
-                return false;
-            }
-            if (data[y][x] == '*')
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public bool IsPart(int x, int y)
-        {
-
-            if (x < 0 || y < 0)
-            {
-                return false;
-            }
-            if (y >= data.Count)
-            {
-                return false;
-            }
-            if (x >= data[y].Length)
-            {
-                return false;
-            }
-            if (data[y][x].IsNumber())
-            {
-                return false;
-            }
-            if (data[y][x] == '.')
-            {
-                return false;
-            }
-            return true;
-
-        }
-
-        public bool IsNumber(int x, int y)
-        {
-            if (x < 0 || y < 0)
-            {
-                return false;
-            }
-            if (y >= data.Count)
-            {
-                return false;
-            }
-            if (x >= data[y].Length)
-            {
-                return false;
-            }
-            if (data[y][x].IsNumber())
-            {
-                return false;
-            }
-
-            if (data[y][x].IsNumber())
-            {
-                return true;
-            }
-            return false;
-        }
-        class num
-        {
-            public int n { get; set; }
-            public List<string> AdjacantCogs { get; set; }
-
+            gondolaEngine = new GondolaEngine();
+            gondolaEngine.ReadSchematics(data);
+            gondolaEngine.Annotate();
         }
 
         public void Run()
         {
-            //SparseMap2D<char> map = new SparseMap2D<char>();
+            int result1 = Problem1();
+            Console.WriteLine($"P1: The sum of all components is {Answer(result1)}");
 
+            int result2 = Problem2();
+            Console.WriteLine($"P2: The sum of all gear ratios is {Answer(result2)}");
+        }
+        public int Problem1()
+        {            
+           return  SchematicsInterpreter.FindSum(gondolaEngine);
+        }
+        public int Problem2()
+        {
+            return SchematicsInterpreter.FindGearRatio(gondolaEngine);
+        }
 
-            //for (int y = 0; y < data.Count; y++)
-            //{
-            //    string line = data[y];
-
-            //    for (int x = 0; x < data[y].Length; x++)
-            //    {
-            //        if (line[x] != '.')
-            //        {
-            //            map.Set(x, y, line[x]);
-            //        }
-            //    }
-            //}
-
-//            data = @"467..114..
-//...*......
-//..35..633.
-//......#...
-//617*......
-//.....+.58.
-//..592.....
-//......755.
-//...$.*....
-//.664.598..".SplitOnNewline();
-
-
-
-            List<num> nums = new List<num>();
-
-            string currentnum = "";
-            long sum = 0;
-
-            for (int y = 0; y < data.Count; y++)
+        public static class SchematicsInterpreter
+        {
+            public static int FindSum(GondolaEngine engine)
             {
-                for (int x = 0; x < data[y].Length; x++)
+                return engine.Parts.Where(p=>p.Symbols.Any()).Select(p=>p.Number).Sum();
+            }
+
+            public static int FindGearRatio(GondolaEngine engine)
+            {
+                int sum = 0;
+
+                foreach (Vector2D coord in engine.Schematics.EnumerateCoords())
                 {
-                    if (data[y][x].IsNumber())
+                    if (engine.Schematics[coord]=='*')
                     {
-                        List<string> cogs = new List<string>();
-
-                        string n = $"{data[y][x]}";
-                        int len = 1;
-                        bool hasAdjacent = false;
-                        hasAdjacent = hasAdjacent || HasAdjacentPart(x, y);
-
-                        cogs.AddRange(AdjacentCogs(x, y));
-
-                        while (x + len < data[y].Length)
+                        var parts = engine.Parts.Where(p => p.Symbols.Where(s => s.Postion.X == coord.X && s.Postion.Y == coord.Y).Any()).ToArray();
+                        
+                        if (parts.Count()==2)
                         {
-                            if (data[y][x + len].IsNumber())
+                            sum += parts[0].Number * parts[1].Number;
+                        }
+                    }
+                }
+                return sum;
+            }
+        }
+
+        public class GondolaEngine
+        {
+            public Map2D<char> Schematics { get; set; }
+            public List<PartNumber> Parts { get; set; }
+
+            public void ReadSchematics(IEnumerable<string> rawSchematics)
+            {
+                Schematics = new Map2D<char>();
+                Schematics.Init(rawSchematics.First().Length, rawSchematics.Count());
+
+                for (int y = 0; y < Schematics.MaxY;y++)
+                {
+                    for(int x = 0; x < Schematics.MaxX; x++)
+                    {
+                        Schematics[x, y] = rawSchematics.ElementAt(y)[x];
+                    }
+                }
+               
+            }
+
+            public List<Symbol> GetSurroundingSymbols(Vector2D coord)
+            {
+                List<Vector2D> surroundingCoords = Schematics.GetSurrounding(coord);
+                List<Symbol> symbols = new List<Symbol>();
+
+                foreach (var surroundingCoord in surroundingCoords)
+                {
+                    if (!Schematics[surroundingCoord].IsNumber() && Schematics[surroundingCoord] != '.')
+                    {
+                        Symbol sym = new Symbol();
+                        sym.SymbolChar = Schematics[surroundingCoord];
+                        sym.Postion = surroundingCoord;
+                        symbols.Add(sym);
+                    }
+                }
+                return symbols;
+            }
+
+            public List<Symbol> GetSurroundingSymbols(int x, int y)
+            {
+                return GetSurroundingSymbols(new Vector2D(x, y));
+            }
+
+            public void Annotate()
+            {
+                Parts = new List<PartNumber>();
+
+                int len = 1;
+                foreach (Vector2D position in Schematics.EnumerateCoords())
+                {
+                    // Step over already processed positions
+                    if (len > 1)
+                    {
+                        len--;
+                        continue;
+                    }
+
+                    if (Schematics[position].IsNumber())
+                    {
+                        List<Symbol> symbols = new List<Symbol>();
+
+                        string number = $"{Schematics[position]}";
+                        symbols.AddRange(GetSurroundingSymbols(position));
+
+                        while (position.X + len < Schematics.MaxX)
+                        {
+                            if (Schematics[position.X + len, position.Y].IsNumber())
                             {
-                                n += $"{data[y][x + len]}";
-                                hasAdjacent = hasAdjacent || HasAdjacentPart(x + len, y);
-                                var c = AdjacentCogs(x + len, y);
-                                foreach (var cog in c)
+                                number += $"{Schematics[position.X + len, position.Y]}";
+
+                                var moreSymbols = GetSurroundingSymbols(position.X + len, position.Y);
+                                foreach (var symbol in moreSymbols)
                                 {
-                                    if (!cogs.Contains(cog))
+                                    if (!symbols.Where(s=>s.Postion.X==symbol.Postion.X && s.Postion.Y==symbol.Postion.Y).Any())
                                     {
-                                        cogs.Add(cog);
+                                        symbols.Add(symbol);
                                     }
                                 }
                                 len++;
@@ -214,72 +150,28 @@ namespace AdventOfCode2023
                                 break;
                         }
 
-                        nums.Add(new num { n = n.ToInt(), AdjacantCogs = cogs });
-
-                        if (hasAdjacent)
+                        PartNumber part = new PartNumber
                         {
-                            sum += n.ToInt();
-                        }
+                            Number = number.ToInt(),
+                            Symbols = symbols,
+                        };
 
-                        x += len - 1;
-
-
-                    }
-
-                }
-            }
-
-
-            Console.WriteLine(sum);
-
-            sum = 0;
-
-            for (int y = 0; y < data.Count; y++)
-            {
-                for (int x = 0; x < data[y].Length; x++)
-                {
-                    if (data[y][x] == '*')
-                    {
-                        var p = nums.Where(n => n.AdjacantCogs.Contains($"{x}x{y}")).ToArray();
-
-                        if (p.Count() == 2)
-                        {
-                            sum += p[0].n * p[1].n;
-                        }
-
-
-
-
+                        Parts.Add(part);
                     }
                 }
             }
-
-
-
-            Console.WriteLine(sum);
-
-
-
-
-
-
-
-
-            int result1 = Problem1();
-            Console.WriteLine($"P1: Result: {result1}");
-
-            int result2 = Problem2();
-            Console.WriteLine($"P2: Result: {result2}");
         }
-        public int Problem1()
+
+        public class PartNumber
         {
-            return 0;
-        }
-        public int Problem2()
-        {
-            return 0;
+            public int Number { get; set; }
+            public List<Symbol> Symbols { get; set; }
         }
 
-       
+        public class Symbol
+        {
+            public char SymbolChar { get; set; }
+            public Vector2D Postion { get; set; }
+        }
     }
 }

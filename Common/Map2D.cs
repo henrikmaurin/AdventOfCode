@@ -222,7 +222,7 @@
         public static class Vector
         {
             public static Vector2D Up { get => GetDirection(Directions.Up); }
-            public static Vector2D Down { get =>GetDirection(Directions.Down); }
+            public static Vector2D Down { get => GetDirection(Directions.Down); }
             public static Vector2D Left { get => GetDirection(Directions.Left); }
             public static Vector2D Right { get => GetDirection(Directions.Right); }
 
