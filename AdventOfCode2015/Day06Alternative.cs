@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-using Common;
+﻿using Common;
 
 using static AdventOfCode2015.Day06Alternative.Instruction;
 using static Common.Parser;
@@ -69,7 +67,8 @@ namespace AdventOfCode2015
 
             public bool Set(Vector2D pos)
             {
-                return _map.Set(pos, 1) == 1;
+                _map.Set(pos, 1);
+                return _map.Get(pos) == 1;
             }
 
             public void SetNew(Vector2D pos)
@@ -81,7 +80,8 @@ namespace AdventOfCode2015
 
             public bool Clear(Vector2D pos)
             {
-                return _map.Set(pos, 0) == 1;
+                _map.Set(pos, 0);
+                return _map.Get(pos) == 1;
             }
 
             public bool ClearNew(Vector2D pos)
@@ -90,14 +90,16 @@ namespace AdventOfCode2015
                 if (brightness < 0)
                     brightness = 0;
 
-                return _map.Set(pos, brightness) == 1;
+                _map.Set(pos, brightness);
+                return _map.Get(pos) == 1;
             }
 
             public bool Toggle(Vector2D pos)
             {
                 long togglevalue = 1 - (_map.Get(pos) ?? 0);
 
-                return _map.Set(pos, togglevalue) == 1;
+                _map.Set(pos, togglevalue);
+                return _map.Get(pos) == 1;
             }
 
             public void ToggleNew(Vector2D pos)

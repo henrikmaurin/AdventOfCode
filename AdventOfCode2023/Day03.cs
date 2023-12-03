@@ -31,8 +31,8 @@ namespace AdventOfCode2023
             Console.WriteLine($"P2: The sum of all gear ratios is {Answer(result2)}");
         }
         public int Problem1()
-        {            
-           return  SchematicsInterpreter.FindSum(gondolaEngine);
+        {
+            return SchematicsInterpreter.FindSum(gondolaEngine);
         }
         public int Problem2()
         {
@@ -43,7 +43,7 @@ namespace AdventOfCode2023
         {
             public static int FindSum(GondolaEngine engine)
             {
-                return engine.Parts.Where(p=>p.Symbols.Any()).Select(p=>p.Number).Sum();
+                return engine.Parts.Where(p => p.Symbols.Any()).Select(p => p.Number).Sum();
             }
 
             public static int FindGearRatio(GondolaEngine engine)
@@ -52,11 +52,11 @@ namespace AdventOfCode2023
 
                 foreach (Vector2D coord in engine.Schematics.EnumerateCoords())
                 {
-                    if (engine.Schematics[coord]=='*')
+                    if (engine.Schematics[coord] == '*')
                     {
                         var parts = engine.Parts.Where(p => p.Symbols.Where(s => s.Postion.X == coord.X && s.Postion.Y == coord.Y).Any()).ToArray();
-                        
-                        if (parts.Count()==2)
+
+                        if (parts.Count() == 2)
                         {
                             sum += parts[0].Number * parts[1].Number;
                         }
@@ -68,27 +68,27 @@ namespace AdventOfCode2023
 
         public class GondolaEngine
         {
-            public Map2D<char> Schematics { get; set; }
+            public SparseMap2D<char> Schematics { get; set; }
             public List<PartNumber> Parts { get; set; }
 
             public void ReadSchematics(IEnumerable<string> rawSchematics)
             {
-                Schematics = new Map2D<char>();
+                Schematics = new SparseMap2D<char>();
                 Schematics.Init(rawSchematics.First().Length, rawSchematics.Count());
 
-                for (int y = 0; y < Schematics.MaxY;y++)
+                for (int y = 0; y < Schematics.MaxY; y++)
                 {
-                    for(int x = 0; x < Schematics.MaxX; x++)
+                    for (int x = 0; x < Schematics.MaxX; x++)
                     {
                         Schematics[x, y] = rawSchematics.ElementAt(y)[x];
                     }
                 }
-               
+
             }
 
             public List<Symbol> GetSurroundingSymbols(Vector2D coord)
             {
-                List<Vector2D> surroundingCoords = Schematics.GetSurrounding(coord);
+                List<Vector2D> surroundingCoords = Schematics.FilterValidCoords(coord.GetSurrounding());
                 List<Symbol> symbols = new List<Symbol>();
 
                 foreach (var surroundingCoord in surroundingCoords)
@@ -134,12 +134,12 @@ namespace AdventOfCode2023
                         {
                             if (Schematics[position.X + len, position.Y].IsNumber())
                             {
-                                number += $"{Schematics[position.X + len, position.Y]}";
+                                number += $"{Schematics[position + Directions.Vector.Right * len]}";
 
                                 var moreSymbols = GetSurroundingSymbols(position.X + len, position.Y);
                                 foreach (var symbol in moreSymbols)
                                 {
-                                    if (!symbols.Where(s=>s.Postion.X==symbol.Postion.X && s.Postion.Y==symbol.Postion.Y).Any())
+                                    if (!symbols.Where(s => s.Postion == symbol.Postion).Any())
                                     {
                                         symbols.Add(symbol);
                                     }

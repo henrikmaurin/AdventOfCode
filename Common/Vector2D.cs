@@ -30,18 +30,21 @@
 
         public static bool Equals(Vector2D a, Vector2D b)
         {
+            if (a is null || b is null)
+                return false;
+
             return a.X == b.X && a.Y == b.Y;
         }
         public bool Equals(Vector2D b)
         {
-            return Equals(this,b);
+            return Equals(this, b);
         }
 
         public override bool Equals(object? obj)
         {
             if (obj is null) return false;
 
-            return Equals(obj as Vector2D);
+            return Equals((Vector2D)obj);
         }
 
         public override int GetHashCode()
@@ -79,6 +82,16 @@
         public Vector2D Clone()
         {
             return new Vector2D(this);
+        }
+
+        public List<Vector2D> GetSurrounding()
+        {
+            return Directions.GetSurroundingCoordsFor(this).ToList();
+        }
+
+        public List<Vector2D> GetNeigboingCoords()
+        {
+            return Directions.GetNeighboringCoordsFor(this).ToList();
         }
     }
 }

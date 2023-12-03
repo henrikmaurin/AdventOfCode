@@ -81,12 +81,12 @@ namespace AdventOfCode2015
 
             private int DropPackage(Vector2D coordinate)
             {
-                if (_map.Map.ContainsKey(coordinate.ToString()))
-                    _map.Map[coordinate.ToString()]++;
+                if (_map.Map.ContainsKey(coordinate))
+                    _map.Map[coordinate]++;
                 else
-                    _map.Map.Add(coordinate.ToString(), 1);
+                    _map.Map.Add(coordinate, 1);
 
-                return _map.Map[coordinate.ToString()];
+                return _map.Map[coordinate];
             }
 
             public void FollowInstructions(IEnumerable<Instruction> instructions)
