@@ -1,5 +1,28 @@
 ﻿namespace Common
 {
+    public static class InitMap
+    {
+        public static void InitFromStringArray<T>(this IMap2D<T> map, string[] mapData, Func<char, T> mapper)
+        {
+            map.Init(mapData.Select(m => m.Length).Max(), mapData.Length);
+
+            for (int y = 0; y < map.MaxY; y++)
+            {
+                for (int x = 0; x < map.MaxX; x++)
+                {
+                    map.Set(x,y, mapper(mapData.ElementAt(y)[x]));
+                }
+            }
+        }
+
+        public static void InitFromStringArray(this SparseMap2D<char> map, string[] mapData)
+        {
+            InitFromStringArray<char>(map, mapData, (ch) => { return ch; });
+        } 
+    }
+
+
+
     public class SparseMap2D<T> : IMap2D<T>
     {
         private int? _minX;
@@ -125,9 +148,9 @@
             else
                 Map[pos] = value;
 
-            return ;
+            return;
         }
-        
+
         public virtual T? TryGet(int xPos, int yPos)
         {
             if (Map == null)
@@ -173,7 +196,7 @@
 
         public List<Tuple<Vector2D, T>> EnumerateMap()
         {
-           return Map.Select(m=> new Tuple<Vector2D, T>(m.Key, m.Value)).ToList();
+            return Map.Select(m => new Tuple<Vector2D, T>(m.Key, m.Value)).ToList();
         }
 
         public virtual T this[int x, int y]

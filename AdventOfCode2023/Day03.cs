@@ -74,16 +74,7 @@ namespace AdventOfCode2023
             public void ReadSchematics(IEnumerable<string> rawSchematics)
             {
                 Schematics = new SparseMap2D<char>();
-                Schematics.Init(rawSchematics.First().Length, rawSchematics.Count());
-
-                for (int y = 0; y < Schematics.MaxY; y++)
-                {
-                    for (int x = 0; x < Schematics.MaxX; x++)
-                    {
-                        Schematics[x, y] = rawSchematics.ElementAt(y)[x];
-                    }
-                }
-
+                Schematics.InitFromStringArray(rawSchematics.ToArray());
             }
 
             public List<Symbol> GetSurroundingSymbols(Vector2D coord)

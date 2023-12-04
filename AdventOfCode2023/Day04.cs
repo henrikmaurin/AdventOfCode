@@ -1,102 +1,123 @@
 ﻿using Common;
 
+using static AdventOfCode2023.Day02;
+using static Common.Parser;
+
 namespace AdventOfCode2023
 {
     public class Day04 : DayBase, IDay
     {
         private const int day = 4;
-        List<string> data;
+
+        private IEnumerable<ScratchCard> cards;
+
         public Day04(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
-            {
-                data = testdata.SplitOnNewline();
+            {              
+                cards = Parser.ParseLinesDelimitedByNewline<ScratchCard, ScratchCard.Parsed>(testdata);
                 return;
             }
 
-            data = input.GetDataCached().SplitOnNewline();
+            string data = input.GetDataCached();
+            cards = Parser.ParseLinesDelimitedByNewline<ScratchCard, ScratchCard.Parsed>(data);
         }
         public void Run()
         {
-            double result1 = Problem1();
+            int result1 = Problem1();
             Console.WriteLine($"P1: The scratch cards are worth {Answer(result1)} points in total");
 
             int result2 = Problem2();
             Console.WriteLine($"P2: You end up with {Answer(result2)} scratch cards in total");
         }
-        public double Problem1()
+        public int Problem1()
         {
-            double result = 0;
-
-            foreach (var item in data)
-            {
-                string numbers = item.Split(": ").Last();
-
-                int[] winningNumbers = numbers.Trim().Split('|').First().Trim().Split(' ').Select(s => s.ToInt()).ToArray();
-                int[] cardnumbers = numbers.Trim().Split('|').Last().Trim().Replace("  ", " ").Split(' ').Select(s => s.ToInt()).ToArray();
-
-
-                int numberofhits = 0;
-                foreach (var number in cardnumbers)
-                {
-                    if (number.In(winningNumbers))
-                        numberofhits++;
-                }
-
-
-                if (numberofhits > 0)
-                {
-                    result += Math.Pow(2, numberofhits - 1);
-                }
-            }
-            return result;
+            return CardScratcherElf.ScrachAllCardsAndSumScore(cards);
         }
         public int Problem2()
         {
-            Dictionary<int, int> lotteryTicketCount = new Dictionary<int, int>();
-
-
-            int result = 0;
-
-            Stack<string> stack = new Stack<string>();
-
-
-            foreach (var item in data)
-                stack.Push(item);
-
-            while (stack.Count > 0)
-            {
-                int count = 1;
-
-                string item = stack.Pop();
-
-
-                int gameno = item.Split(":").First().Split(" ").Last().ToInt();
-                string numbers = item.Split(": ").Last();
-
-                int[] winningNumbers = numbers.Trim().Split('|').First().Trim().Split(' ').Select(s => s.ToInt()).ToArray();
-                int[] cardnumbers = numbers.Trim().Split('|').Last().Trim().Replace("  ", " ").Split(' ').Select(s => s.ToInt()).ToArray();
-
-
-                int numberofhits = 0;
-                foreach (var number in cardnumbers)
-                {
-                    if (number.In(winningNumbers))
-                        numberofhits++;
-                }
-
-                for (int i = 0; i <= numberofhits; i++)
-                {
-                    if (lotteryTicketCount.ContainsKey(i + gameno))
-                    {
-                        count += lotteryTicketCount[i + gameno];
-                    }
-                }
-
-                lotteryTicketCount.Add(gameno, count);
-                result += count;
-            }
-            return result;
+            return CardScratcherElf.CountAllCards(cards);
         }
+
+        public static class CardScratcherElf
+        {
+            public static int ScrachAllCardsAndSumScore(IEnumerable<ScratchCard> cards)
+            {
+                return cards.Sum(card => card.Score);
+            }
+
+            public static int CountAllCards(IEnumerable<ScratchCard> cards)
+            {
+                ElfMemory memory = new ElfMemory();
+                int result = 0;
+
+                foreach (ScratchCard card in cards.OrderByDescending(c=>c.CardNo))
+                {
+                    int count = 1;
+                    for (int i = 0; i <= card.Matches; i++)
+                    {
+                        if (memory.HasMemorized(i + card.CardNo))
+                        {
+                            count += memory.PullFormMemory(i + card.CardNo);
+                        }
+                    }
+
+                    memory.Memorize(card.CardNo, count);
+                    result += count;
+                }
+                return result;
+            }
+
+            internal class ElfMemory
+            {
+                private Dictionary<int, int> memory = new Dictionary<int, int>();
+                internal void Memorize(int forCard, int matches)
+                {
+                    memory.Add(forCard, matches);
+                }
+
+                internal bool HasMemorized(int card)
+                {
+                    return memory.ContainsKey(card);
+                }
+
+                internal int PullFormMemory(int card)
+                {
+                    return memory[card];
+                }
+                
+            }
+        }
+
+        public class ScratchCard : IParsedDataFormat
+        {
+            public int CardNo { get; set; }
+            public List<int> WinningNumbers { get; set; }
+            public List<int> Numbers { get; set; }
+
+            public int Matches { get => Numbers.Where(n => n.In(WinningNumbers)).Count(); }
+            public int Score { get => Matches > 0 ? (int)Math.Pow(2, Matches - 1) : 0; }
+
+            public class Parsed : IInDataFormat
+            {
+                public string DataFormat => @"Card (\d+): (.+) \| (.+)";
+
+                public string[] PropertyNames => new string[] { nameof(CardNumber), nameof(WinningNumbers), nameof(Numbers) };
+                public int CardNumber { get; set; }
+                public string WinningNumbers { get; set; }
+                public string Numbers { get; set; }
+            }
+
+            public void Transform(IInDataFormat data)
+            {
+                Parsed parsed = (Parsed)data;
+
+                CardNo = parsed.CardNumber;
+                WinningNumbers = parsed.WinningNumbers.SplitOnWhitespace().Select(n => n.ToInt()).ToList();
+                Numbers = parsed.Numbers.SplitOnWhitespace().Select(n => n.ToInt()).ToList();
+
+            }
+        }
+
     }
 }

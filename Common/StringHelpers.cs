@@ -1,5 +1,7 @@
 ﻿using System.Text;
 
+using Microsoft.Extensions.Primitives;
+
 namespace Common
 {
 	public static class StringHelpers
@@ -140,7 +142,12 @@ namespace Common
 			return retval;
 		}
 
-		public static string ReplaceNewLine(this string me)
+        public static string[] SplitOnWhitespace(this string me)
+        {
+            return System.Text.RegularExpressions.Regex.Split(me, @"\s+");
+        }
+
+        public static string ReplaceNewLine(this string me)
 		{
 			me = me.Replace("\r\n", Environment.NewLine);
 			me = me.Replace("\r", Environment.NewLine);
@@ -177,7 +184,7 @@ namespace Common
 		public static string IsSingleLine(this string me)
 		{
 			return me.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
-		}
+		}		
 
 		public static string[] Tokenize(this string indata)
 		{
