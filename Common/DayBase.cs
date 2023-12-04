@@ -42,12 +42,18 @@ namespace Common
             return Bold().Yellow(answer);
         }
 
+
         public static string Answer(int answer)
         {
             return Bold().Yellow($"{answer}");
         }
 
         public static string Answer(long answer)
+        {
+            return Bold().Yellow($"{answer}");
+        }
+
+        public static string Answer(double answer)
         {
             return Bold().Yellow($"{answer}");
         }

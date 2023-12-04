@@ -18,13 +18,11 @@ namespace AdventOfCode2023
         }
         public void Run()
         {
-
-
             double result1 = Problem1();
-            Console.WriteLine($"P1: Result: {result1}");
+            Console.WriteLine($"P1: The scratch cards are worth {Answer(result1)} points in total");
 
             int result2 = Problem2();
-            Console.WriteLine($"P2: Result: {result2}");
+            Console.WriteLine($"P2: You end up with {Answer(result2)} scratch cards in total");
         }
         public double Problem1()
         {
@@ -55,19 +53,23 @@ namespace AdventOfCode2023
         }
         public int Problem2()
         {
+            Dictionary<int, int> lotteryTicketCount = new Dictionary<int, int>();
+
+
             int result = 0;
 
-            Queue<string> queue = new Queue<string>();
+            Stack<string> stack = new Stack<string>();
 
 
             foreach (var item in data)
-                queue.Enqueue(item);
+                stack.Push(item);
 
-
-            while (queue.Count > 0)
+            while (stack.Count > 0)
             {
-                string item = queue.Dequeue();
-                result++;
+                int count = 1;
+
+                string item = stack.Pop();
+
 
                 int gameno = item.Split(":").First().Split(" ").Last().ToInt();
                 string numbers = item.Split(": ").Last();
@@ -83,13 +85,16 @@ namespace AdventOfCode2023
                         numberofhits++;
                 }
 
-                for (int i = 0; i < numberofhits; i++)
+                for (int i = 0; i <= numberofhits; i++)
                 {
-                    if (i +gameno < data.Count)
+                    if (lotteryTicketCount.ContainsKey(i + gameno))
                     {
-                        queue.Enqueue(data[i+gameno]);
+                        count += lotteryTicketCount[i + gameno];
                     }
                 }
+
+                lotteryTicketCount.Add(gameno, count);
+                result += count;
             }
             return result;
         }
