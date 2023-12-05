@@ -142,12 +142,12 @@ namespace Common
 			return retval;
 		}
 
-        public static string[] SplitOnWhitespace(this string me)
-        {
-            return System.Text.RegularExpressions.Regex.Split(me, @"\s+");
-        }
+		public static string[] SplitOnWhitespace(this string me)
+		{
+			return System.Text.RegularExpressions.Regex.Split(me, @"\s+");
+		}
 
-        public static string ReplaceNewLine(this string me)
+		public static string ReplaceNewLine(this string me)
 		{
 			me = me.Replace("\r\n", Environment.NewLine);
 			me = me.Replace("\r", Environment.NewLine);
@@ -228,9 +228,9 @@ namespace Common
 
 		public static int IndexOfAny(this string thisString, string[] strings, int startIndex=0)
 		{
-            List<int> result = strings.Select(s => thisString.IndexOf(s, startIndex)).Where(i=>i>=0).ToList();
+			List<int> result = strings.Select(s => thisString.IndexOf(s, startIndex)).Where(i=>i>=0).ToList();
 
-            return result.Min();
+			return result.Min();
 		}
 
 		public static int LastIndexOfAny(this string thisString, string[] strings, int startIndex = -1)
@@ -240,7 +240,7 @@ namespace Common
 
 			List<int> result = strings.Select(s => thisString.LastIndexOf(s, startIndex)).ToList();
 
-            return result.Max();
+			return result.Max();
 		}
 
 	}
