@@ -2,22 +2,30 @@
 
 using Common;
 
+using static AdventOfCode2023.Day05;
+using static Common.Parser;
+
 namespace AdventOfCode2023
 {
     public class Day05 : DayBase, IDay
     {
         private const int day = 5;
-        string data;
+        string[][] data;
+
+        private Seeds SeedInstructions;
+        private NecessityMappings NecessityMapper;
 
         public Day05(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
-                data = testdata;
+                data = testdata.GroupByEmptyLine();
                 return;
             }
 
-            data = input.GetDataCached();
+            data = input.GetDataCached().GroupByEmptyLine();
+            SeedInstructions = new Seeds(data[0][0]);
+            NecessityMapper = new NecessityMappings(data[1..]);
         }
         public void Run()
         {
@@ -28,92 +36,35 @@ namespace AdventOfCode2023
             Console.WriteLine($"P2: Result: {result2}");
         }
 
+
+
         public long Problem1()
         {
-            var sections = data.GroupByEmptyLine();
-
-            List<NecessityCatecory> necessityCategories = new List<NecessityCatecory>();
-
-            for (int i = 1; i < sections.Length; i++)
-            {
-                NecessityCatecory necessityCategory = new NecessityCatecory();
-
-                foreach (string line in sections[i])
-                {
-                    if (line.Contains(":"))
-                        continue;
-
-                    Necessity necessity = new Necessity(line);
-                    necessityCategory.Necessities.Add(necessity);
-                }
-                necessityCategories.Add(necessityCategory);
-            }
-
-            long min = long.MaxValue;
-
-            int[] seeds = sections[0][0].Split(": ").Last().Split(" ").ToInt();
-
-            foreach (var item in seeds)
-            {
-                int depth = 0;
-                long pos = item;
-                while (depth < 7)
-                {
-                    pos = necessityCategories[depth].GetPos(pos);
-                    depth++;
-                }
-                if (pos < min)
-                    min = pos;
-
-            }
-
-            return min;
+            return GardeningElf.PlantSeeds(SeedInstructions, NecessityMapper);
         }
 
         public long Problem2_slow()
         {
-            var sections = data.GroupByEmptyLine();
-
-            List<NecessityCatecory> necessityCategories = new List<NecessityCatecory>();
-
-            for (int i = 1; i < sections.Length; i++)
-            {
-                NecessityCatecory necessityCategory = new NecessityCatecory();
-
-                foreach (string line in sections[i])
-                {
-                    if (line.Contains(":"))
-                        continue;
-
-                    Necessity necessity = new Necessity(line);
-                    necessityCategory.Necessities.Add(necessity);
-                }
-                necessityCategories.Add(necessityCategory);
-            }
-
+            long counter = 0;
             long min = long.MaxValue;
 
-            long[] seeds = sections[0][0].Split(": ").Last().Split(" ").ToLong();
-
-            for (long i = 0; i < seeds.Length; i += 2)
+            foreach (Range seed in SeedInstructions.SeedRanges)
             {
-                long start = seeds[i];
-                long end = seeds[i] + seeds[i + 1] - 1;
-
-
-
-                for (long item = start; item <= end; item++)
+                for (long item = seed.From; item <= seed.To; item++)
                 {
                     int depth = 0;
                     long pos = item;
                     while (depth < 7)
                     {
-                        pos = necessityCategories[depth].GetPos(pos);
+                        pos = NecessityMapper.NecessityCategories[depth].GetPos(pos);
                         depth++;
                     }
                     if (pos < min)
                         min = pos;
 
+                    counter++;
+                    if (counter % 1000000 == 0)
+                        Console.WriteLine(counter);
                 }
             }
             return min;
@@ -121,54 +72,109 @@ namespace AdventOfCode2023
 
         public long Problem2()
         {
-            var sections = data.GroupByEmptyLine();
-            long[] seeds = sections[0][0].Split(": ").Last().Split(" ").ToLong();
-
-            List<Range> seedsToTry = new List<Range>();
-
-            for (int i = 0; i < seeds.Length; i += 2)
-            {
-                seedsToTry.Add(new Range { From = seeds[i], To = seeds[i] + seeds[i + 1] - 1 });
-            }
-
-            List<NecessityCatecory> necessityCategories = new List<NecessityCatecory>();
-
-            for (int i = 1; i < sections.Length; i++)
-            {
-                NecessityCatecory necessityCategory = new NecessityCatecory();
-
-                foreach (string line in sections[i])
-                {
-                    if (line.Contains(":"))
-                        continue;
-
-                    Necessity necessity = new Necessity(line);
-                    necessityCategory.Necessities.Add(necessity);
-                }
-                necessityCategories.Add(necessityCategory);
-            }
-
             long min = long.MaxValue;
 
-            NecessityCollection container = new NecessityCollection();
-            container.NecessityCategories = necessityCategories;
-
-            foreach (var seedRange in seedsToTry)
+            foreach (var seedRange in SeedInstructions.SeedRanges)
             {
-                long result = container.GetLowest(seedRange, 0);
+                long result = NecessityMapper.GetLowest(seedRange);
                 if (result < min)
                     min = result;
             }
             return min;
         }
 
-        class NecessityCollection
+        public static class GardeningElf
         {
-            public List<NecessityCatecory> NecessityCategories { get; set; } = new List<NecessityCatecory>();
+            public static long PlantSeeds(Seeds seeds, NecessityMappings mappings)
+            {
+                long min = long.MaxValue;
+
+                foreach (var seed in seeds.SeedPostitions)
+                {
+                    int depth = 0;
+                    long pos = seed;
+                    while (depth < 7)
+                    {
+                        pos = mappings.NecessityCategories[depth].GetPos(pos);
+                        depth++;
+                    }
+                    if (pos < min)
+                        min = pos;
+
+                }
+
+                return min;
+            }
+
+            public static long PlantRangesOfSeeds(Seeds seeds, NecessityMappings mappings)
+            {
+                long min = long.MaxValue;
+
+                foreach (var seedRange in seeds.SeedRanges)
+                {
+                    long result = mappings.GetLowest(seedRange);
+                    if (result < min)
+                        min = result;
+                }
+                return min;
+            }
+        }
+
+        public class Seeds
+        {
+            private List<long>? _seedData = null;
+            public List<long> SeedPostitions { get => _seedData == null ? new List<long>() : new List<long>(_seedData); }
+            public List<Range> SeedRanges { get => GetRanges(); }
+
+            public Seeds(string data)
+            {
+                data = data.Replace("seeds: ", "");
+                _seedData = data.SplitOnWhitespace().ToLong().ToList();
+            }
+
+            private List<Range> GetRanges()
+            {
+                List<Range> ranges = new List<Range>();
+
+                if (_seedData == null)
+                    return ranges;
+
+                for (int i = 0; i < _seedData?.Count; i += 2)
+                {
+                    ranges.Add(new Range { From = _seedData[i], To = _seedData[i] + _seedData[i + 1] - 1 });
+                }
+                return ranges;
+            }
+        }
+
+        public class NecessityMappings
+        {
+            public List<NecessityCatecory> NecessityCategories { get; set; }
             public Dictionary<string, long> Cache = new Dictionary<string, long>();
 
-            public long GetLowest(Range range, int depth, long lowest = long.MaxValue)
+            public NecessityMappings(string[][] data)
             {
+                NecessityCategories = new List<NecessityCatecory>();
+                for (int i = 0; i < data.Length; i++)
+                {
+                    NecessityCategories.Add(new NecessityCatecory(data[i]));
+                }
+            }
+
+            static class NecessityType
+            {
+                public const int Soil = 0;
+                public const int Fertilizer = 1;
+                public const int Water = 2;
+                public const int Light = 3;
+                public const int Temperature = 4;
+                public const int Humidity = 5;
+                public const int Location = 6;
+            }
+
+            public long GetLowest(Range range, int depth = 0)
+            {
+                long lowest = long.MaxValue;
                 if (depth == 7)
                 {
                     return range.From;
@@ -193,9 +199,20 @@ namespace AdventOfCode2023
         }
 
 
-        class NecessityCatecory
+        public class NecessityCatecory
         {
             public List<Necessity> Necessities { get; set; }
+            public NecessityCatecory(string[] data)
+            {
+                Necessities = new List<Necessity>();
+                foreach (var item in data)
+                {
+                    if (item.Contains(":"))
+                        continue;
+                    Necessity necessity = new Necessity(item);
+                    Necessities.Add(necessity);
+                }
+            }
 
             public override string ToString()
             {
@@ -244,7 +261,8 @@ namespace AdventOfCode2023
                 if (necessity == null)
                     return pos;
 
-                return necessity.Transform(pos);
+                long transformed = necessity.Transform(pos);
+                return transformed;
             }
         }
 
