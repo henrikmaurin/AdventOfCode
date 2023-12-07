@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Reflection;
 
 using static Crayon.Output;
 
@@ -72,8 +71,9 @@ namespace Common
             Stopwatch stopwatch = new Stopwatch();
             try
             {
+                Func<T> func = function.Compile();
                 stopwatch.Start();
-                return function.Compile().Invoke();
+                return func.Invoke();
             }
             finally
             {

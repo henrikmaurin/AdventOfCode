@@ -10,16 +10,18 @@ namespace AdventOfCode2023
     public class Day05 : DayBase, IDay
     {
         private const int day = 5;
-        string[][] data;
 
         private Seeds SeedInstructions;
         private NecessityMappings NecessityMapper;
 
         public Day05(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
+            string[][] data;
             if (testdata != null)
             {
                 data = testdata.GroupByEmptyLine();
+                SeedInstructions = new Seeds(data[0][0]);
+                NecessityMapper = new NecessityMappings(data[1..]);
                 return;
             }
 
@@ -33,7 +35,7 @@ namespace AdventOfCode2023
             WriteAnswer(1, "First plot to plant at {result}", result1);
            
             long result2 = MeasureExecutionTime(() => Problem2());
-            WriteAnswer(2, "Revised firt plot to plant at {result}", result2);
+            WriteAnswer(2, "Revised first plot to plant at {result}", result2);
         }
 
 
@@ -72,15 +74,7 @@ namespace AdventOfCode2023
 
         public long Problem2()
         {
-            long min = long.MaxValue;
-
-            foreach (var seedRange in SeedInstructions.SeedRanges)
-            {
-                long result = NecessityMapper.GetLowest(seedRange);
-                if (result < min)
-                    min = result;
-            }
-            return min;
+            return GardeningElf.PlantRangesOfSeeds(SeedInstructions, NecessityMapper);
         }
 
         public static class GardeningElf
