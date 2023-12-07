@@ -1,4 +1,8 @@
-﻿using static Crayon.Output;
+﻿using System.Diagnostics;
+using System.Linq.Expressions;
+using System.Reflection;
+
+using static Crayon.Output;
 
 namespace Common
 {
@@ -10,6 +14,8 @@ namespace Common
         {
             Year = year;
             Day = day;
+
+            _executionTime = null;
 
             if (runtests)
                 return;
@@ -32,9 +38,66 @@ namespace Common
             }
         }
 
+        protected void WriteAnswer<T>(int problemNumber, string message, T result)
+        {
+            WriteAnswer(problemNumber, message, result.ToString());
+        }
+
+        protected void WriteAnswer(int problemNumber, string message, string result)
+        {
+            long? timeTaken = null;
+            string key = $"Problem{problemNumber}";
+            if (_executionTime?.ContainsKey(key) == true)
+                timeTaken = _executionTime[key];
+
+            message = message.Replace("{result}", Bold().Yellow($"{result}"));
+
+            string outputString = $"P{problemNumber}: {message}";
+            if (timeTaken != null)
+                outputString += $" ({Bold().Green($"{timeTaken}")} ms)";
+
+            Console.WriteLine(outputString);
+        }
+
+
+        protected T MeasureExecutionTime<T>(Expression<Func<T>> function)
+        {
+            if (_executionTime == null)
+                _executionTime = new Dictionary<string, long>();
+
+
+            var methodCall = function.Body as MethodCallExpression;
+            string name = methodCall.Method.Name;
+
+            Stopwatch stopwatch = new Stopwatch();
+            try
+            {
+                stopwatch.Start();
+                return function.Compile().Invoke();
+            }
+            finally
+            {
+                stopwatch.Stop();
+                if (!_executionTime.ContainsKey(name))
+                    _executionTime.Add(name, stopwatch.ElapsedMilliseconds);
+                else
+                    _executionTime[name] = stopwatch.ElapsedMilliseconds;
+            }
+
+
+        }
+
         public DayBase(bool runtests)
         {
 
+        }
+
+        public string ExecutionTime(string key)
+        {
+            if (!_executionTime?.ContainsKey(key) == true)
+                return "N/A";
+
+            return "(" + Bold().Green($"{_executionTime[key]} ms") + ")";
         }
 
         public static string Answer(string answer)
@@ -86,6 +149,8 @@ namespace Common
         public string? Cookie { get; private set; }
         public string? Email { get; private set; }
         protected AOCGetInput input;
+
+        private Dictionary<string, long> _executionTime;
 
     }
 

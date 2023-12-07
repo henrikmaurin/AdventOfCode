@@ -25,11 +25,11 @@ namespace AdventOfCode2023
 
         public void Run()
         {
-            int result1 = Problem1();
-            Console.WriteLine($"P1: Sum of all decoded calibration values are {Answer(result1)}");
+            int result1 = MeasureExecutionTime(()=> Problem1());
+            WriteAnswer(1, "Sum of all decoded calibration values are {result}",result1);
 
-            int result2 = Problem2();
-            Console.WriteLine($"P2: Sum of all decoded calibration values including spelled out numbers are {Answer(result2)}");
+            int result2 = MeasureExecutionTime(() => Problem2());
+            WriteAnswer(1, "Sum of all decoded calibration values including spelled out numbers are {result}", result2);            
         }
         public int Problem1()
         {

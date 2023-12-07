@@ -24,11 +24,11 @@ namespace AdventOfCode2023
         }
         public void Run()
         {
-            int result1 = Problem1();
-            Console.WriteLine($"P1: The scratch cards are worth {Answer(result1)} points in total");
+            int result1 = MeasureExecutionTime(()=> Problem1());
+            WriteAnswer(1, "The scratch cards are worth {result} points in total", result1);
 
-            int result2 = Problem2();
-            Console.WriteLine($"P2: You end up with {Answer(result2)} scratch cards in total");
+            int result2 = MeasureExecutionTime(() => Problem2());
+            WriteAnswer(2, "You end up with {result} scratch cards in total", result2);
         }
         public int Problem1()
         {
@@ -100,7 +100,7 @@ namespace AdventOfCode2023
 
             public class Parsed : IInDataFormat
             {
-                public string DataFormat => @"Card (\d+): (.+) \| (.+)";
+                public string DataFormat => @"Card\s+(\d+): (.+) \| (.+)";
 
                 public string[] PropertyNames => new string[] { nameof(CardNumber), nameof(WinningNumbers), nameof(Numbers) };
                 public int CardNumber { get; set; }

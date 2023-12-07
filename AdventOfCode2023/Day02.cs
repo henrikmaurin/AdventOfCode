@@ -22,11 +22,11 @@ namespace AdventOfCode2023
         }
         public void Run()
         {
-            int result1 = Problem1();
-            Console.WriteLine($"P1: The sum of all possible games is {Answer(result1)}");
+            int result1 = MeasureExecutionTime(()=> Problem1());
+            WriteAnswer(1, "The sum of all possible games is {result}", result1);
 
-            int result2 = Problem2();
-            Console.WriteLine($"P2: The sum of power is {Answer(result2)}");
+            int result2 = MeasureExecutionTime(() => Problem2());
+            WriteAnswer(2, "The sum of power is {result}", result2);
         }
         public int Problem1()
         {

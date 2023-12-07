@@ -29,11 +29,11 @@ namespace AdventOfCode2023
         }
         public void Run()
         {
-            long result1 = Problem1();
-            Console.WriteLine($"P1: Result: {result1}");
-
-            long result2 = Problem2();
-            Console.WriteLine($"P2: Result: {result2}");
+            long result1 = MeasureExecutionTime(()=> Problem1());
+            WriteAnswer(1, "First plot to plant at {result}", result1);
+           
+            long result2 = MeasureExecutionTime(() => Problem2());
+            WriteAnswer(2, "Revised firt plot to plant at {result}", result2);
         }
 
 
