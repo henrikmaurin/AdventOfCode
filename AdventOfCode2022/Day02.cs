@@ -47,11 +47,11 @@ namespace AdventOfCode2022
         }
         public void Run()
         {
-            int result1 = Problem1();
-            Console.WriteLine($"P1: Winning strategy resluts in: {result1}");
+            int result1 = MeasureExecutionTime(() => Problem1());
+            WriteAnswer(1, "Sum of calories of Elf with most calories: {result}", result1);
 
-            int result2 = Problem2();
-            Console.WriteLine($"P2: correct winning strategy resluts in: {result2}");
+            int result2 = MeasureExecutionTime(() => Problem2());
+            WriteAnswer(2, "Correct winning strategy resluts in: {result}", result2);
         }
 
         public int Problem1()

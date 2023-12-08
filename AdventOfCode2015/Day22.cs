@@ -31,10 +31,10 @@ namespace AdventOfCode2015
         public void Run()
         {
             int result1 = Problem1();
-            Console.WriteLine($"P1: Result: {result1}");
+            WriteAnswer(1, "Result: {result}", result1);
 
             int result2 = Problem2();
-            Console.WriteLine($"P2: Result: {result2}");
+            WriteAnswer(2, "Result: {result}", result2);
         }
 
 

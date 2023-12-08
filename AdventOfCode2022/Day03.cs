@@ -20,10 +20,10 @@ namespace AdventOfCode2022
 
         public void Run()
         {
-            int result1 = Problem1();
+            int result1 = MeasureExecutionTime(() => Problem1());
             Console.WriteLine($"P1: Sum of Priorities: {result1}");
 
-            int result2 = Problem2();
+            int result2 = MeasureExecutionTime(() => Problem2());
             Console.WriteLine($"P2: Sum of group Priorities: {result2}");
         }
 

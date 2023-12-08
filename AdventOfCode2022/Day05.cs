@@ -20,10 +20,10 @@ namespace AdventOfCode2022
         }
         public void Run()
         {
-            string result1 = Problem1();
+            string result1 = MeasureExecutionTime(() => Problem1());
             Console.WriteLine($"P1: Top crates: {result1}");
 
-            string result2 = Problem2();
+            string result2 = MeasureExecutionTime(() => Problem2());
             Console.WriteLine($"P2: Top crates: {result2}");
         }
         public string Problem1()

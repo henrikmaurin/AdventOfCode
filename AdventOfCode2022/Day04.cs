@@ -18,10 +18,10 @@ namespace AdventOfCode2022
         }
         public void Run()
         {
-            int result1 = Problem1();
+            int result1 = MeasureExecutionTime(() => Problem1());
             Console.WriteLine($"P1: Fully contains the other: {result1}");
 
-            int result2 = Problem2();
+            int result2 = MeasureExecutionTime(() => Problem2());
             Console.WriteLine($"P2: Overlaps eachother: {result2}");
         }
         public int Problem1()
