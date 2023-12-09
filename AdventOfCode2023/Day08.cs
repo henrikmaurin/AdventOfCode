@@ -27,6 +27,8 @@ namespace AdventOfCode2023
         }
         public int Problem1()
         {
+            
+
             string instructions = data.First();
 
             Dictionary<string,NetworkNode> nodes = new Dictionary<string,NetworkNode>();
@@ -97,7 +99,8 @@ namespace AdventOfCode2023
 
                     if (currentnodes[i].EndsWith("Z"))
                     {
-                        long currentcount = 0;
+                        
+                        long currentcount = 1;
 
                         if ((keyValuePairs.ContainsKey(i)))
                         { currentcount = keyValuePairs[i];
@@ -111,7 +114,8 @@ namespace AdventOfCode2023
                         {
                             keyValuePairs.Add(i, counter);
                         }
-                    
+                        Console.WriteLine($"{i} {counter - currentcount}");
+
                         long diff = counter - currentcount;
                        if (repeats.Count() == currentnodes.Length)
                         {   
