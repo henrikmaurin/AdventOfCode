@@ -111,6 +111,15 @@
             return coords.Where(coord => IsInRange(coord)).ToList();
         }
 
+        public List<Vector2D> GetNeighbors(int xPos, int yPos)
+        {
+            return Directions.GetNeighboringCoordsFor(xPos, yPos).Where(coord => IsInRange(coord)).ToList();
+        }
+        public List<Vector2D> GetNeighbors(Vector2D coord)
+        {
+            return GetNeighbors(coord.X, coord.Y);
+        }
+
         public virtual T? Get(int xPos, int yPos)
         {
             Vector2D vector2D = new Vector2D { X = xPos, Y = yPos };
@@ -209,6 +218,19 @@
         {
             get { return this[coord.X, coord.Y]; }
             set { this[coord.X, coord.Y] = value; }
+        }
+
+        public void Draw()
+        {
+            for (int y = 0; y < SizeY; y++)
+            {
+                for (int x = 0; x < SizeX; x++)
+                {
+                    Console.Write(this[x, y].ToString());
+                }
+                Console.WriteLine();
+            }
+
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using Common;
+﻿using System.Globalization;
+using System.Linq;
+
+using Common;
 
 using static Crayon.Output;
 
@@ -10,6 +13,7 @@ namespace AdventOfCode2023
         List<string> data;
         Map2D<Tile> map;
         Vector2D startingPoint;
+        PipeMaze pipeMaze;
 
         public Day10(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
@@ -21,55 +25,21 @@ namespace AdventOfCode2023
 
             data = input.GetDataCached().SplitOnNewline();
 
+/*
+            data = @".F----7F7F7F7F-7....
+.|F--7||||||||FJ....
+.||.FJ||||||||L7....
+FJL7L7LJLJ||LJ.L-7..
+L--J.L7...LJS7F-7L7.
+....F-J..F7FJ|L7L7L7
+....L7.F7||L7|.L7L7|
+.....|FJLJ|FJ|F7|.LJ
+....FJL-7.||.||||...
+....L---J.LJ.LJLJ...".SplitOnNewline();
+*/
 
-//            data = @"...........
-//.S-------7.
-//.|F-----7|.
-//.||.....||.
-//.||.....||.
-//.|L-7.F-J|.
-//.|..|.|..|.
-//.L--J.L--J.
-//...........".SplitOnNewline();
-
-
-            map = new Map2D<Tile>();
-            map.Init(data.First().Length, data.Count);
-            foreach (Vector2D currentPos in map.EnumerateCoords())
-            {
-                Tile tile = new Tile();
-                tile.TileType = data[currentPos.Y][currentPos.X];
-
-                if (tile.TileType == 'S')
-                {
-                    startingPoint = currentPos;
-                    continue;
-                }
-
-
-                map[currentPos] = tile;
-            }
-            map.SafeOperations = true;
-
-            Vector2D[] aroundS = Directions.GetNeighboringCoordsFor(startingPoint);
-
-
-            foreach (char test in "|-LJ7F")
-            {
-                Vector2D[] dirs = Tile.GetConnectionsFrom(startingPoint, test);
-                char t1 = map[dirs[0]].TileType;
-                char t2 = map[dirs[1]].TileType;
-
-                bool c1 = Tile.GetConnectionsFrom(dirs[0], t1)?.Contains(startingPoint) == true;
-                bool c2 = Tile.GetConnectionsFrom(dirs[1], t2)?.Contains(startingPoint) == true;
-
-                if (c1 && c2) ;
-                {
-                    map[startingPoint] = new Tile { TileType = test };
-                    continue;
-                }
-            }
-
+            pipeMaze = new PipeMaze();
+            pipeMaze.Init(data);
         }
         public void Run()
         {
@@ -81,163 +51,232 @@ namespace AdventOfCode2023
         }
         public int Problem1()
         {
-            Vector2D currentPos = new Vector2D(startingPoint);
-            Vector2D nextPos = Tile.GetConnectionsFrom(currentPos, map[currentPos].TileType).First();
-
-            int counter = 1;
-            map[currentPos].PartOfTheLoop = true;
-
-            while (!(nextPos.X == startingPoint.X && nextPos.Y == startingPoint.Y))
-            {
-
-
-
-                Tile t = map[nextPos];
-                Vector2D[] nextPostitions = Tile.GetConnectionsFrom(nextPos, t.TileType);
-
-                if (nextPostitions[0].X == currentPos.X && nextPostitions[0].Y == currentPos.Y)
-                {
-                    currentPos = nextPos;
-                    nextPos = nextPostitions[1];
-                }
-                else
-                {
-                    currentPos = nextPos;
-                    nextPos = nextPostitions[0];
-
-                }
-                map[currentPos].PartOfTheLoop = true;
-
-                counter++;
-            }
-
-
-
-            return counter / 2;
+            return MazeRunner.FindSpotFurtherstAway(pipeMaze);
         }
         public int Problem2()
         {
-            //map.Draw(0, 0, map.MaxX, map.MaxY);
-            var map2 = Expand(map);
-           // map2.Draw(0, 0, map2.MaxX, map2.MaxY);
-            map2=  Fill(map2);
-            //map2.Draw(0, 0, map2.MaxX, map2.MaxY);
-
-            var map3 = Reduce(map2);
-           // map3.Draw(0, 0, map3.MaxX, map3.MaxY);
-
-
-
-
-
-
-            return map3.Map.Where(m=>m.TileType=='.').Count();
-
+            return MazeRunner.CountNestSpots(pipeMaze);
         }
 
-        public Map2D<Tile> Expand(Map2D<Tile> map)
+        public static class MazeRunner
         {
-            Map2D<Tile> map2;
-            map2 = new Map2D<Tile>();
-            map2.Init(map.SizeX * 2, map.SizeY * 2);
-            foreach (var pos in map2.EnumerateCoords()) {
-                map2[pos] = new Tile { PartOfTheLoop = false, TileType = '.' };
-            }
-
-
-            map2.SafeOperations = true;
-
-            foreach (var pos in map.EnumerateCoords())
+            public static int FindSpotFurtherstAway(PipeMaze pipeMaze)
             {
-                if (map[pos].PartOfTheLoop)
-                {
-                    map2[pos.X * 2, pos.Y * 2] = new Tile { PartOfTheLoop = true, TileType = map[pos].TileType };
+                pipeMaze.TraverseLoop();
 
-                    if (map[pos].TileType.In('|', 'J', 'L'))
-                    {
-                        map2[pos.X * 2, pos.Y * 2 - 1] = new Tile { PartOfTheLoop = true, TileType = '|' };
-                    }
-
-                    if (map[pos].TileType.In('|', '7', 'F'))
-                    {
-                        map2[pos.X * 2, pos.Y * 2 + 1] = new Tile { PartOfTheLoop = true, TileType = '|' };
-                    }
-
-                    if (map[pos].TileType.In('-', '7', 'J'))
-                    {
-                        map2[pos.X * 2 - 1, pos.Y * 2] = new Tile { PartOfTheLoop = true, TileType = '-' };
-                    }
-
-                    if (map[pos].TileType.In('-', 'F', 'L'))
-                    {
-                        map2[pos.X * 2 + 1, pos.Y * 2] = new Tile { PartOfTheLoop = true, TileType = '-' };
-                    }
-                }
+                return pipeMaze.Map.Where(p => p.Value.PartOfTheLoop).Count() / 2;
             }
-            return map2;
 
-        }
-
-        public Map2D<Tile> Reduce(Map2D<Tile> map)
-        {
-            Map2D<Tile> map2;
-            map2 = new Map2D<Tile>();
-            map2.Init(map.SizeX / 2, map.SizeY / 2);
-            foreach (var pos in map2.EnumerateCoords())
+            public static int CountNestSpots(PipeMaze pipeMaze)
             {
-                map2[pos] = map[pos.X*2, pos.Y*2];
+                //pipeMaze.Draw();
+                PipeMaze expandedMaze = pipeMaze.Expandx2();
+                //expandedMaze.Draw();
+                PipeMaze expandedMazeWithBorder = expandedMaze.AddBorder();
+                //expandedMazeWithBorder.Draw();
+                expandedMazeWithBorder.Fill();
+                //expandedMazeWithBorder.Draw();
+                expandedMaze = expandedMazeWithBorder.RemoveBorder();
+                //expandedMaze.Draw();
+                PipeMaze reducedMaze = expandedMaze.Reduce();
+                //reducedMaze.Draw();
+
+                return reducedMaze.Map.Where(m => m.Value.TileType == '.').Count();
             }
-
-
-
-
-            return map2;
-
         }
 
-        public Map2D<Tile> Fill(Map2D<Tile> mapToFill)
+        public class PipeMaze : SparseMap2D<Tile>
         {
-            Queue<Vector2D> queue = new Queue<Vector2D>();
+            public Vector2D StartingPos { get; set; }
 
-            var v = mapToFill.GetNeighbors(new Vector2D { X = 0, Y = 0 });
            
-            mapToFill[0, 0].TileType = ' ';
 
-            foreach (var n in v)
+            public void Init(List<string> mapdata)
             {
-                if (!mapToFill[n].PartOfTheLoop && mapToFill[n].TileType != ' ')
+                Init(mapdata.First().Length, mapdata.Count());
+                foreach (Vector2D currentPos in EnumerateCoords())
                 {
-                    mapToFill[n].TileType = ' ';
-                    queue.Enqueue(n);
-                }
-            }
+                    Tile tile = new Tile();
+                    tile.TileType = mapdata[currentPos.Y][currentPos.X];
 
-            while (queue.Count > 0)
-            {
-                var c = queue.Dequeue();
-
-                if (c.X==3 && c.Y==3)
-                {
-                    int a = 0;
-                }
-
-                v = mapToFill.GetNeighbors(c);
-                foreach (var n in v)
-                {
-                    if (!mapToFill[n].PartOfTheLoop && mapToFill[n].TileType != ' ')
+                    if (tile.TileType == 'S')
                     {
-                        mapToFill[n].TileType = ' ';
-                        queue.Enqueue(n);
+                        StartingPos = currentPos;
+                        continue;
+                    }
+
+
+                    this[currentPos] = tile;
+                }
+                SafeOperations = true;
+
+                List<Vector2D> aroundS = GetNeighbors(StartingPos);
+
+                foreach (char test in "|-LJ7F")
+                {
+                    Vector2D[] dirs = Tile.GetConnectionsFrom(StartingPos, test);
+                    if (!IsInRange(dirs[0]) || !IsInRange(dirs[1]))
+                        continue;
+
+                    char t1 = this[dirs[0]].TileType;
+                    char t2 = this[dirs[1]].TileType;
+
+                    bool c1 = Tile.GetConnectionsFrom(dirs[0], t1)?.Contains(StartingPos) == true;
+                    bool c2 = Tile.GetConnectionsFrom(dirs[1], t2)?.Contains(StartingPos) == true;
+
+                    if (c1 && c2)
+                    {
+                        this[StartingPos] = new Tile { TileType = test };
+                        continue;
                     }
                 }
+            }
+            public void TraverseLoop()
+            {
+                Vector2D currentPos = new Vector2D(StartingPos);
+                Vector2D nextPos = Tile.GetConnectionsFrom(currentPos, this[currentPos].TileType).First();
 
+                this[currentPos].PartOfTheLoop = true;
 
+                while (!(nextPos.X == StartingPos.X && nextPos.Y == StartingPos.Y))
+                {
+                    Tile t = this[nextPos];
+                    Vector2D[] nextPostitions = Tile.GetConnectionsFrom(nextPos, t.TileType);
 
+                    if (nextPostitions[0].X == currentPos.X && nextPostitions[0].Y == currentPos.Y)
+                    {
+                        currentPos = nextPos;
+                        nextPos = nextPostitions[1];
+                    }
+                    else
+                    {
+                        currentPos = nextPos;
+                        nextPos = nextPostitions[0];
 
-
+                    }
+                    this[currentPos].PartOfTheLoop = true;
+                }
             }
 
-            return mapToFill;
+            public PipeMaze Expandx2()
+            {
+                PipeMaze newMap;
+                newMap = new PipeMaze();
+                newMap.Init(SizeX * 2, SizeY * 2);
+                foreach (var pos in newMap.EnumerateCoords())
+                {
+                    newMap[pos] = new Tile { PartOfTheLoop = false, TileType = '.' };
+                }
+
+                newMap.SafeOperations = true;
+
+                foreach (var pos in EnumerateCoords())
+                {
+                    if (this[pos].PartOfTheLoop)
+                    {
+                        newMap[pos.X * 2, pos.Y * 2] = new Tile { PartOfTheLoop = true, TileType = this[pos].TileType };
+
+                        if (this[pos].TileType.In('|', 'J', 'L'))
+                        {
+                            newMap[pos.X * 2, pos.Y * 2 - 1] = new Tile { PartOfTheLoop = true, TileType = '|' };
+                        }
+
+                        if (this[pos].TileType.In('|', '7', 'F'))
+                        {
+                            newMap[pos.X * 2, pos.Y * 2 + 1] = new Tile { PartOfTheLoop = true, TileType = '|' };
+                        }
+
+                        if (this[pos].TileType.In('-', '7', 'J'))
+                        {
+                            newMap[pos.X * 2 - 1, pos.Y * 2] = new Tile { PartOfTheLoop = true, TileType = '-' };
+                        }
+
+                        if (this[pos].TileType.In('-', 'F', 'L'))
+                        {
+                            newMap[pos.X * 2 + 1, pos.Y * 2] = new Tile { PartOfTheLoop = true, TileType = '-' };
+                        }
+                    }
+                }
+                return newMap;
+            }
+
+            public PipeMaze AddBorder()
+            {
+                PipeMaze newMap;
+                newMap = new PipeMaze();
+                newMap.Init(SizeX + 2, SizeY + 2);
+                foreach (var pos in newMap.EnumerateCoords())
+                {
+                    newMap[pos] = new Tile { PartOfTheLoop = false, TileType = '.' };
+                }
+
+                foreach (var pos in EnumerateCoords())
+                {
+                    newMap[pos + Directions.Vector.DownRight] = this[pos];
+                }
+
+                newMap.SafeOperations = true;
+
+                return newMap;
+            }
+
+            public PipeMaze RemoveBorder()
+            {
+                PipeMaze newMap;
+                newMap = new PipeMaze();
+                newMap.Init(SizeX - 2, SizeY - 2);
+
+                foreach (var pos in newMap.EnumerateCoords())
+                {
+                    newMap[pos] = this[pos + Directions.Vector.DownRight];
+                }
+
+                newMap.SafeOperations = true;
+
+                return newMap;
+            }
+
+            public PipeMaze Reduce()
+            {
+                PipeMaze newMap;
+                newMap = new PipeMaze();
+                newMap.Init(SizeX / 2, SizeY / 2);
+                foreach (var pos in newMap.EnumerateCoords())
+                {
+                    newMap[pos] = this[pos.X * 2, pos.Y * 2];
+                }
+                return newMap;
+            }
+
+            public void Fill(char fillChar = ' ', Vector2D startpos = null)
+            {
+                if (startpos == null)
+                    startpos = new Vector2D(0, 0);
+
+                Queue<Vector2D> queue = new Queue<Vector2D>();
+
+                var v = GetNeighbors(startpos);
+
+                this[startpos].TileType = fillChar;
+                queue.Enqueue(startpos);
+
+                while (queue.Count > 0)
+                {
+                    var c = queue.Dequeue();
+
+                    v = GetNeighbors(c);
+                    foreach (var n in v)
+                    {
+                        if (!this[n].PartOfTheLoop && this[n].TileType != fillChar)
+                        {
+                            this[n].TileType = fillChar;
+                            queue.Enqueue(n);
+                        }
+                    }
+
+                }
+            }
+
         }
 
 
