@@ -219,6 +219,12 @@ namespace Common
 		{
 			return orig.Substring(0, orig.Length >= length ? length : orig.Length);
 		}
+		public static string SafeSubstringFromStart(this string orig, int start)
+		{
+			if(start >= orig.Length)
+				return string.Empty;
+			return orig.Substring( start , orig.Length-start);
+		}
 
 		public static string SafeSubstring(this string orig, int start, int length)
 		{

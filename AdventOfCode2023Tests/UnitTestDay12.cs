@@ -7,16 +7,16 @@ namespace Tests
 	public class UnitTestDay12
 	{
 		private Day12 day;
-        private string data;
-        private string[] testdata;
+		private string data;
+		private string[] testdata;
 
-        [TestInitialize]
-        public void Init()
-        {
-            data = @"";
-            testdata = data.SplitOnNewlineArray(false);
+		[TestInitialize]
+		public void Init()
+		{
+			data = @"";
+			testdata = data.SplitOnNewlineArray(false);
 
-            day = new Day12(data);
+			day = new Day12(data);
 		}
 
 
