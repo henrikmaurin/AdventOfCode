@@ -1,7 +1,3 @@
-using AdventOfCode2023;
-
-using Common;
-
 using static AdventOfCode2023.Day01;
 
 namespace Tests
@@ -9,17 +5,11 @@ namespace Tests
     [TestClass]
     public class UnitTestDay01
     {
-        //private Day01 day;
-        private string data;
-        private string[] testdata;
+       
 
         [TestInitialize]
         public void Init()
         {
-            //data = @"";
-            //testdata = data.SplitOnNewlineArray(false);
-
-            //day = new Day01(data);
         }
 
 

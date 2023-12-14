@@ -9,6 +9,7 @@ namespace AdventOfCode2023
     {
         private const int day = 13;
         string[][] data;
+        List<Mirror> mirrors;
         public Day13(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -18,6 +19,11 @@ namespace AdventOfCode2023
             }
 
             data = input.GetDataCached().GroupByEmptyLine();
+            mirrors = new List<Mirror>();
+            foreach (var item in data)
+            {
+                mirrors.Add(new Mirror(item));
+            }
         }
         public void Run()
         {
@@ -28,6 +34,113 @@ namespace AdventOfCode2023
             WriteAnswer(2, "Result: {result}", result2);
         }
 
+        public long Problem1()
+        {
+            long sum = MirrorAnalyzer.TestAllMirrors(mirrors);
+            return sum;
+        }
+
+        public long Problem2()
+        {
+            long sum = MirrorAnalyzer.TestAllMirrorsWithOneSmudgeCleaned(mirrors);
+            return sum;
+        }
+
+
+        public static class MirrorAnalyzer
+        {
+            public static long TestAllMirrors(List<Mirror> mirrors)
+            {
+                long sum = 0;
+                foreach (Mirror mirror in mirrors)
+                {
+                    Reflection[] reflections = GetReflections(mirror);
+                    Reflection? reflection = GetRelevantReflection(reflections);
+                    sum += GetValueFrom(reflection);
+                }
+                return sum;
+            }
+
+            public static long TestAllMirrorsWithOneSmudgeCleaned(List<Mirror> mirrors)
+            {
+                long sum = 0;
+
+                foreach (Mirror mirror in mirrors)
+                {
+                    bool found = false;
+                    Reflection? refReflection = GetRelevantReflection(GetReflections(mirror));
+                    for (int y = 0; y < mirror.MirrorParts.Length && !found; y++)
+                    {
+                        for (int x = 0; x < mirror.MirrorParts[y].Length && !found; x++)
+                        {
+                            char old = mirror.MirrorParts[y][x];
+                            if (old == '#')
+                                mirror.MirrorParts[y][x] = '.';
+                            else
+                                mirror.MirrorParts[y][x] = '#';
+
+                            long result = GetValueFrom(GetRelevantReflection(GetReflections(mirror, refReflection)));
+                            if (result > 0)
+                            {
+                                sum += result;
+                                found = true;
+                            }
+
+                            mirror.MirrorParts[y][x] = old;
+                        }
+                    }
+
+                }
+                return sum;
+
+            }
+
+            public static Reflection[] GetReflections(Mirror mirror, Reflection? except = null)
+            {
+                if (except is null)
+                    except = new Reflection();
+
+                Reflection[] reflections = new Reflection[2];
+
+                reflections[0] = mirror.Reflect(except.Row);
+                Mirror rotatedMirror = mirror.Rotate();
+
+                reflections[1] = rotatedMirror.Reflect(except.Column);
+
+                return reflections;
+            }
+
+            public static Reflection? GetRelevantReflection(Reflection[] reflection)
+            {
+                if (reflection[0].Row >= 0 || reflection[0].Column >= 0)
+                    return reflection[0];
+
+                if (reflection[1].Row >= 0 || reflection[1].Column >= 0)
+                    return reflection[1];
+
+                return null;
+            }
+
+            public static long GetValueFrom(Reflection? reflection)
+            {
+                if (reflection == null)
+                    return 0;
+
+                if (reflection.Row > -1)
+                {
+                    return (reflection.Row + 1) * 100;
+                }
+                if (reflection.Column > -1)
+                {
+                    return (reflection.Column + 1);
+                }
+
+                return 0;
+            }
+
+
+        }
+
         public class Reflection
         {
             public int Row { get; set; }
@@ -35,223 +148,89 @@ namespace AdventOfCode2023
             public Reflection()
             {
                 Row = -1;
-                Column=-1;
+                Column = -1;
             }
-            //public int Amount { get; set; }
-            //public bool Perfect { get; set; }
         }
 
-        Reflection Reflect(string[] rows, string direction, int except)
+        public class Mirror
         {
-            Reflection reflection = new Reflection
+            public char[][] MirrorParts { get; set; }
+            public bool Rotated { get; set; } = false;
+            public Mirror()
             {
-                Row = -1,
-                Column = -1,             
-            };
+            }
 
-            for (int i = 0; i < rows.Count(); i++)
+            public Mirror(string[] data)
             {
-                bool perfect = Reflect(rows, i);
-                if (perfect && i != except)
+                MirrorParts = new char[data.Length][];
+                for (int i = 0; i < data.Length; i++)
+                    MirrorParts[i] = data[i].ToCharArray();
+            }
+
+            public Reflection Reflect(int except = -1)
+            {
+                Reflection reflection = new Reflection();
+
+                for (int i = 0; i < MirrorParts.GetLength(0); i++)
                 {
-                    //reflection.Perfect = true;
-                    if (direction == "row")
-                        reflection.Row = i;
-                    else
-                        reflection.Column = i;
-                }
-            }
-            return reflection;
-        }
-
-        bool Reflect(string[] rows, int over)
-        {
-            int amount = 0;
-            while (over - amount >= 0 && over + amount < rows.Length - 1)
-            {
-                if (rows[over - amount] == rows[over + amount + 1])
-                {
-                    if (over - amount == 0 || over + amount + 1 == rows.Length - 1)
-                        return true;
-                    amount++;
-                }
-                else
-                    break;
-            }
-
-            return false;
-        }
-
-        string[] Transform(string[] rows)
-        {
-            string[] lines = new string[rows[0].Length];
-            for (int i = 0; i < lines.Length; i++)
-                lines[i] = string.Empty;
-
-            for (int i = 0; i < rows.Length; i++)
-            {
-                for (int j = 0; j < lines.Length; j++)
-                {
-                    lines[j] += rows[i][j];
-                }
-            }
-            return lines;
-        }
-
-        public long GetValueFrom(Reflection reflection)
-        {
-            if (reflection==null)
-                return 0;
-
-            if (reflection.Row > -1)
-            {
-                return (reflection.Row + 1) * 100;
-            }
-            if (reflection.Column > -1)
-            {
-                return (reflection.Column + 1);
-            }
-
-            return 0;
-        }
-
-        public long Problem1()
-        {
-            long sum = 0;
-
-//data = @"#.##..##.
-//..#.##.#.
-//##......#
-//##......#
-//..#.##.#.
-//..##..##.
-//#.#.##.#.
-
-//#...##..#
-//#....#..#
-//..##..###
-//#####.##.
-//#####.##.
-//..##..###
-//#....#..#".GroupByEmptyLine();
-
-            foreach (var item in data)
-            {
-                Reflection[] reflections = GetReflections(item,new Reflection ());
-                Reflection reflection = GetRelevantReflection(reflections);
-
-                sum += GetValueFrom(reflection);
-            }
-            return sum;
-        }
-
-        public string[] ReplaceAt(string[]s, int x, int y)
-        {
-            string[] newStrings = new string[s.Length];
-            for (int i = 0; i < newStrings.Length; i++)
-                newStrings[i] = s[i].ToString();
-
-            var a = newStrings[y].ToCharArray();
-            if (a[x] == '.')
-                a[x] = '#';
-            else
-                a[x] = '.';
-
-            newStrings[y] = new string(a);
-
-            return newStrings;
-        }
-
-        public long Problem2()
-        {
-            long sum = 0;
-//            data = @"#.##..##.
-//..#.##.#.
-//##......#
-//##......#
-//..#.##.#.
-//..##..##.
-//#.#.##.#.
-
-//#...##..#
-//#....#..#
-//..##..###
-//#####.##.
-//#####.##.
-//..##..###
-//#....#..#".GroupByEmptyLine();
-
-            foreach (var item in data)
-            {
-                bool found = false;
-                Reflection refReflection = GetRelevantReflection(GetReflections(item,new Reflection()));
-                for (int y = 0; y < item.Length && !found; y++)
-                {
-                    for (int x = 0; x < item[y].Length && !found; x++)
+                    bool isPerfectReflection = ReflectOver(i);
+                    if (isPerfectReflection && i != except)
                     {
-                        string[] newStrings =ReplaceAt(item, x, y);
-
-
-                        long result = CountReflection(newStrings, refReflection);
-                        if (result > 0)
-                        {
-                            sum += result;
-                            found = true;
-                        }
-
+                        //reflection.Perfect = true;
+                        if (Rotated == false)
+                            reflection.Row = i;
+                        else
+                            reflection.Column = i;
                     }
                 }
-
+                return reflection;
             }
-            return sum;
-        }
 
-
-
-
-    
-        public Reflection[] GetReflections(string[] rows,Reflection except)
-        {
-            Reflection[] reflections = new Reflection[2];
-
-            reflections[0] = Reflect(rows, "row",except.Row);
-            var columns = Transform(rows);
-            reflections[1] = Reflect(columns, "column", except.Column);
-
-            return reflections;
-        }
-
-        public Reflection GetRelevantReflection(Reflection[] reflection)
-        {
-            if (reflection[0].Row >= 0 || reflection[0].Column >= 0)
-                return reflection[0];
-
-            if (reflection[1].Row >= 0 || reflection[1].Column >= 0)
-                return reflection[1];
-
-            return null;
-        }
-
-
-        public long CountReflection(string[] rows, Reflection refReflection)
-        {
-            Reflection[] reflections = GetReflections(rows,refReflection);
-
-            long sum = 0;
-            if (reflections[0].Row > -1 && refReflection.Row != reflections[0].Row)
+            public bool ReflectOver(int over)
             {
-                sum += (reflections[0].Row + 1) * 100;
-            }
-            else if (reflections[1].Column > -1 && refReflection.Column != reflections[1].Column)
-            {
-                sum += (reflections[1].Column + 1);
-            }
-            else
-            {
-                int a = 1;
+                int amount = 0;
+                while (over - amount >= 0 && over + amount < MirrorParts.GetLength(0) - 1)
+                {
+                    if (new string(MirrorParts[over - amount]) == new string(MirrorParts[over + amount + 1]))
+                    {
+                        if (over - amount == 0 || over + amount + 1 == MirrorParts.GetLength(0) - 1)
+                            return true;
+                        amount++;
+                    }
+                    else
+                        break;
+                }
+
+                return false;
             }
 
-            return sum;
+            public char[][] GetRotated()
+            {
+                int length = MirrorParts[0].Length;
+
+                char[][] lines = new char[length][];
+                for (int i = 0; i < length; i++)
+                    lines[i] = new char[MirrorParts.GetLength(0)];
+
+                for (int y = 0; y < MirrorParts.GetLength(0); y++)
+                {
+                    for (int x = 0; x < lines.Length; x++)
+                    {
+                        lines[x][y] = MirrorParts[y][x];
+                    }
+                }
+                return lines;
+            }
+
+            public Mirror Rotate()
+            {
+                Mirror mirror = new Mirror();
+                mirror.MirrorParts = GetRotated();
+                mirror.Rotated = true;
+                return mirror;
+            }
+
         }
+
     }
 }

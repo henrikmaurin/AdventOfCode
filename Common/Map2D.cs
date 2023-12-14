@@ -167,6 +167,17 @@
             return coords;
         }
 
+        public Vector2D[] EnumerateCoordsVertical()
+        {
+            List<Vector2D> coords = new List<Vector2D>();
+            for (int x = MinX; x < MaxX; x++) 
+                for (int y = MinY; y < MaxY; y++)                
+                   coords.Add( new Vector2D { X = x, Y = y });
+
+            return coords.ToArray();
+        }
+
+
         public string Draw(int x1, int y1, int x2, int y2, int? objX = null, int? objY = null, char? sprite = null)
         {
             for (int y = y1; y < y2; y++)

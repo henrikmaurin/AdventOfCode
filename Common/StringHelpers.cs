@@ -179,9 +179,9 @@ namespace Common
 				list.Add(group.ToArray());
 
 			return list.ToArray();
-		}
+		}       
 
-		public static string IsSingleLine(this string me)
+        public static string IsSingleLine(this string me)
 		{
 			return me.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
 		}		
