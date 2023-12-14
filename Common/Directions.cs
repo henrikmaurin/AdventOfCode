@@ -19,6 +19,12 @@
         public const int UpRight = 6;
         public const int DownRight = 8;
 
+        public const int North = Up;
+        public const int East = Right;
+        public const int South = Down;
+        public const int West = Left;
+
+
         public static class Vector
         {
             public static Vector2D Up { get => GetDirection(Directions.Up); }
@@ -28,9 +34,8 @@
             public static Vector2D UpLeft { get => GetDirection(Directions.UpLeft); }
             public static Vector2D UpRight { get => GetDirection(Directions.UpRight); }
             public static Vector2D DownLeft { get => GetDirection(Directions.DownLeft); }
-            public static Vector2D DownRight { get => GetDirection(Directions.DownRight); }
-
-        }
+            public static Vector2D DownRight { get => GetDirection(Directions.DownRight); }        
+                    }
 
         private static Vector2D[] _directionsVectors = {
             new Vector2D{X=0,Y=0},

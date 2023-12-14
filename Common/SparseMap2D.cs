@@ -10,7 +10,7 @@
             {
                 for (int x = 0; x < map.MaxX; x++)
                 {
-                    map.Set(x,y, mapper(mapData.ElementAt(y)[x]));
+                    map.Set(x, y, mapper(mapData.ElementAt(y)[x]));
                 }
             }
         }
@@ -18,7 +18,17 @@
         public static void InitFromStringArray(this SparseMap2D<char> map, string[] mapData)
         {
             InitFromStringArray<char>(map, mapData, (ch) => { return ch; });
-        } 
+        }
+
+        public static void InitFromStringArray(this Map2D<char> map, string[] mapData)
+        {
+            InitFromStringArray<char>(map, mapData, (ch) => { return ch; });
+        }
+
+        //public static void InitFromStringArray(this IMap2D<char> map, string[] mapData)
+        //{
+        //    InitFromStringArray<char>(map, mapData, (ch) => { return ch; });
+        //}
     }
 
 
