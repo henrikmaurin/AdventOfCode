@@ -15,6 +15,11 @@
             }
         }
 
+        public static void InitFromStringList<T>(this IMap2D<T> map, List<string> mapData, Func<char, T> mapper)
+        {
+            InitFromStringArray(map, mapData.ToArray(), mapper);
+        }
+
         public static void InitFromStringArray(this SparseMap2D<char> map, string[] mapData)
         {
             InitFromStringArray<char>(map, mapData, (ch) => { return ch; });
