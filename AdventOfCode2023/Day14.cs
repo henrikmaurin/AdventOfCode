@@ -45,11 +45,8 @@ namespace AdventOfCode2023
             public void Tilt(int direction)
             {
                 List<Vector2D> positions = EnumerateCoords().ToList();
-                if (direction.In(Directions.East, Directions.South))
-                {
-                    positions.Reverse();
-                }
-                foreach (Vector2D pos in positions)
+
+                foreach (Vector2D pos in (direction.In(Directions.East, Directions.South) ? positions.Reverse<Vector2D>() : positions))
                 {
                     if (this[pos] == 'O')
                     {

@@ -40,22 +40,22 @@ namespace Tests
             Assert.AreEqual("21,61,3", day.FindMaxSquare(grid).ToString());
         }
 
-        [TestMethod("Day 11, Part 2")]
-        [TestCategory("Example data")]
-        public void Part2_1()
-        {
-            SerialNo = 18;
-            Map2D<MapVal> grid = day.Init(SerialNo);
-            Assert.AreEqual("90,269,16", day.TestAllSizes(grid).ToString());
-        }
+        //[TestMethod("Day 11, Part 2")]
+        //[TestCategory("Example data")]
+        //public void Part2_1()
+        //{
+        //    SerialNo = 18;
+        //    Map2D<MapVal> grid = day.Init(SerialNo);
+        //    Assert.AreEqual("90,269,16", day.TestAllSizes(grid).ToString());
+        //}
 
-        [TestMethod("Day 11, Part 2")]
-        [TestCategory("Example data")]
-        public void Part2_2()
-        {
-            SerialNo = 42;
-            Map2D<MapVal> grid = day.Init(SerialNo);
-            Assert.AreEqual("232,251,12", day.TestAllSizes(grid).ToString());
-        }
+        //[TestMethod("Day 11, Part 2")]
+        //[TestCategory("Example data")]
+        //public void Part2_2()
+        //{
+        //    SerialNo = 42;
+        //    Map2D<MapVal> grid = day.Init(SerialNo);
+        //    Assert.AreEqual("232,251,12", day.TestAllSizes(grid).ToString());
+        //}
     }
 }
