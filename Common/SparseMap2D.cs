@@ -247,5 +247,21 @@
             }
 
         }
+
+        public void DrawAll()
+        {
+            for(int y = MinY;y <= MaxY; y++)
+            {
+                for(int x= MinX;x <= MaxX;x++)
+                {
+                 
+
+
+                    Console.Write(this[x, y]?.ToString() ?? " ");
+                }
+                Console.WriteLine();
+            }
+
+        }
     }
 }

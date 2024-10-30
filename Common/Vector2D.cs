@@ -89,7 +89,7 @@
             return Directions.GetSurroundingCoordsFor(this).ToList();
         }
 
-        public List<Vector2D> GetNeigboingCoords()
+        public List<Vector2D> GetNeigboringCoords()
         {
             return Directions.GetNeighboringCoordsFor(this).ToList();
         }
