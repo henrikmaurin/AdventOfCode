@@ -24,6 +24,9 @@ namespace Tests
 		[TestCategory("Example data")]
 		public void Part1()
 		{
+			
+
+
 
 			Assert.AreEqual(1, 1);
 		}
