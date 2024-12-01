@@ -32,8 +32,8 @@ namespace AdventOfCode2024
 
             foreach (var item in data)
             {
-                Lists.List1.Add(int.Parse(item.Split(' ').First()));
-                Lists.List2.Add(int.Parse(item.Split(' ').Last()));
+                Lists.List1.Add(item.Split(' ').First().ToInt());
+                Lists.List2.Add(item.Split(' ').Last().ToInt());
             }
         }
 
