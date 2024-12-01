@@ -7,8 +7,7 @@ namespace AdventOfCode2024
         private const int day = 1;
         List<string> data;
 
-        private List<int> List1;
-        private List<int> List2;
+        public Lists Lists { get; set; }
 
 
         public Day01(string? testdata = null) : base(Global.Year, day, testdata != null)
@@ -26,13 +25,15 @@ namespace AdventOfCode2024
 
         public void Parse()
         {
-            List1 = new List<int>();
-            List2 = new List<int>();
+            Lists = new Lists();
+
+            Lists.List1 = new List<int>();
+            Lists.List2 = new List<int>();
 
             foreach (var item in data)
             {
-                List1.Add(int.Parse(item.Split(' ').First()));
-                List2.Add(int.Parse(item.Split(' ').Last()));
+                Lists.List1.Add(int.Parse(item.Split(' ').First()));
+                Lists.List2.Add(int.Parse(item.Split(' ').Last()));
             }
         }
 
@@ -46,29 +47,52 @@ namespace AdventOfCode2024
         }
         public int Problem1()
         {
-            List<int> locationIds1 = List1.OrderBy(n => n).ToList();
-            List<int> locationIds2 = List2.OrderBy(n => n).ToList();
-
-            int sum = 0;
-
-            for (int i = 0; i < locationIds1.Count; i++)
-            {
-                sum += Math.Abs(locationIds1[i] - locationIds2[i]);
-            }
-
-            return sum;
+            return CalculateDistance(Lists.List1.OrderBy(n => n).ToList(), Lists.List2.OrderBy(n => n).ToList());
+        }
+        public int Problem2()
+        {
+            return CalculateSimilarity(Lists.List1, Lists.List2);
         }
 
-        public int Problem2()
+        public int CalculateDistance(List<int> list1, List<int> list2)
         {
             int sum = 0;
 
-            foreach (var locationId in List1)
+            for (int i = 0; i < list1.Count; i++)
             {
-                sum += locationId * List2.Where(n => n == locationId).Count();
+                sum += CalculateDistance(list1[i], list2[i]);
             }
 
             return sum;
         }
+
+        public int CalculateDistance(int value1, int value2)
+        {
+            return Math.Abs(value1 - value2);
+        }
+
+        public int CalculateSimilarity(List<int> list1, List<int> list2)
+        {
+            int sum = 0;
+
+            foreach (var item in list1)
+            {
+                sum += CalculateSimilarity(item, list2);
+            }
+
+            return sum;
+        }
+
+        public int CalculateSimilarity(int value, List<int> list)
+        {
+            return value * list.Where(n => n == value).Count();
+        }
+    }
+
+    public class Lists
+    {
+        public List<int> List1 { get; set; }
+        public List<int> List2 { get; set; }
     }
 }
+
