@@ -8,8 +8,7 @@ namespace AdventOfCode2017
     }
     public class Year : IYear
     {
-
-        public IDay? Day(int day)
+        public IDay Day(int day)
         {
             switch (day)
             {

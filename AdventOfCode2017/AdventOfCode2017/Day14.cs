@@ -1,4 +1,5 @@
 ﻿using Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,8 +41,6 @@ namespace AdventOfCode2017
         {
 
             int[] map = new int[130 * 130];
-
-            int bitsum = 0;
 
             for (int y = 0; y < 128; y++)
             {

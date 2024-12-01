@@ -18,9 +18,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode2020Tests", "AdventOfCode2020Tests\AdventOfCode2020Tests.csproj", "{FCAE7C02-91C8-450D-AD40-DEBC50FE006D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BE0024C1-F887-4F4D-A565-DD733BA19A08}"
-	ProjectSection(SolutionItems) = preProject
-		AdventOfCodeTestsTemplate\UnitTestDay01.cs = AdventOfCodeTestsTemplate\UnitTestDay01.cs
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdventOfCode", "AdventOfCode", "{D49EBD41-3938-45A5-87A3-FE1D388D97A9}"
 EndProject
@@ -43,8 +40,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode2022", "AdventOfCode2022\AdventOfCode2022.csproj", "{53981BD4-3570-4639-A1E6-4C4D54058024}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode2022Tests", "AdventOfCode2022Tests\AdventOfCode2022Tests.csproj", "{C7616DB8-55AF-4AD6-9F61-F4D4CEC1F833}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualAoC", "VisualAoC\VisualAoC.csproj", "{F9E57870-3362-4768-B386-3152DA0B4A69}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode2018Tests", "AdventOfCode2018Tests\AdventOfCode2018Tests.csproj", "{A96183E6-A733-4302-AADB-0631060191F9}"
 EndProject
@@ -130,10 +125,6 @@ Global
 		{C7616DB8-55AF-4AD6-9F61-F4D4CEC1F833}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7616DB8-55AF-4AD6-9F61-F4D4CEC1F833}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7616DB8-55AF-4AD6-9F61-F4D4CEC1F833}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9E57870-3362-4768-B386-3152DA0B4A69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9E57870-3362-4768-B386-3152DA0B4A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9E57870-3362-4768-B386-3152DA0B4A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9E57870-3362-4768-B386-3152DA0B4A69}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A96183E6-A733-4302-AADB-0631060191F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A96183E6-A733-4302-AADB-0631060191F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A96183E6-A733-4302-AADB-0631060191F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
