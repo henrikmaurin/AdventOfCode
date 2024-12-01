@@ -42,7 +42,7 @@ namespace AdventOfCode2024
             WriteAnswer(1, "Total distance between list is {result}", result1);
 
             int result2 = MeasureExecutionTime(() => Problem2());
-            WriteAnswer(2, "The similarity score of the lista is {result}", result2);
+            WriteAnswer(2, "The similarity score of the lists is {result}", result2);
         }
         public int Problem1()
         {
@@ -65,7 +65,7 @@ namespace AdventOfCode2024
 
             foreach (var locationId in List1)
             {
-                sum += locationId * List1.Where(n => n == locationId).Count();
+                sum += locationId * List2.Where(n => n == locationId).Count();
             }
 
             return sum;

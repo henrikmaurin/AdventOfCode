@@ -39,8 +39,10 @@ namespace Tests
         [TestCategory("Example data")]
         public void Part2()
         {
+            int sum = day.Problem2();
 
-            Assert.AreEqual(2, 2);
+
+            Assert.AreEqual(31, sum);
         }
     }
 }
