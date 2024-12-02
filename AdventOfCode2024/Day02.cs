@@ -50,13 +50,16 @@ namespace AdventOfCode2024
             foreach (var item in data)
             {
                 bool hasSafe = false;
+                List<int> values = item.Split(' ').ToInt().ToList();
+
+                hasSafe = IsSafe(values);
 
                 for (int j = 0; j < item.Split(' ').Count() && !hasSafe; j++)
                 {
-                    List<int> values = item.Split(' ').ToInt().ToList();
-                    values.RemoveAt(j);
+                    List<int> reducedList = new List<int>(values);
+                    reducedList.RemoveAt(j);
 
-                    if (IsSafe(values))
+                    if (IsSafe(reducedList))
                     {
                         hasSafe = true;
                     }
