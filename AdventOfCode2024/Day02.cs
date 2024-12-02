@@ -66,7 +66,8 @@ namespace AdventOfCode2024
                 }
 
                 // Also try original if too far apart rule breaks;
-                if(!hasSafe){
+                if (!hasSafe)
+                {
                     hasSafe = IsSafe(item.Split(' ').ToInt().ToList());
                 }
 
@@ -77,18 +78,18 @@ namespace AdventOfCode2024
             return counter;
         }
 
-        bool IsSafe(List<int> numbers)
-        {           
+        private static bool IsSafe(List<int> numbers)
+        {
             int direction = SetDirection(numbers[0], numbers[1]);
 
             for (int i = 0; i < numbers.Count - 1; i++)
             {
-                if(!IsInDirection(direction, numbers[i], numbers[i+1]))
+                if (!IsInDirection(direction, numbers[i], numbers[i + 1]))
                 {
                     return false;
-                }              
+                }
 
-                if (!HasCorrectDistance(numbers[i], numbers[i+1]))
+                if (!HasCorrectDistance(numbers[i], numbers[i + 1]))
                 {
                     return false;
                 }
@@ -96,7 +97,7 @@ namespace AdventOfCode2024
             return true; ;
         }
 
-        int SetDirection(int value1, int value2)
+        private static int SetDirection(int value1, int value2)
         {
             if (value1 < value2)
                 return 1;
@@ -107,12 +108,12 @@ namespace AdventOfCode2024
             return 0;
         }
 
-        bool IsInDirection(int direction, int value1, int value2)
-        {          
-                return direction == SetDirection(value1, value2);
+        private static bool IsInDirection(int direction, int value1, int value2)
+        {
+            return direction == SetDirection(value1, value2);
         }
 
-        bool HasCorrectDistance(int value1,int value2)
+        private static bool HasCorrectDistance(int value1, int value2)
         {
             return Math.Abs(value1 - value2).IsBetween(1, 3, true, true);
         }
