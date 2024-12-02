@@ -60,8 +60,13 @@ namespace AdventOfCode2024
                     {
                         hasSafe = true;
                     }
-
                 }
+
+                // Also try original if too far apart rule breaks;
+                if(!hasSafe){
+                    hasSafe = IsSafe(item.Split(' ').ToInt().ToList());
+                }
+
                 if (hasSafe)
                     counter++;
 
