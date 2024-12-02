@@ -17,13 +17,8 @@ namespace AdventOfCode2024
             }
 
             data = input.GetDataCached().SplitOnNewline();
-//data = @"7 6 4 2 1
-//1 2 7 8 9
-//9 7 6 2 1
-//1 3 2 4 5
-//8 6 4 4 1
-//1 3 6 7 9".SplitOnDoubleNewline();
         }
+
         public void Run()
         {
             int result1 = MeasureExecutionTime(() => Problem1());
@@ -32,129 +27,36 @@ namespace AdventOfCode2024
             int result2 = MeasureExecutionTime(() => Problem2());
             WriteAnswer(2, "Result: {result}", result2);
         }
+
         public int Problem1()
         {
             int counter = 0;
 
             foreach (var item in data)
             {
-                int direction = 0;
-                bool safe = true;
-
-                int[] values = item.Split(' ').ToInt();
-                for (int i = 0; i < values.Length - 1 && safe; i++)
-                {
-                    safe = IsSafe(values.ToList());
-
-                    //if (values[i] < values[i + 1])
-                    //{
-                    //    if (direction == 0)
-                    //    {
-                    //        direction = 1;
-                    //        safe = true;
-                    //    }
-
-                    //    if (direction != 1 && safe)
-                    //    {
-                    //        safe = false;
-                    //        continue;
-
-                    //    }
-                    //}
-
-                    //if (values[i] > values[i + 1])
-                    //{
-                    //    if (direction == 0)
-                    //    {
-                    //        direction = 2;
-
-                    //    }
-                    //    if (direction != 2 && safe)
-                    //    {
-                    //        safe = false;
-                    //        continue;
-
-                    //    }
-                    //}
-
-                    //if (safe && !(Math.Abs(values[i] - values[i + 1]).IsBetween(1, 3, true, true)))
-                    //{
-                    //    safe = false;
-                    //    continue;
-
-                    //}
-                }
-
-                if (safe)
+                if (IsSafe(item.Split(' ').ToInt().ToList()))
                 {
                     counter++;
                 }
-
-
             }
-            return counter;
 
+            return counter;
         }
+
         public int Problem2()
         {
             int counter = 0;
 
             foreach (var item in data)
             {
-                int direction = 0;
-
                 bool hasSafe = false;
-                bool safe = true;
 
                 for (int j = 0; j < item.Split(' ').Count() && !hasSafe; j++)
-                {                    
+                {
                     List<int> values = item.Split(' ').ToInt().ToList();
                     values.RemoveAt(j);
-                    safe = true;
-                    direction = 0;
 
-                    for (int i = 0; i < values.Count - 1 && safe; i++)
-                    {
-                        if (values[i] < values[i + 1])
-                        {
-                            if (direction == 0)
-                            {
-                                direction = 1;
-                                safe = true;
-                            }
-
-                            if (direction != 1 && safe)
-                            {
-                                safe = false;
-                                continue;
-
-                            }
-                        }
-
-                        if (values[i] > values[i + 1])
-                        {
-                            if (direction == 0)
-                            {
-                                direction = 2;
-
-                            }
-                            if (direction != 2 && safe)
-                            {
-                                safe = false;
-                                continue;
-
-                            }
-                        }
-
-                        if (safe && !(Math.Abs(values[i] - values[i + 1]).IsBetween(1, 3, true, true)))
-                        {
-                            safe = false;
-                            continue;
-
-                        }
-                    }
-
-                    if (safe)
+                    if (IsSafe(values))
                     {
                         hasSafe = true;
                     }
@@ -163,60 +65,48 @@ namespace AdventOfCode2024
                 if (hasSafe)
                     counter++;
 
-                
-
             }
             return counter;
         }
 
         bool IsSafe(List<int> numbers)
-        {
-            bool             safe = true;
-            int direction = 0;
+        {           
+            int direction = SetDirection(numbers[0], numbers[1]);
 
-            for (int i = 0; i < numbers.Count - 1 && safe; i++)
+            for (int i = 0; i < numbers.Count - 1; i++)
             {
-                if (numbers[i] < numbers[i + 1])
+                if(!IsInDirection(direction, numbers[i], numbers[i+1]))
                 {
-                    if (direction == 0)
-                    {
-                        direction = 1;
-                        safe = true;
-                    }
+                    return false;
+                }              
 
-                    if (direction != 1 && safe)
-                    {
-                        safe = false;
-                        continue;
-
-                    }
-                }
-
-                if (numbers[i] > numbers[i + 1])
+                if (!HasCorrectDistance(numbers[i], numbers[i+1]))
                 {
-                    if (direction == 0)
-                    {
-                        direction = 2;
-
-                    }
-                    if (direction != 2 && safe)
-                    {
-                        safe = false;
-                        continue;
-
-                    }
-                }
-
-                if (safe && !(Math.Abs(numbers[i] - numbers[i + 1]).IsBetween(1, 3, true, true)))
-                {
-                    safe = false;
-                    continue;
-
+                    return false;
                 }
             }
-            return safe;
+            return true; ;
         }
-       
 
+        int SetDirection(int value1, int value2)
+        {
+            if (value1 < value2)
+                return 1;
+
+            if (value1 > value2)
+                return 2;
+
+            return 0;
+        }
+
+        bool IsInDirection(int direction, int value1, int value2)
+        {          
+                return direction == SetDirection(value1, value2);
+        }
+
+        bool HasCorrectDistance(int value1,int value2)
+        {
+            return Math.Abs(value1 - value2).IsBetween(1, 3, true, true);
+        }
     }
 }
