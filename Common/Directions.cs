@@ -34,8 +34,14 @@
             public static Vector2D UpLeft { get => GetDirection(Directions.UpLeft); }
             public static Vector2D UpRight { get => GetDirection(Directions.UpRight); }
             public static Vector2D DownLeft { get => GetDirection(Directions.DownLeft); }
-            public static Vector2D DownRight { get => GetDirection(Directions.DownRight); }        
-                    }
+            public static Vector2D DownRight { get => GetDirection(Directions.DownRight); }
+
+            public static Vector2D[] Vertical { get => new[] { Up, Down }; }
+            public static Vector2D[] Horizontal { get => new[] { Left, Right }; }
+            public static Vector2D[] UpRightDownLeft { get => new[] { Up, Right, Down, Left }; }
+            public static Vector2D[] All { get => new[] { UpLeft, Up, UpRight, Right, DownRight, Down, DownLeft, Left }; }
+
+        }
 
         private static Vector2D[] _directionsVectors = {
             new Vector2D{X=0,Y=0},

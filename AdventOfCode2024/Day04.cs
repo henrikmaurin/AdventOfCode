@@ -5,26 +5,19 @@ namespace AdventOfCode2024
     public class Day04 : DayBase, IDay
     {
         private const int day = 4;
-        List<string> data;
+        string[] data;
+        Map2D<char> map;
         public Day04(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
-                data = testdata.SplitOnNewline();
+                data = testdata.SplitOnNewlineArray();
+                map = Map2D<char>.FromStringArray(data);
                 return;
             }
 
-            data = input.GetDataCached().SplitOnNewline();
-            //            data = @"MMMSXXMASM
-            //MSAMXMSMSA
-            //AMXSXMAAMM
-            //MSAMASMSMX
-            //XMASAMXAMM
-            //XXAMMXXAMA
-            //SMSMSASXSS
-            //SAXAMASAAA
-            //MAMMMXMMMM
-            //MXMXAXMASX".SplitOnNewline();
+            data = input.GetDataCached().SplitOnNewlineArray();
+            map = Map2D<char>.FromStringArray(data);
         }
         public void Run()
         {
@@ -36,60 +29,43 @@ namespace AdventOfCode2024
         }
         public int Problem1()
         {
-            List<Coord> directions = new List<Coord>();
-            directions.Add(new Coord { X = -1, Y = -1 });
-            directions.Add(new Coord { X = 0, Y = -1 });
-            directions.Add(new Coord { X = 1, Y = -1 });
-            directions.Add(new Coord { X = 1, Y = 0 });
-            directions.Add(new Coord { X = 1, Y = 1 });
-            directions.Add(new Coord { X = 0, Y = 1 });
-            directions.Add(new Coord { X = -1, Y = 1 });
-            directions.Add(new Coord { X = -1, Y = 0 });
-
             string matchwith = "XMAS";
 
             int counter = 0;
 
-            for (int y = 0; y < data.Count; y++)
+            foreach (Vector2D coord in map.EnumerateCoords())
             {
-                for (int x = 0; x < data[y].Count(); x++)
+                if (map[coord] != 'X')
                 {
-                    if (data[y][x] != 'X')
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    foreach (Coord direction in directions)
-                    {
-                        bool matched = true;
+                foreach (Vector2D direction in Directions.Vector.All)
+                {
+                    bool matched = true;
 
-                        for (int pos = 1; pos < matchwith.Length && matched; pos++)
+                    for (int charPos = 1; charPos < matchwith.Length && matched; charPos++)
+                    {
+                        Vector2D pos = coord + direction * charPos;
+
+                        if (!map.IsInRange(pos))
                         {
-                            int posX = x + direction.X * pos;
-                            int posY = y + direction.Y * pos;
-                            if (!posX.IsBetween(0, data[y].Length - 1))
-                            {
-                                matched = false;
-                                continue;
-                            }
-                            if (!posY.IsBetween(0, data.Count - 1))
-                            {
-                                matched = false;
-                                continue;
-                            }
-                            if (data[posY][posX] != matchwith[pos])
-                            {
-                                matched = false;
-                                continue;
-                            }
+                            matched = false;
+                            continue;
                         }
 
-                        if (matched)
+                        if (map[pos] != matchwith[charPos])
                         {
-                            counter++;
+                            matched = false;
+                            continue;
                         }
                     }
 
+                    if (matched)
+                    {
+                        counter++;
+
+                    }
                 }
             }
 
@@ -98,51 +74,39 @@ namespace AdventOfCode2024
         public int Problem2()
         {
             int counter = 0;
+            map.SafeOperations = true;
 
-            for (int y = 1; y < data.Count - 1; y++)
+            foreach (Vector2D coord in map.EnumerateCoords())
             {
-                for (int x = 1; x < data[y].Count() - 1; x++)
+                if (map[coord] != 'A')
                 {
-                    if (data[y][x] != 'A')
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    if (MatchBackSlash(x, y) && MatchSlash(x, y))
-                    {
-                        counter++;
-                    }
+                if (MatchBackSlash(coord) && MatchSlash(coord))
+                {
+                    counter++;
                 }
             }
 
             return counter;
         }
 
-        public bool MatchBackSlash(int x, int y)
+        public bool MatchBackSlash(Vector2D coord)
         {
-            char upperLeft = data[y - 1][x - 1];
-            char lowerRight = data[y + 1][x + 1];
+            char upperLeft = map[coord + Directions.Vector.UpLeft];
+            char lowerRight = map[coord + Directions.Vector.DownRight];
 
             return (upperLeft == 'M' && lowerRight == 'S') || (upperLeft == 'S' && lowerRight == 'M');
         }
 
-        public bool MatchSlash(int x, int y)
+        public bool MatchSlash(Vector2D coord)
         {
-            char upperRight = data[y - 1][x + 1];
-            char lowerLeft = data[y + 1][x - 1];
+            char upperRight = map[coord + Directions.Vector.UpRight];
+            char lowerLeft = map[coord + Directions.Vector.DownLeft];
 
             return (lowerLeft == 'M' && upperRight == 'S') || (lowerLeft == 'S' && upperRight == 'M');
         }
 
-    }
-
-
-
-
-
-    public class Coord
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
     }
 }

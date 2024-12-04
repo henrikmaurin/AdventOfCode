@@ -12,6 +12,20 @@
         public int SizeX => MaxX - MinX;
         public int SizeY => MaxY - MinY;
 
+        public static Map2D<char> FromStringArray(string[] strings)
+        {
+            Map2D<char> map = new Map2D<char>();
+            map.Init(strings[0].Length, strings.Length);
+            for (int y = 0; y < strings.Length; y++)
+            {
+                for (int x = 0; x < strings[y].Length; x++)
+                {
+                    map[x, y] = strings[y][x];
+                }
+            }
+
+            return map;
+        }
 
         public void Init(int sizeX, int sizeY, T? initialvalue = default(T?))
         {
