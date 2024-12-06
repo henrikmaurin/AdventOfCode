@@ -44,6 +44,9 @@
             Array.Fill(Map, initialvalue);
         }
 
+        
+
+
         public bool IsInRange(int xPos, int yPos)
         {
             if (!xPos.IsBetween(MinX, MaxX - 1))
