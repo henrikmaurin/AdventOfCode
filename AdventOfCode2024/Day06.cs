@@ -50,14 +50,10 @@ namespace AdventOfCode2024
             WriteAnswer(2, "Result: {result}", result2);
         }
         public int Problem1()
-        {         
-            HashSet<Vector2D> visited = new HashSet<Vector2D>();           
-
-            Vector2D[] directions = Directions.Vector.UpRightDownLeft;
-            int direction = 0;
+        {
+            HashSet<Vector2D> visited = new HashSet<Vector2D>();
 
             Run(startPos, out visited);
-
 
             return visited.Count;
         }
@@ -88,7 +84,6 @@ namespace AdventOfCode2024
         {
             Vector2D pos = new Vector2D(startpos);
 
-
             HashSet<string> visitedWithDirection = new HashSet<string>();
             visited = new HashSet<Vector2D>();
 
@@ -97,7 +92,7 @@ namespace AdventOfCode2024
 
             while (map.IsInRange(pos))
             {
-                string hash = $"{pos.X}:{pos.Y}:{direction % 4}";
+                string hash = $"{pos.X}:{pos.Y}:{direction}";
 
                 visited.TryAdd(pos);
                 if (visitedWithDirection.Contains(hash))
@@ -105,12 +100,14 @@ namespace AdventOfCode2024
 
                 visitedWithDirection.Add(hash);
 
-                while (map[pos + directions[direction % 4]].In('#', 'O'))
-                    direction += 1;
+                while (map[pos + directions[direction]].In('#', 'O'))
+                {
+                    direction++;
+                    direction %= 4;
+                }
 
-                pos += directions[direction % 4];
+                pos += directions[direction];
             }
-
 
             return true;
         }
