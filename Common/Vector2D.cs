@@ -28,6 +28,11 @@
             return new Vector2D { X = me.X * amount, Y = me.Y * amount };
         }
 
+        public static Vector2D operator /(Vector2D me, int amount)
+        {
+            return new Vector2D { X = me.X / amount, Y = me.Y / amount };
+        }
+
         public static bool Equals(Vector2D a, Vector2D b)
         {
             if (a is null || b is null)
@@ -92,6 +97,20 @@
         public List<Vector2D> GetNeigboringCoords()
         {
             return Directions.GetNeighboringCoordsFor(this).ToList();
+        }
+
+        public bool Parellel(Vector2D vector)
+        {
+            int determinant = X * vector.Y - Y * vector.X;
+            return determinant == 0;
+        }
+
+        public bool AreInLineWith(Vector2D other1, Vector2D other2)
+        {
+            Vector2D delta1 = this - other1;
+            Vector2D delta2 = this - other2;
+
+            return delta1.Parellel(delta2);
         }
     }
 }
