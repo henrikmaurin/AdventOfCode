@@ -1,5 +1,7 @@
 ﻿using Common;
 
+using static Common.InitMap;
+
 namespace AdventOfCode2024
 {
     public class Day08 : DayBase, IDay
@@ -7,7 +9,7 @@ namespace AdventOfCode2024
         private const int day = 8;
         string[] data;
 
-        Map2D<char> map;
+        SparseMap2D<char?> map;
 
         public Day08(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
@@ -24,7 +26,8 @@ namespace AdventOfCode2024
 
         public void Parse()
         {
-            map = Map2D<char>.FromStringArray(data);
+            map = new SparseMap2D<char?>();
+            map.InitFromStringArrayWithoutEmpties(data);
         }
         public void Run()
         {
@@ -41,13 +44,11 @@ namespace AdventOfCode2024
 
             foreach (Vector2D v in coords)
             {
-                if (map[v] == '.')
-                {
-                    continue;
-                }
-
                 foreach (var other in coords)
                 {
+                    if (map[v] == null)
+                    { continue; }
+
                     if (v == other)
                     { continue; }
 
@@ -75,7 +76,7 @@ namespace AdventOfCode2024
 
             foreach (Vector2D v in coords)
             {
-                if (map[v] == '.')
+                if (map[v] == null)
                 {
                     continue;
                 }

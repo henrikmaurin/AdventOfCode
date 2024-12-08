@@ -1,4 +1,6 @@
-﻿namespace Common
+﻿using System.Reflection.Metadata.Ecma335;
+
+namespace Common
 {
     public static class InitMap
     {
@@ -11,6 +13,25 @@
                 for (int x = 0; x < map.MaxX; x++)
                 {
                     map.Set(x, y, mapper(mapData.ElementAt(y)[x]));
+                }
+            }
+        }
+
+        public static void InitFromStringArrayWithoutEmpties(this IMap2D<char?> map, string[] mapData, char empty = '.')
+        {       
+            map.Init(mapData.Select(m => m.Length).Max(), mapData.Length);
+
+            for (int y = 0; y < map.MaxY; y++)
+            {
+                for (int x = 0; x < map.MaxX; x++)
+                {
+                    char? val = EmptySpaceMapper(mapData.ElementAt(y)[x], empty);
+                    if (val is null)
+                    {
+                        continue; ;
+                    }
+
+                    map.Set(x, y, val.Value);
                 }
             }
         }
@@ -34,9 +55,17 @@
         //{
         //    InitFromStringArray<char>(map, mapData, (ch) => { return ch; });
         //}
+
+        public static char? EmptySpaceMapper(char data, char empty)
+        {
+            if (data == empty)
+            {
+                return null;
+            }
+            return data;
+        }
+
     }
-
-
 
     public class SparseMap2D<T> : IMap2D<T>
     {
@@ -250,11 +279,11 @@
 
         public void DrawAll()
         {
-            for(int y = MinY;y <= MaxY; y++)
+            for (int y = MinY; y <= MaxY; y++)
             {
-                for(int x= MinX;x <= MaxX;x++)
+                for (int x = MinX; x <= MaxX; x++)
                 {
-                 
+
 
 
                     Console.Write(this[x, y]?.ToString() ?? " ");
