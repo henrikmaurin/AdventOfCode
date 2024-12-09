@@ -8,6 +8,7 @@ namespace AdventOfCode2024
     {
         private const int day = 9;
         string data;
+        List<Fil> _files;
         public Day09(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -23,6 +24,35 @@ namespace AdventOfCode2024
 
         public void Parse()
         {
+            _files = new List<Fil>();
+
+            int position = 0;
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                int length = data[i].ToInt();
+
+                if (i % 2 == 0)
+                {
+                    _files.Add(new Fil
+                    {
+                        Position = position,
+                        Content = i / 2,
+                        Length = length,
+                    });
+                }
+                else
+                {
+                    _files.Add(new Fil
+                    {
+                        Position = position,
+                        Content = null,
+                        Length = length,
+                    });
+                }
+                position += length;
+            }
+
 
         }
         public void Run()
@@ -35,57 +65,111 @@ namespace AdventOfCode2024
         }
         public long Problem1()
         {
-            List<int?> files = new List<int?>();
-            bool file = true;
-
-            for (int i = 0; i < data.Length; i++)
+            for (int i = _files.Count - 1; i > 0; i--)
             {
-                for (int j = 0; j < data[i].ToInt(); j++)
-                {
-                    if (file)
-                        files.Add(i / 2);
-                    else
-                        files.Add(null);
-                }
-                file = !file;
-            }
-
-            int pos = 0;
-            while (pos < files.Count())
-            {
-                if (files[pos] != null)
-                {
-                    pos++;
+                if (_files[i].Content == null)
                     continue;
-                }
 
-                int? val = files.Last();
-                files.RemoveAt(files.Count() - 1);
+                int emptySpaceIndex = 0;
 
-                while (val == null && pos < files.Count())
+                while (_files[i].Length > 0 && _files[i].Content != null && emptySpaceIndex < i)
                 {
-                    val = files.Last();
-                    files.RemoveAt(files.Count() - 1);
+                    emptySpaceIndex = _files.FindIndex(f => f.Content is null);
+
+                    if (emptySpaceIndex == -1 || emptySpaceIndex > i)
+                    {
+                        emptySpaceIndex = int.MaxValue;
+                        continue;
+                    }
+
+                    int lengthToCopy = MathHelpers.Lowest(_files[i].Length, _files[emptySpaceIndex].Length);
+
+                    if (lengthToCopy < _files[emptySpaceIndex].Length)
+                    {
+                        _files.Insert(emptySpaceIndex + 1, new Fil
+                        {
+                            Content = null,
+                            Length = _files[emptySpaceIndex].Length - lengthToCopy,
+                            Position = _files[emptySpaceIndex].Position + lengthToCopy,
+                        });
+                        i++;
+                    }
+
+                    _files[i].Length -= lengthToCopy;
+                    _files[emptySpaceIndex].Content = _files[i].Content;
+                    _files[emptySpaceIndex].Length = lengthToCopy;
                 }
-
-                files[pos] = val;
-                pos++;
             }
 
-            long result = 0;
+            //foreach (Fil fil in _files)
+            //{
+            //    for (int i = 0; i < fil.Length; i++)
+            //    {
+            //        Console.Write(fil.Content);
+            //    }
 
-            for (int i = 0; i < files.Count(); i++)
-            {
-                if (files[i] is null)
-                    continue;
-                result += i * files[i].Value;
-            }
+            //}
 
-
-            return result;
+            return _files.Select(f => f.Checksum()).Sum();
         }
         public long Problem2()
         {
+            Parse();
+            for (int i = _files.Count - 1; i > 0; i--)
+            {
+                if (_files[i].Content == null)
+                    continue;
+
+                int emptySpaceIndex = 0;
+
+                while (_files[i].Length > 0 && _files[i].Content != null && emptySpaceIndex < i)
+                {
+                    emptySpaceIndex = _files.FindIndex(emptySpaceIndex, f => f.Content is null);
+
+                    if (emptySpaceIndex == -1 || emptySpaceIndex > i)
+                    {
+                        emptySpaceIndex = int.MaxValue;
+                        continue;
+                    }
+
+                    if (_files[i].Length > _files[emptySpaceIndex].Length)
+                    {
+                        emptySpaceIndex++;
+                        continue;
+                    }
+
+
+                    int lengthToCopy = MathHelpers.Lowest(_files[i].Length, _files[emptySpaceIndex].Length);
+
+                    if (lengthToCopy < _files[emptySpaceIndex].Length)
+                    {
+                        _files.Insert(emptySpaceIndex + 1, new Fil
+                        {
+                            Content = null,
+                            Length = _files[emptySpaceIndex].Length - lengthToCopy,
+                            Position = _files[emptySpaceIndex].Position + lengthToCopy,
+                        });
+                        i++;
+                    }
+
+                    _files[i].Length -= lengthToCopy;
+                    _files[emptySpaceIndex].Content = _files[i].Content;
+                    _files[emptySpaceIndex].Length = lengthToCopy;
+                }
+            }
+
+            //foreach (Fil fil in _files)
+            //{
+            //    for (int i = 0; i < fil.Length; i++)
+            //    {
+            //        Console.Write(fil.Content);
+            //    }
+
+            //}
+
+            return _files.Select(f => f.Checksum()).Sum();
+
+
             List<int?> files = new List<int?>();
             bool file = true;
 
@@ -192,6 +276,31 @@ namespace AdventOfCode2024
                 length++;
             }
             return length;
+        }
+    }
+
+    public class Fil
+    {
+        public int Position { get; set; }
+        public int? Content { get; set; }
+        public int Length { get; set; }
+
+        public long Checksum()
+        {
+            if (Content == null)
+                return 0;
+
+            long checksum = 0;
+            for (int i = 0; i < Length; i++)
+            {
+                checksum += (Position + i) * (Content ?? 0);
+            }
+            return checksum;
+        }
+
+        public override string ToString()
+        {
+            return $"p:{Position} c:{Content} l:{Length}";
         }
     }
 }
