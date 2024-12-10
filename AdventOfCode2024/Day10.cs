@@ -25,7 +25,7 @@ namespace AdventOfCode2024
         {
             map = new Map2D<char>();
             map.InitFromStringArray(data);
-            map.SafeOperations = true;  
+            map.SafeOperations = true;
         }
         public void Run()
         {
@@ -41,7 +41,7 @@ namespace AdventOfCode2024
 
             List<Vector2D> list = new List<Vector2D>();
 
-            
+
 
             foreach (Vector2D startingpos in map.EnumerateCoords())
             {
@@ -70,28 +70,17 @@ namespace AdventOfCode2024
                         continue;
                     }
 
-                    if (map[current + Directions.Vector.Left] == map[current] + 1)
+                    foreach (Vector2D d in Directions.Vector.UpRightDownLeft)
                     {
-                        queue.Enqueue(current + Directions.Vector.Left);
+                        if (map[current + d] == map[current] + 1)
+                        {
+                            queue.Enqueue(current + d);
+                        }
                     }
 
-                    if (map[current + Directions.Vector.Up] == map[current] + 1)
-                    {
-                        queue.Enqueue(current + Directions.Vector.Up);
-                    }
-
-                    if (map[current + Directions.Vector.Right] == map[current] + 1)
-                    {
-                        queue.Enqueue(current + Directions.Vector.Right);
-                    }
-
-                    if (map[current + Directions.Vector.Down] == map[current] + 1)
-                    {
-                        queue.Enqueue(current + Directions.Vector.Down);
-                    }
                 }
-                result += top.Count;            
-            }            
+                result += top.Count;
+            }
 
             return result;
         }
@@ -100,8 +89,6 @@ namespace AdventOfCode2024
             int result = 0;
 
             List<Vector2D> list = new List<Vector2D>();
-
-
 
             foreach (Vector2D startingpos in map.EnumerateCoords())
             {
@@ -116,9 +103,7 @@ namespace AdventOfCode2024
             foreach (Vector2D startingPos in list)
             {
                 Queue<Vector2D> queue = new Queue<Vector2D>();
-                HashSet<Vector2D> top = new HashSet<Vector2D>();
                 queue.Enqueue(startingPos);
-
 
                 while (queue.Count > 0)
                 {
@@ -126,31 +111,19 @@ namespace AdventOfCode2024
 
                     if (map[current] == '9')
                     {
-                        result++; ;
+                        result++;
                         continue;
                     }
 
-                    if (map[current + Directions.Vector.Left] == map[current] + 1)
+                    foreach (Vector2D d in Directions.Vector.UpRightDownLeft)
                     {
-                        queue.Enqueue(current + Directions.Vector.Left);
-                    }
-
-                    if (map[current + Directions.Vector.Up] == map[current] + 1)
-                    {
-                        queue.Enqueue(current + Directions.Vector.Up);
-                    }
-
-                    if (map[current + Directions.Vector.Right] == map[current] + 1)
-                    {
-                        queue.Enqueue(current + Directions.Vector.Right);
-                    }
-
-                    if (map[current + Directions.Vector.Down] == map[current] + 1)
-                    {
-                        queue.Enqueue(current + Directions.Vector.Down);
+                        if (map[current + d] == map[current] + 1)
+                        {
+                            queue.Enqueue(current + d);
+                        }
                     }
                 }
-               
+
             }
 
             return result;
