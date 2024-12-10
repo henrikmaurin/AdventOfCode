@@ -5,16 +5,27 @@ namespace AdventOfCode2024
     public class Day10 : DayBase, IDay
     {
         private const int day = 10;
-        List<string> data;
+        string[] data;
+        Map2D<char> map;
+
         public Day10(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
             {
-                data = testdata.SplitOnNewline();
+                data = testdata.SplitOnNewlineArray();
+                Parse();
                 return;
             }
 
-            data = input.GetDataCached().SplitOnNewline();
+            data = input.GetDataCached().SplitOnNewlineArray();
+            Parse();
+        }
+
+        public void Parse()
+        {
+            map = new Map2D<char>();
+            map.InitFromStringArray(data);
+            map.SafeOperations = true;  
         }
         public void Run()
         {
@@ -26,11 +37,123 @@ namespace AdventOfCode2024
         }
         public int Problem1()
         {
-            return 0;
+            int result = 0;
+
+            List<Vector2D> list = new List<Vector2D>();
+
+            
+
+            foreach (Vector2D startingpos in map.EnumerateCoords())
+            {
+                if (map[startingpos] != '0')
+                {
+                    continue;
+                }
+
+                list.Add(startingpos);
+            }
+
+            foreach (Vector2D startingPos in list)
+            {
+                Queue<Vector2D> queue = new Queue<Vector2D>();
+                HashSet<Vector2D> top = new HashSet<Vector2D>();
+                queue.Enqueue(startingPos);
+
+
+                while (queue.Count > 0)
+                {
+                    Vector2D current = queue.Dequeue();
+
+                    if (map[current] == '9')
+                    {
+                        top.TryAdd(current);
+                        continue;
+                    }
+
+                    if (map[current + Directions.Vector.Left] == map[current] + 1)
+                    {
+                        queue.Enqueue(current + Directions.Vector.Left);
+                    }
+
+                    if (map[current + Directions.Vector.Up] == map[current] + 1)
+                    {
+                        queue.Enqueue(current + Directions.Vector.Up);
+                    }
+
+                    if (map[current + Directions.Vector.Right] == map[current] + 1)
+                    {
+                        queue.Enqueue(current + Directions.Vector.Right);
+                    }
+
+                    if (map[current + Directions.Vector.Down] == map[current] + 1)
+                    {
+                        queue.Enqueue(current + Directions.Vector.Down);
+                    }
+                }
+                result += top.Count;            
+            }            
+
+            return result;
         }
         public int Problem2()
         {
-            return 0;
+            int result = 0;
+
+            List<Vector2D> list = new List<Vector2D>();
+
+
+
+            foreach (Vector2D startingpos in map.EnumerateCoords())
+            {
+                if (map[startingpos] != '0')
+                {
+                    continue;
+                }
+
+                list.Add(startingpos);
+            }
+
+            foreach (Vector2D startingPos in list)
+            {
+                Queue<Vector2D> queue = new Queue<Vector2D>();
+                HashSet<Vector2D> top = new HashSet<Vector2D>();
+                queue.Enqueue(startingPos);
+
+
+                while (queue.Count > 0)
+                {
+                    Vector2D current = queue.Dequeue();
+
+                    if (map[current] == '9')
+                    {
+                        result++; ;
+                        continue;
+                    }
+
+                    if (map[current + Directions.Vector.Left] == map[current] + 1)
+                    {
+                        queue.Enqueue(current + Directions.Vector.Left);
+                    }
+
+                    if (map[current + Directions.Vector.Up] == map[current] + 1)
+                    {
+                        queue.Enqueue(current + Directions.Vector.Up);
+                    }
+
+                    if (map[current + Directions.Vector.Right] == map[current] + 1)
+                    {
+                        queue.Enqueue(current + Directions.Vector.Right);
+                    }
+
+                    if (map[current + Directions.Vector.Down] == map[current] + 1)
+                    {
+                        queue.Enqueue(current + Directions.Vector.Down);
+                    }
+                }
+               
+            }
+
+            return result;
         }
     }
 }
