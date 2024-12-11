@@ -8,6 +8,9 @@ namespace AdventOfCode2024
     {
         private const int day = 11;
         string data;
+        string[] stones;
+        Dictionary<string, long> values = new Dictionary<string, long>();
+
         public Day11(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -23,7 +26,7 @@ namespace AdventOfCode2024
 
         public void Parse()
         {
-
+            stones = data.SplitOnWhitespace();
         }
         public void Run()
         {
@@ -35,58 +38,26 @@ namespace AdventOfCode2024
         }
         public long Problem1()
         {
-            LinkedList<string> list = new LinkedList<string>();
+            long result = 0;
             foreach (string item in data.SplitOnWhitespace())
             {
-                list.AddLast(item);
+                result += Blink(item, 25);
             }
-
-            for (int i = 0; i < 25; i++)
-            {
-                LinkedListNode<string> node = list.First;
-
-                while (node != null)
-                {
-                    if (node.Value == "0")
-                    {
-                        node.Value = "1";
-                        node= node.Next;
-                        continue;
-                    }
-
-                    if (node.Value.Length%2 == 0)
-                    {
-                        string val = node.Value;
-                        node.Value = val.Substring(0, val.Length/2).ToLong().ToString();
-                        node = list.AddAfter(node,val.Substring(val.Length / 2).ToLong().ToString());
-                        node = node.Next;
-                        continue;
-                    }
-
-                    node.Value = (node.Value.ToLong() * 2024).ToString();
-                    node= node.Next;
-
-                }
-
-            }
-
-
-
-            return list.Count;
+            return result;
         }
         public long Problem2()
         {
             long result = 0;
             foreach (string item in data.SplitOnWhitespace())
             {
-                result += Rules(item, 75);
+                result += Blink(item, 75);
             }
             return result;
         }
 
-        Dictionary<string, long> values = new Dictionary<string, long>();
+        
 
-        public long Rules(string d, int depth)
+        public long Blink(string d, int depth)
         {
             string key = $"{d}:{depth}";
             if (values.ContainsKey(key))
@@ -99,7 +70,7 @@ namespace AdventOfCode2024
 
             if (d == "0")
             {
-                 retVal= Rules("1", depth-1);
+                 retVal= Blink("1", depth-1);
                 values.Add(key, retVal);
 
                 return retVal;
@@ -107,13 +78,13 @@ namespace AdventOfCode2024
 
             if (d.Length%2==0)
             {
-                retVal = Rules(d.Substring(0,d.Length/2).ToLong().ToString(), depth-1);
-                retVal += Rules(d.Substring(d.Length / 2).ToLong().ToString(),depth-1);
+                retVal = Blink(d.Substring(0,d.Length/2).ToLong().ToString(), depth-1);
+                retVal += Blink(d.Substring(d.Length / 2).ToLong().ToString(),depth-1);
                 values.Add(key , retVal);
                 return retVal;
             }
 
-            retVal = Rules((d.ToLong() * 2024).ToString(),depth-1);
+            retVal = Blink((d.ToLong() * 2024).ToString(),depth-1);
             values.Add(key , retVal);
 
             return retVal;

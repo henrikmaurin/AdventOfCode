@@ -35,7 +35,7 @@ namespace Tests
         {
             long result = day.Problem2();
 
-            Assert.AreEqual(55312, result);
+            Assert.AreEqual(65601038650482, result);
         }
     }
 }
