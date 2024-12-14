@@ -7,6 +7,9 @@ namespace AdventOfCode2024
         private const int day = 12;
         string[] data;
         Map2D<char> map;
+        Map2D<Plot> PMap;
+
+
         public Day12(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -25,7 +28,26 @@ namespace AdventOfCode2024
             map = new Map2D<char>();
             map.InitFromStringArray(data);
             map.SafeOperations = true;
+
+            PMap = new Map2D<Plot>();
+            PMap.Init(map.SizeX, map.SizeY);
+            foreach (var coord in map.EnumerateCoords())
+            {
+                PMap[coord] =new Plot { fence = new HashSet<Vector2D>() };
+
+                foreach (Vector2D direction in Directions.Vector.UpRightDownLeft)
+                {
+                    if (map[coord + direction] != map[coord])
+                    {
+                        PMap[coord].fence.Add(direction);
+                    }
+                }
+            }
+
+
         }
+
+       
 
         public void Run()
         {
@@ -94,20 +116,7 @@ namespace AdventOfCode2024
             HashSet<Vector2D> visited = new HashSet<Vector2D>();
 
             int result = 0;
-            Dictionary<Vector2D, Plot> plots = new Dictionary<Vector2D, Plot>();
-            foreach (var coord in map.EnumerateCoords())
-            {
-                plots.Add(coord, new Plot { fence = new HashSet<Vector2D>() });
-
-                foreach (Vector2D direction in Directions.Vector.UpRightDownLeft)
-                {
-                    if (map[coord + direction] != map[coord])
-                    {
-                        plots[coord].fence.Add(direction);
-                    }
-                }
-            }
-
+           
             foreach (var coord in map.EnumerateCoords())
             {
                 if (visited.Contains(coord))
@@ -139,9 +148,9 @@ namespace AdventOfCode2024
                         if (map[plotSpot + direction] != map[plotSpot])
                         {
 
-                            if (direction == Directions.Vector.Up)
+                            if (direction.In(Directions.Vector.Up, Directions.Vector.Down))
                             {
-                                if (!plots.ContainsKey(plotSpot + Directions.Vector.Left))
+                                if (!PMap.IsInRange(plotSpot + Directions.Vector.Left))
                                 {
                                     fence++;
                                     continue;
@@ -153,7 +162,7 @@ namespace AdventOfCode2024
                                     continue;
                                 }
 
-                                if (!plots[plotSpot + Directions.Vector.Left].fence.Contains(Directions.Vector.Up))
+                                if (!PMap[plotSpot + Directions.Vector.Left].fence.Contains(direction))
                                 {
                                     fence++;
                                     continue;
@@ -162,9 +171,9 @@ namespace AdventOfCode2024
 
                             }
 
-                            if (direction == Directions.Vector.Left)
+                            if (direction.In( Directions.Vector.Left, Directions.Vector.Right))
                             {
-                                if (!plots.ContainsKey(plotSpot + Directions.Vector.Up))
+                                if (!PMap.IsInRange(plotSpot + Directions.Vector.Up))
                                 {
                                     fence++;
                                     continue;
@@ -177,56 +186,13 @@ namespace AdventOfCode2024
                                     continue;
                                 }
 
-                                if (!plots[plotSpot + Directions.Vector.Up].fence.Contains(Directions.Vector.Left))
+                                if (!PMap[plotSpot + Directions.Vector.Up].fence.Contains(direction))
                                 {
                                     fence++;
                                     continue;
                                 }
-                            }
-
-                            if (direction == Directions.Vector.Down)
-                            {
-                                if (!plots.ContainsKey(plotSpot + Directions.Vector.Left))
-                                {
-                                    fence++;
-                                    continue;
-                                }
-
-
-                                if (map[plotSpot + Directions.Vector.Left] != map[plotSpot])
-                                {
-                                    fence++;
-                                    continue;
-                                }
-
-                                if (!plots[plotSpot + Directions.Vector.Left].fence.Contains(Directions.Vector.Down))
-                                {
-                                    fence++;
-                                    continue;
-                                }
-                            }
-
-                            if (direction == Directions.Vector.Right)
-                            {
-                                if (!plots.ContainsKey(plotSpot + Directions.Vector.Up))
-                                {
-                                    fence++;
-                                    continue;
-                                }
-
-
-                                if (map[plotSpot + Directions.Vector.Up] != map[plotSpot])
-                                {
-                                    fence++;
-                                    continue;
-                                }
-
-                                if (!plots[plotSpot + Directions.Vector.Up].fence.Contains(Directions.Vector.Right))
-                                {
-                                    fence++;
-                                    continue;
-                                }
-                            }
+                            }                           
+                           
                             continue;
                         }
 
