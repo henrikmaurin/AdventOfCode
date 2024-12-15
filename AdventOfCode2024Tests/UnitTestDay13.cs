@@ -48,7 +48,7 @@ Prize: X=18641, Y=10279";
         public void Part2()
         {
             long result = day.Problem2();
-            Assert.AreEqual(2, result);
+            Assert.AreEqual(875318608908, result);
         }
     }
 }
