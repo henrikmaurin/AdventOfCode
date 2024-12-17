@@ -17,6 +17,7 @@ namespace AdventOfCode2015
 
             string data = input.GetDataCached();
             _instructions = ParseLineOfSingleChars<Instruction, Instruction.Parsed>(data);
+            _elevator = new Elevator();
         }
 
         public Day01Alternative(IElevator elevator, bool runtests) : this(runtests)
@@ -26,11 +27,11 @@ namespace AdventOfCode2015
 
         public void Run()
         {
-            int finalFloor = Problem1();
-            Console.WriteLine($"P1: Santa ends up on floor: {Answer(finalFloor)}");
+            int result1 = MeasureExecutionTime(() => Problem1());
+            WriteAnswer(1, "Santa ends up on floor: {result}", result1);
 
-            int numberOfButtonPresses = Problem2();
-            Console.WriteLine($"P2: Santa ends up in basement at button press number: {Answer(numberOfButtonPresses)}");
+            int result2 = MeasureExecutionTime(() => Problem2());
+            WriteAnswer(2, "Santa ends up in basement at button press number: {result}", result2);
         }
 
         public int Problem1()
@@ -90,8 +91,8 @@ namespace AdventOfCode2015
         public class Elevator : IElevator
         {
             public int Floor { get; private set; }
-            
-            public Elevator() : this(0) { }          
+
+            public Elevator() : this(0) { }
 
             public Elevator(int floor)
             {
@@ -181,5 +182,5 @@ namespace AdventOfCode2015
 
     }
 
- 
+
 }
