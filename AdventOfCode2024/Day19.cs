@@ -37,16 +37,12 @@ namespace AdventOfCode2024
 
             string[] towels = data[0].Split(", ");
 
+            seen.Clear();
+
             foreach (string design in data.Skip(1))
             {
-                bool r = TestDesign(design, towels);
-                if (r)
-                {
-                    result++;
-                }
-
+                result += TestDesign(design, towels, breakOnMatch: true);
             }
-
 
             return result;
         }
@@ -61,49 +57,22 @@ namespace AdventOfCode2024
 
             foreach (string design in data.Skip(1))
             {
-                result += TestDesign2(design, towels, breakOnMatch: false);
-            }
-
-            return result;
-        }
-
-        public bool TestDesign(string design, string[] towels)
-        {
-            if (design.Length == 0)
-            {
-
-                return true;
-            }
-
-            bool result = false;
-
-            foreach (string towel in towels)
-            {
-                if (design.StartsWith(towel))
-                {
-                    result = TestDesign(design.Substring(towel.Length), towels);
-                    if (result)
-                        break;
-                }
-
+                result += TestDesign(design, towels, breakOnMatch: false);
             }
 
             return result;
         }
 
 
-
-        public long TestDesign2(string design, string[] towels, bool breakOnMatch)
+        public long TestDesign(string design, string[] towels, bool breakOnMatch)
         {
             if (seen.ContainsKey(design))
             {
                 return seen[design];
             }
 
-
             if (design.Length == 0)
             {
-
                 return 1;
             }
 
@@ -113,10 +82,12 @@ namespace AdventOfCode2024
             {
                 if (design.StartsWith(towel))
                 {
-                    result += TestDesign2(design.Substring(towel.Length), towels, breakOnMatch);
-
+                    result += TestDesign(design.Substring(towel.Length), towels, breakOnMatch);
+                    if (result == 1 && breakOnMatch)
+                    {
+                        return result;
+                    }
                 }
-
             }
 
             seen.Add(design, result);
