@@ -84,6 +84,26 @@
             return false;
         }
 
+        public static int ManhattanDistance(Vector2D a, Vector2D b)
+        {
+            return Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
+        }
+
+        public static int ManhattanDistance(int x1, int y1, int x2, int y2)
+        {
+            return Math.Abs(x1 - x2) + Math.Abs(y1 - y2);
+        }
+
+        public int ManhattanDistance(Vector2D other)
+        {
+            return ManhattanDistance(this, other);
+        }
+
+        public int ManhattanDistance(int x, int y)
+        {
+            return ManhattanDistance(X, Y, x, y);
+        }
+
         public Vector2D Clone()
         {
             return new Vector2D(this);
