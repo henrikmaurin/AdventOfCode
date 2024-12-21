@@ -226,6 +226,20 @@
             }
             return counter;
         }
+
+        public Vector2D? FindFirst(T searchFor)
+        {
+            if (searchFor == null)
+                return null;
+
+            foreach (Vector2D c in EnumerateCoords())
+            {
+                if (searchFor.Equals(this[c]))
+                    return c;
+                    
+            }
+            return null;
+        }
     }
 
     
