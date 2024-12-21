@@ -49,6 +49,7 @@ namespace Tests
         [TestCategory("Example data")]
         public void Part1()
         {
+            day.ByteFallCount = 12;
             long result = day.Problem1();
             Assert.AreEqual(22, result);
         }

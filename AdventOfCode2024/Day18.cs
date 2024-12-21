@@ -7,6 +7,7 @@ namespace AdventOfCode2024
         private const int day = 18;
         List<string> data;
         Map2D<char> Map;
+        public int ByteFallCount { get; set; }
         public Day18(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -30,6 +31,7 @@ namespace AdventOfCode2024
             Map = new Map2D<char>();
             Map.Init(x, y, '.');
             Map.SafeOperations = true;
+            ByteFallCount = 1024;
         }
 
         public void Parse()
@@ -50,7 +52,7 @@ namespace AdventOfCode2024
         {
             long result = 0;
 
-            for (int i = 0; i < 1024 && i < data.Count; i++)
+            for (int i = 0; i < ByteFallCount && i < data.Count; i++)
             {
                 int x = data[i].Split(',').First().ToInt();
                 int y = data[i].Split(',').Last().ToInt();
