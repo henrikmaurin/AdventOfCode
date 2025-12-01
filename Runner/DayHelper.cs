@@ -19,6 +19,7 @@ namespace Runner
             _years.Add(2022, new AdventOfCode2022.Year());
             _years.Add(2023, new AdventOfCode2023.Year());
             _years.Add(2024, new AdventOfCode2024.Year());
+            _years.Add(2025, new AdventOfCode2025.Year());
         }
 
         public static IEnumerable<int> GetAvailableYears()
