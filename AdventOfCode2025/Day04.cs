@@ -5,7 +5,7 @@ namespace AdventOfCode2025
     public class Day04 : DayBase, IDay
     {
         private const int day = 4;
-        List<string> data;        
+        List<string> data;
 
         public Day04(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
@@ -26,6 +26,21 @@ namespace AdventOfCode2025
             int result2 = MeasureExecutionTime(() => Problem2());
             WriteAnswer(2, "Result: {result}", result2);
         }
+
+        public static int CountSurrounding(Map2D<char> map, Vector2D pos, char target)
+        {
+            int count = 0;
+            var surrounding = map.GetSurrounding(pos);
+            foreach (var s in surrounding)
+            {
+                if (map[s] == target)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
         public int Problem1()
         {
             Map2D<char> map;
@@ -35,28 +50,16 @@ namespace AdventOfCode2025
 
             foreach (Vector2D mapPos in map.EnumerateCoords())
             {
-                int c = 0;
-
                 if (map[mapPos] != '@')
                     continue;
 
-                var surrounding = map.GetSurrounding(mapPos);
-
-                foreach (var s in surrounding)
-                {
-                    if (map[s] == '@')
-                    {
-                        c++;
-                    }
-                }
-
-                if (c < 4)
+                if (CountSurrounding(map, mapPos, '@') < 4)
                     counter++;
             }
 
-
             return counter;
         }
+
         public int Problem2()
         {
             Map2D<char> map;
@@ -71,26 +74,14 @@ namespace AdventOfCode2025
                 removed = false;
                 foreach (Vector2D mapPos in map.EnumerateCoords())
                 {
-                    int c = 0;
-
                     if (map[mapPos] != '@')
                         continue;
 
-                    var surrounding = map.GetSurrounding(mapPos);
-
-                    foreach (var s in surrounding)
-                    {
-                        if (map[s] == '@')
-                        {
-                            c++;
-                        }
-                    }
-
-                    if (c < 4)
+                    if (CountSurrounding(map, mapPos, '@') < 4)
                     {
                         counter++;
                         removed = true;
-                        map[(mapPos)] = '.';
+                        map[mapPos] = '.';
                     }
                 }
             }
