@@ -5,7 +5,8 @@ namespace AdventOfCode2025
     public class Day04 : DayBase, IDay
     {
         private const int day = 4;
-        List<string> data;
+        List<string> data;        
+
         public Day04(string? testdata = null) : base(Global.Year, day, testdata != null)
         {
             if (testdata != null)
@@ -15,16 +16,7 @@ namespace AdventOfCode2025
             }
 
             data = input.GetDataCached().SplitOnNewline();
-            //            data = @"..@@.@@@@.
-            //@@@.@.@.@@
-            //@@@@@.@.@@
-            //@.@@@@..@.
-            //@@.@@@@.@@
-            //.@@@@@@@.@
-            //.@.@.@.@@@
-            //@.@@@.@@@@
-            //.@@@@@@@@.
-            //@.@.@@@.@.".SplitOnNewline();
+
         }
         public void Run()
         {
@@ -36,107 +28,71 @@ namespace AdventOfCode2025
         }
         public int Problem1()
         {
-            int xSize = data[0].Length;
-            int ySize = data.Count;
-
-            Dictionary<(int, int), char> map = new Dictionary<(int, int), char>();
-
-            for (int y = 0; y < data.Count; y++)
-            {
-                for (int x = 0; x < xSize; x++)
-                    map.Add((x, y), data[y][x]);
-            }
-
+            Map2D<char> map;
             int counter = 0;
+            map = Map2D<char>.FromStringArray(data.ToArray());
+            map.SafeOperations = true;
 
-            for (int y = 0; y < data.Count; y++)
+            foreach (Vector2D mapPos in map.EnumerateCoords())
             {
-                for (int x = 0; x < xSize; x++)
+                int c = 0;
+
+                if (map[mapPos] != '@')
+                    continue;
+
+                var surrounding = map.GetSurrounding(mapPos);
+
+                foreach (var s in surrounding)
                 {
-                    int c = 0;
-
-                    if (map[(x, y)] != '@')
-                        continue;
-
-                    char r;
-
-                    if (map.TryGetValue((x - 1, y - 1), out r) && r == '@') c++;
-                    if (map.TryGetValue((x - 1, y), out r) && r == '@') c++;
-                    if (map.TryGetValue((x - 1, y + 1), out r) && r! == '@') c++;
-                    if (map.TryGetValue((x, y - 1), out r) && r == '@') c++;
-                    if (map.TryGetValue((x, y + 1), out r) && r == '@') c++;
-                    if (map.TryGetValue((x + 1, y - 1), out r) && r == '@') c++;
-                    if (map.TryGetValue((x + 1, y), out r) && r == '@') c++;
-                    if (map.TryGetValue((x + 1, y + 1), out r) && r == '@') c++;
-
-
-
-                    if (c < 4)
-                        counter++;
-
-
+                    if (map[s] == '@')
+                    {
+                        c++;
+                    }
                 }
 
+                if (c < 4)
+                    counter++;
             }
-
 
 
             return counter;
         }
         public int Problem2()
         {
-            int xSize = data[0].Length;
-            int ySize = data.Count;
-
-            Dictionary<(int, int), char> map = new Dictionary<(int, int), char>();
-
-            for (int y = 0; y < data.Count; y++)
-            {
-                for (int x = 0; x < xSize; x++)
-                    map.Add((x, y), data[y][x]);
-            }
-
+            Map2D<char> map;
             int counter = 0;
+            map = Map2D<char>.FromStringArray(data.ToArray());
+            map.SafeOperations = true;
 
             bool removed = true;
 
             while (removed)
             {
                 removed = false;
-                for (int y = 0; y < data.Count; y++)
+                foreach (Vector2D mapPos in map.EnumerateCoords())
                 {
-                    for (int x = 0; x < xSize; x++)
+                    int c = 0;
+
+                    if (map[mapPos] != '@')
+                        continue;
+
+                    var surrounding = map.GetSurrounding(mapPos);
+
+                    foreach (var s in surrounding)
                     {
-                        int c = 0;
-
-                        if (map[(x, y)] != '@')
-                            continue;
-
-                        char r;
-
-                        if (map.TryGetValue((x - 1, y - 1), out r) && r == '@') c++;
-                        if (map.TryGetValue((x - 1, y), out r) && r == '@') c++;
-                        if (map.TryGetValue((x - 1, y + 1), out r) && r! == '@') c++;
-                        if (map.TryGetValue((x, y - 1), out r) && r == '@') c++;
-                        if (map.TryGetValue((x, y + 1), out r) && r == '@') c++;
-                        if (map.TryGetValue((x + 1, y - 1), out r) && r == '@') c++;
-                        if (map.TryGetValue((x + 1, y), out r) && r == '@') c++;
-                        if (map.TryGetValue((x + 1, y + 1), out r) && r == '@') c++;
-
-
-
-                        if (c < 4)
+                        if (map[s] == '@')
                         {
-                            removed = true;
-                            map[(x, y)] = '.';
-                            counter++;
+                            c++;
                         }
-
-
                     }
 
+                    if (c < 4)
+                    {
+                        counter++;
+                        removed = true;
+                        map[(mapPos)] = '.';
+                    }
                 }
-
             }
 
             return counter;
