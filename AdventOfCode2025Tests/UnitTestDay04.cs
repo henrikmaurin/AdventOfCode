@@ -36,13 +36,13 @@ namespace Tests
             map = Map2D<char>.FromStringArray(testdata);
             map.SafeOperations = true;
 
-            int result = Day04.CountSurrounding(map, new Vector2D(0, 0), '@');
+            int result = Day04.CountSurrounding(map, (0, 0), '@');
             Assert.AreEqual(2, result);
 
-            result = Day04.CountSurrounding(map, new Vector2D(5, 0), '@');
+            result = Day04.CountSurrounding(map, (5, 0), '@');
             Assert.AreEqual(3, result);
 
-            result = Day04.CountSurrounding(map, new Vector2D(4, 4), '@');
+            result = Day04.CountSurrounding(map,(4, 4), '@');
             Assert.AreEqual(8, result);
         }
 

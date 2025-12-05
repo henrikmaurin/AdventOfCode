@@ -33,6 +33,16 @@
             return new Vector2D { X = me.X / amount, Y = me.Y / amount };
         }
 
+        public static implicit operator (int, int)(Vector2D vector)
+        {
+            return (vector.X, vector.Y);
+        }
+
+        public static implicit operator Vector2D((int, int) tuple)
+        {
+            return new Vector2D(tuple.Item1, tuple.Item2);
+        }
+
         public static bool Equals(Vector2D a, Vector2D b)
         {
             if (a is null || b is null)
@@ -86,7 +96,7 @@
 
         public static int ManhattanDistance(Vector2D a, Vector2D b)
         {
-            return Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
+            return ManhattanDistance(a.X, a.Y, b.X, b.Y);
         }
 
         public static int ManhattanDistance(int x1, int y1, int x2, int y2)
