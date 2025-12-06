@@ -13,7 +13,17 @@ namespace Tests
         [TestInitialize]
         public void Init()
         {
-            data = @"";
+            data = @"3-5
+10-14
+16-20
+12-18
+
+1
+5
+8
+11
+17
+32";
             testdata = data.SplitOnNewlineArray(false);
 
             day = new Day05(data);
@@ -24,16 +34,18 @@ namespace Tests
 		[TestCategory("Example data")]
 		public void Part1()
 		{
+			long result = day.Problem1();
 
-			Assert.AreEqual(1, 1);
+			Assert.AreEqual(3, result);
 		}
 
 		[TestMethod("Day 5, Part 2")]
 		[TestCategory("Example data")]
 		public void Part2()
 		{
+            long result = day.Problem2();
 
-			Assert.AreEqual(2, 2);
+            Assert.AreEqual(14, result);
 		}
 	}
 }

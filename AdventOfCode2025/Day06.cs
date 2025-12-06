@@ -111,12 +111,7 @@ namespace AdventOfCode2025
                             total += ints.Sum();
                             break;
                         case '*':                           
-                            long prod = 1;
-                            foreach (var i in ints)
-                            {
-                                prod *= i;
-                            }
-                            total += prod;
+                            total += ints.Multiply();
                             break;
                     }
                     ints.Clear();
