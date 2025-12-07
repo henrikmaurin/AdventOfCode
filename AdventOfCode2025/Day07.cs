@@ -1,4 +1,8 @@
-﻿using Common;
+﻿using System.Collections.Immutable;
+
+using Common;
+
+using static Common.Directions;
 
 namespace AdventOfCode2025
 {
@@ -21,16 +25,99 @@ namespace AdventOfCode2025
             int result1 = MeasureExecutionTime(() => Problem1());
             WriteAnswer(1, "Result: {result}", result1);
 
-            int result2 = MeasureExecutionTime(() => Problem2());
+            long result2 = MeasureExecutionTime(() => Problem2());
             WriteAnswer(2, "Result: {result}", result2);
         }
         public int Problem1()
         {
-            return 0;
+            Map2D<char> map = Map2D<char>.FromStringArray(data.ToArray());
+            map.SafeOperations = true;
+
+            int splits = 0;
+
+            foreach (var coord in map.EnumerateCoords())
+            {
+                switch (map[coord])
+                {
+                    case 'S':
+                        map[coord + Vector.Down] = '|';
+                        break;
+                    case '^':
+                        if (map[coord + Vector.Up] != '|')
+                        {
+                            break;
+                        }
+
+                        map[coord + Vector.Left] = '|';
+                        map[coord + Vector.Right] = '|';
+                        splits++;
+                        break;
+                    case '.':
+                        if (map[coord + Vector.Up] != '|')
+                        {
+                            break;
+                        }
+                        map[coord] = '|';
+                        break;
+                }
+            }
+            return splits;
         }
-        public int Problem2()
+
+        public long Problem2()
         {
-            return 0;
+            Map2D<char> map = Map2D<char>.FromStringArray(data.ToArray());
+            map.SafeOperations = true;
+
+            Vector2D start = map.FindFirst('S');
+
+            long result = Traverse(map, new List<Vector2D>() { start }, new Dictionary<string, long>());
+
+            return result;
         }
+
+        public static long Traverse(Map2D<char> map, List<Vector2D> path, Dictionary<string, long> cache)
+        {
+            string key = string.Join(";", path.Select(p => p.ToString()));
+
+            if (cache.ContainsKey(key))
+            {
+                return cache[key];
+            }
+
+            if (path.Last().Y >= map.MaxY)
+            {
+                return 1;
+            }
+
+            Vector2D pos = path.Last();
+
+            long total = 0;
+            Vector2D nextPos;
+            switch (map[pos])
+            {
+                case 'S':
+                case '.':
+                    nextPos = pos + Vector.Down;
+                    List<Vector2D> newPath = new List<Vector2D>(path);
+                    newPath.Add(nextPos);                  
+                    total += Traverse(map, newPath, cache);
+                    break;
+                case '^':
+                    List<Vector2D> leftPath = new List<Vector2D>();
+                    leftPath.Add(pos + Vector.Left);                   
+                    total += Traverse(map, leftPath, cache);
+                    List<Vector2D> rightPath = new List<Vector2D>();
+                    rightPath.Add(pos + Vector.Right);
+                    total += Traverse(map, rightPath, cache);
+                    break;
+            }
+
+            cache[key] = total;
+
+            return total;
+        }
+
+
     }
 }
