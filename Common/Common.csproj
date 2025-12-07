@@ -9,6 +9,6 @@
   <ItemGroup>
     <PackageReference Include="Crayon" Version="2.0.69" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
-  </ItemGroup>
+  </ItemGroup> 
 
 </Project>
