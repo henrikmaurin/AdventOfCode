@@ -34,6 +34,22 @@ namespace AdventOfCode2025
             int result2 = MeasureExecutionTime(() => Problem2());
             WriteAnswer(2, "Result: {result}", result2);
         }
+
+        public static int RotateDial(int start, string instruction)
+        {
+            int dial = start;
+            dial += DecodeInstruction(instruction);
+            dial = dial.CircularWrap(0, 99);
+            return dial;
+        }
+
+        public static int DecodeInstruction(string instruction)
+        {
+            string dir = instruction.Substring(0, 1);
+            int steps = instruction.Substring(1).ToInt();
+            return dir=="R" ? steps : -steps;
+        }
+
         public int Problem1()
         {
             int dial = 50;
@@ -41,43 +57,16 @@ namespace AdventOfCode2025
 
             foreach (var item in data)
             {
-                string dir = item.Substring(0, 1);
-                int steps = item.Substring(1).ToInt();
-
-                if (dir == "R")
-                {
-                    dial += steps;
-                }
-                else
-                {
-                    dial -= steps;
-                }
-                while (dial < 0 || dial > 99)
-                {
-                    if (dial < 0)
-                    {
-                        dial += 100;
-                    }
-
-
-
-                    if (dial > 99)
-                    {
-                        dial -= 100;
-                    }
-                }
+                dial = RotateDial(dial, item);
 
                 if (dial == 0)
                 {
                     code++;
                 }
-
-
             }
-
-
             return code;
         }
+
         public int Problem2()
         {
             int dial = 50;
@@ -90,7 +79,6 @@ namespace AdventOfCode2025
 
                 for (int i = 0; i < steps; i++)
                 {
-
                     if (dir == "R")
                     {
                         dial++;
