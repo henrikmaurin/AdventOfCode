@@ -1,6 +1,4 @@
-﻿using System;
-
-using Common;
+﻿using Common;
 
 namespace AdventOfCode2025
 {
@@ -12,12 +10,12 @@ namespace AdventOfCode2025
         {
             if (testdata != null)
             {
-                data = testdata.SplitOnNewline();
+                data = testdata.Split(",").ToList();
                 return;
             }
 
             data = input.GetDataCached().Split(",").ToList();
-           // data = @"11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124".Split(",").ToList();
+            // data = @"11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124".Split(",").ToList();
         }
         public void Run()
         {
@@ -58,7 +56,7 @@ namespace AdventOfCode2025
 
             for (long i = start; i <= end; i++)
             {
-                string s = i.ToString();               
+                string s = i.ToString();
 
                 if (IsLegal(s))
                 {
@@ -75,10 +73,10 @@ namespace AdventOfCode2025
 
             for (long i = start; i <= end; i++)
             {
-                string s = i.ToString();    
+                string s = i.ToString();
 
                 if (IsLegal2(s))
-                    sum += i;             
+                    sum += i;
 
             }
 
