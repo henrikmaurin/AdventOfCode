@@ -19,7 +19,7 @@ namespace AdventOfCode2025
         }
         public void Run()
         {
-            long result1 = MeasureExecutionTime(() => Problem1(10));
+            long result1 = MeasureExecutionTime(() => Problem1(1000));
             WriteAnswer(1, "Result: {result}", result1);
 
             long result2 = MeasureExecutionTime(() => Problem2());
