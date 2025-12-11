@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-using Common;
+﻿using Common;
 
 namespace AdventOfCode2024
 {
@@ -55,13 +53,15 @@ namespace AdventOfCode2024
             return result;
         }
 
-        
+
 
         public long Blink(string d, int depth)
         {
             string key = $"{d}:{depth}";
-            if (values.ContainsKey(key))
-                return values[key];
+            if (Memoize.TryGet(nameof(Blink), key, out long m))
+            {
+                return m;
+            }
 
             if (depth == 0)
                 return 1;
@@ -70,22 +70,22 @@ namespace AdventOfCode2024
 
             if (d == "0")
             {
-                 retVal= Blink("1", depth-1);
+                retVal = Blink("1", depth - 1);
                 values.Add(key, retVal);
 
                 return retVal;
             }
 
-            if (d.Length%2==0)
+            if (d.Length % 2 == 0)
             {
-                retVal = Blink(d.Substring(0,d.Length/2).ToLong().ToString(), depth-1);
-                retVal += Blink(d.Substring(d.Length / 2).ToLong().ToString(),depth-1);
-                values.Add(key , retVal);
+                retVal = Blink(d.Substring(0, d.Length / 2).ToLong().ToString(), depth - 1);
+                retVal += Blink(d.Substring(d.Length / 2).ToLong().ToString(), depth - 1);
+                values.Add(key, retVal);
                 return retVal;
             }
 
-            retVal = Blink((d.ToLong() * 2024).ToString(),depth-1);
-            values.Add(key , retVal);
+            retVal = Blink((d.ToLong() * 2024).ToString(), depth - 1);
+            Memoize.Set(nameof(Blink), key, retVal);
 
             return retVal;
         }
